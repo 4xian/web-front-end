@@ -290,7 +290,7 @@ interface Cat extends Animal{
 - 类型断言 与 类型转换：
 
 ```typescript
-1. 类型断言只影响ts编译时的类型，类型断言语句在编译结果中会被删除，它不会真的影响到变量的类型
+1. 类型断言只影响ts编译时的类型，类型断言语句在编译结果中会被删除，它不会真的影		响到变量的类型
 2. 若要类型转换，直接调用类型转换的方法
 function toBoolean(some: any) boolean{
   return some as boolean;
@@ -310,6 +310,16 @@ function toBoolean(some: any) boolean{
 - 类型断言 与 类型声明：
 
 ```typescript
-1. 
+1.  function getCacheData(key: string): any {
+    	return (window as any).cache[key];
+	}
+
+	interface Cat {
+    	name: string;
+    	run(): void;
+	}
+
+	const tom = getCacheData('tom') as Cat;
+	tom.run();
 ```
 
