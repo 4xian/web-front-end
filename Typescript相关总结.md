@@ -310,16 +310,411 @@ function toBoolean(some: any) boolean{
 - 类型断言 与 类型声明：
 
 ```typescript
-1.  function getCacheData(key: string): any {
-    	return (window as any).cache[key];
-	}
+1. function getCacheData(key: string): any {
+    return (window as any).cache[key];
+}
 
-	interface Cat {
-    	name: string;
-    	run(): void;
-	}
+interface Cat {
+    name: string;
+    run(): void;
+}
 
-	const tom = getCacheData('tom') as Cat;
-	tom.run();
+const tom = getCacheData('tom') as Cat; // 类型断言
+const tom: Cat = getCacheDate('tom'); // 类型声明,将tom声明为Cat，然后将any类型的getCacheData('tom')赋值给Cat类型的tom
+tom.run();
+
+// 类型声明比较严格 
 ```
 
+- 类型断言 与 泛型：
+
+    ```typescript
+    1. 上面例子改写：
+    function getCacheData<T>(key: string): T{
+        return (window as any).cache[key];
+    }
+    interface Cat{
+        name: string;
+        run(): void;
+    }
+    const tom = getCacheData<Cat>('tom');
+    // 通过给getCacheData函数加一个泛型，对返回值的约束，同时去除代码中的any
+    tom.run();
+    ```
+
+### 6.  声明文件：
+
+- 全局变量的声明文件：(类型声明)
+
+```typescript
+- 声明语句只能定义类型，不能定义具体实现
+
+1. 声明全局变量:
+	declare var
+    declare let
+    // let 和 var 可以修改全局变量
+    declare const
+    // const 不允许修改
+
+// src/xxx.d.ts
+declare var jQuery: (sel: string) => any;
+declare let jQuery: (sel: string) => any;
+declare const jQuery: (sel: string) => any;
+
+
+
+2. 声明全局函数：
+	declare function 
+
+// src/xxx.d.ts
+declare function jQuery(sel: string): any;
+
+- 函数类型的声明语句中，函数重载也是支持的
+declare function jQuery(sel: string): any;
+declare function jQuery(callBack: () => any): any;
+
+3. 声明全局类：
+declare class Animal {
+    name: string;
+    constructor(name: string);
+    sayHi(): string;
+}
+let cat = new Animal('Tom');
+
+4. 定义枚举类型：
+declare enum Dirertions {
+    up,
+    down,
+    left,
+    right
+}
+let directions = [Directions.up, Directions.down, Directions.left, Directions.right];
+
+5. namespace : 表示全局变量是一个对象，包含许多子属性
+
+- 类型或接口的声明：
+- 为了减少全局变量的冲突，尽量将interface或type放在namespace里
+delcare namespace jQuery {
+    interface(type) AjaxSettings {
+    	method?: 'GET' | 'POST';
+    	data?: any;
+	}
+    function ajax(url: string, settings?: AjaxSettings): void;
+}
+
+    // 在其他文件中即可使用该接口或类型
+    let settings: jQuery.AjaxSettings = {
+        methods: 'POST',
+        data:{
+            name: 'foo'
+        }
+    }
+    jQuery.ajax('', settings);
+    
+6. 声明合并：
+// 若jQuery既是函数，又是对象，可以组合多个声明语句，它们会合并起来
+declare function jQuery(sel: string): any;
+declare namespace jQuery{
+    function ajax(url: string, settings?: any): void;
+}
+// 使用
+jQuery('#foo');
+jQuery.ajax('xxx/xx')
+```
+
+### 7. 内置对象：
+
+- ECMAScript的内置对象：
+
+```typescript
+Boolean, Error, Date, RegExp等
+let b: Boolean = new Boolean(1);
+let e: Error = new Error('Error');
+let d: Date = new Date();
+let r: RegExp = /[a-z]/;
+```
+
+- DOM 和BOM的内置对象：
+
+```typescript
+Document, HTMLElement, Event, NodeList等
+let body: HTMLElement = documnet.body;
+let allDiv: NodeList = documnet.querySelectorAll('div');
+documnet.addEventListener('click', function(e: MouseEvent)){
+	//                          
+}
+```
+
+### 8. 基础类型字面量类型(约束取值范围)：
+
+```typescript
+1. 约束取值只能取规定内的值：
+type EventNames = 'click' | 'scroll' | 'mousemove';
+function handleEvent(ele: Element, event: EventNames){
+    //
+}
+// 使用
+handleEvent(documnet.getElementById('hello'), 'scroll');
+handleEvent(document.getElementById('world'), 'dbclick'); // 报错，EventNames中不存在dbclick
+```
+
+### 9.  元组：
+
+```typescript
+1. 元组合并不同类型的对象：
+let tom: [string, number] = ['Tom', 25];
+
+2. 越界的元素：
+- 添加的元素只能是定义类型的联合类型，不能添加未定义的类型
+tom.push('male');
+tom.push(true); // 
+```
+
+### 10.  枚举(用于取值被限制在一定范围内)：
+
+```typescript
+enum Days {Sun, Mon, Tue, Wed, Thu, Fri, Sat};
+Days[0] // Sun
+Days['Sun'] // 0
+```
+
+- 常数枚举：
+
+```typescript
+- const enum 声明
+- 常数枚举在编译阶段会被删除
+const enum Directions {
+    up,
+    down,
+    left,
+    right
+}
+```
+
+- 外部枚举：
+
+```typescript
+- declare enum
+- declare 定义的类型只用于编译检查，编译结果中会被删除
+declare enum Directions {
+    up,
+    down,
+    left,
+    right
+}
+```
+
+### 10.  ts中的类：
+
+- 三种修饰符：(public, private, protected)
+
+```typescript
+public: 修饰公有属性和方法
+private: 修饰私有属性和方法，不能在声明它的类的外部访问，子类也不可以访问
+protected: 修饰受保护的属性和方法，与private相似，它在子类中也可访问
+
+- 当private修饰构造函数时，该类不允许被继承或实例化
+- 当protected修饰构造函数时，该类只允许继承
+
+class Animal {
+    public name;
+    private age;
+    protected sex;
+    public constructor(name, age, sxe){
+        this.name = name;
+        this.age = age;
+        this.sex = sex;
+    }
+}
+
+class Cat extends Animal{
+    constructor(name, age){
+        super(name, age);
+        console.log(this.sex); // 不报错，子类可访问父类的protected属性
+        console.log(this.age); // 报错，子类不可访问父类的private属性
+    }
+}
+
+let a = new Animal('Jack',22);
+console.log(a.name); // Jack
+
+```
+
+- 参数属性：
+
+```typescript
+1. 修饰符和readonly可直接使用在构造函数参数中
+class Animal {
+    readonly age;
+    public constructor(public name, age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+
+2. readonly
+- 只读关键字，只允许出现在属性声明或索引签名或构造函数中
+- 若readonly和其他修饰符一起存在，需写在后面
+public constructor(public readonly name){
+    
+}
+
+let a = new Animal('Jack', 15);
+console.log(a.age) // 15
+a.age = 80; // 报错,只读
+```
+
+- 抽象类：
+
+```typescript
+1. 抽象类不允许被实例化：
+
+abstract class Animal {
+    public name = name;
+    public constructor(name){
+        this.name = name;
+    }
+    public abstract sayHi(); // 定义抽象方法，需要子类实现
+}
+let a = new Animal('Jack'); // 报错，抽象类不能被实例化
+
+2. 抽象类中的抽象方法必须被子类实现：
+class Cat extends Animal {
+    public eat(){
+        console.log(`${this.name} is eating`);
+    }
+}
+let cat = new Cat('Tom'); // 报错，子类未实现父类的抽象sayHi方法
+
+// 正确格式：
+class Cat extends Animal {
+    // 实现父类的sayHi方法
+    public sayHi(){
+        console.log(`my name is ${this.name}`);
+    }
+}
+let cat = new Cat('Tom');
+```
+
+- 类的类型：
+
+```typescript
+1. 给类加ts类型，与接口类似：
+class Animal {
+    name: string;
+    constructor(name: string) {
+        this.name = name;
+    }
+    sayHi(): string {
+        return `name is ${this.name}`
+    }
+}
+
+let a: Animal = new Animal('Jack');
+console.log(a.sayHi());
+```
+
+### 11. 类与接口：
+
+- 类实现接口：
+
+```typescript
+1. 一个只能继承另一个类，不同类的共有特性就可以提取成接口(interfaces)，用implements实现
+// 例子：
+interface Alarm {
+    arlert(): void;
+}
+class Door{
+    
+}
+class SecurityDoor extends Door implements Alarm {
+    alert() {
+        console.log('SecurityDoor alert');
+    }
+}
+class Car implements Alarm {
+    alert(){
+        console.log('Car alert');
+    }
+}
+
+2. 一个类可以实现多个接口:
+interface Alarm {
+    alert(): void;
+}
+interface Light {
+    lightOn(): void;
+    lightOff(): void;
+}
+
+class Car implements Alarm, Light {
+    alert(){
+        console.log('Car Alert');
+    }
+    lightOn(){
+        console.log('Light On');
+    }
+    lightOff(){
+        console.log('Light Off');
+    }
+}
+```
+
+- 接口继承接口：
+
+```typescript
+interface Alarm(){
+    alert(): void;
+}
+interface LightAlarm extends Alarm {
+    lightOn(): void;
+    lightOff(): void;
+}
+// LightAlarm 拥有三个方法
+```
+
+- 接口继承类：
+
+```typescript
+class Point {
+    x: number;
+    y: number;
+    constructor(x: number, y: number){
+        this.x = x;
+        this.y = y;
+    }
+}
+// Point3d继承的其实是类Point实例的类型(该类型只包含实例属性和实例方法,不包括构造函数，静态属性，静态方法)
+interface Piont3d extends Point {
+    z: number;
+}
+let point3d: Point3d = {
+    x: 1,
+    y: 2,
+    z: 3
+};
+// 声明class Point时，创建一个Point的类，同时也创建了名为Point的类型(实例的类型),所以既可以把Point当一个类用，也可以当类型用
+function printPoint(p: Point) {
+    console.log(p.x, p.y);
+}
+printPoint(new Point(1, 2))
+```
+
+### 13.  泛型：
+
+- 泛型是指在定义函数，接口，类的时候，不预先指定具体的类型，而是使用的时候再指定
+
+```typescript
+// 例子：实现一个函数，创建一个指定长度的数组，同时将每一项都填默认值
+function createArr<T>(length: number, value: T): Array<T> {
+    let result: T[] = [];
+    for(let i = 0; i < length; i++){
+        result[i]  = value;
+    }
+    return result;
+}
+// 调用时可指定返回值具体的类型
+createArr<string>(3, 'x'); // ['x', 'x', 'x']
+```
+
+- 多个类型
