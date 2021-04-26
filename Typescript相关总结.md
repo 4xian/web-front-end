@@ -717,4 +717,109 @@ function createArr<T>(length: number, value: T): Array<T> {
 createArr<string>(3, 'x'); // ['x', 'x', 'x']
 ```
 
-- 多个类型
+- 多个类型参数：
+
+```typescript
+1. 定义泛型的时候，可以一次定义多个参数类型：
+function swap<T, U>(tuple: [T, U]: [U, T]) {
+    return [tuple[1], tuple[0]];
+}
+swap([7, 'seven']); // ['seven', 7]
+```
+
+- 泛型约束：
+
+```typescript
+1. 泛型约束：(只允许函数传入包含某些属性的变量)
+ - 函数内部使用泛型变量的时候，事先不知道类型，不能随意操作他的属性和方法
+
+function loggingIdentity<T>(arg: T): T {
+    console.log(arg.length); // 报错，泛型T不一定包含length属性
+    return arg;
+}
+
+// 因此可以使用泛型约束
+interface Lengthwise {
+    length: number;
+}
+function loggingIdentity<T extends Lengthwise>(arg: T): T {
+    console.log(arg.length); 
+    return arg;
+}
+// 调用loggingIdentity时，传入的参数不包含length，将会报错
+
+
+2. 多类型之间也可以互相约束：
+function copyFields<T extends U, U>(target: T, source: U): T {
+    for (let id in source) {
+        target[id] = (<T>source)[id];
+    }
+    return target;
+}
+let x = { a: 1, b: 2, c: 3, d: 4 };
+copyFields(x, { b: 10, d: 20 });
+// 使用两个类型参数，T继承U，可理解为U是T的子集
+```
+
+- 泛型接口：
+
+```typescript
+interface CreateArrayFunc {
+    <T>(length: number, value: T): Array<T>;
+}
+let createArray: CreateArrayFunc;
+createArray = function<T>(length: number, value: T): Array<T> {
+    let result: T[] = [];
+    for (let i = 0; i < length; i++) {
+        result[i] = value;
+    }
+    return result;
+}
+createArray(3, 'x'); // ['x', 'x', 'x']
+
+// 进一步，我们可以把泛型参数提前到接口名上：
+interface CreateArrayFunc<T> {
+    (length: number, value: T): Array<T>;
+}
+let createArray: CreateArrayFunc<any>;
+createArray = function<T>(length: number, value: T): Array<T> {
+    let result: T[] = [];
+    for (let i = 0; i < length; i++) {
+        result[i] = value;
+    }
+    return result;
+}
+createArray(3, 'x'); // ['x', 'x', 'x']
+// 注意，此时在使用泛型接口的时候，需要定义泛型的类型
+```
+
+- 泛型类：
+
+```typescript
+1. 与泛型接口类似
+class GenericNumber<T> {
+    constructor(public zeroValue: T, public add:(x: T, y: T) => T){
+        this.zeroValue = zeroValue;
+        this.add  = add;
+    }
+}
+let myGenericNumber = new GenericNumber<number>();
+myGenericnumber.zeroValue = 0;
+myGenericNumber.add = function(x, y){
+    return x + y;
+}
+```
+
+- 泛型参数的默认类型：
+
+```typescript
+1. 使用泛型时，没有直接指定类型参数，也无法从实际值中推测出，默认类型便起作用
+function createArr<T = string>(length: number, value:T): Array<T> {
+	let result: T[] = [];
+    for(let i = 0; i< length; i++){
+        result[i] = value;
+    }
+    return result;
+}
+```
+
