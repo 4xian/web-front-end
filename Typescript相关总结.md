@@ -3,28 +3,31 @@
 ### 1.  数据类型：
 
 ```typescript
+// 定义类型时都是小写(boolean, string, number)
+/// 基本类型：///
 1. 布尔值：
 	let isBol: boolean = false;
 	let isBol: boolean = Boolean(1);
-2. 数值：
+2. 数字：
 	let num: number = 9;
 	let num: number = NaN;
 	let num: number = Infinity;
 3. 字符串：
 	let str: string = 'str'
     
+/// 特殊类型：///
 4. null 和 undefined：
 	let isnull: null = null;
 	let isundefined: undefined = undefined;
-// null 和 undefined 不可赋给number类型
+// null 和 undefined 不可赋给number类型(严格模式下)
 
 5. void(空值)：
 	用void表示没有任何返回值的函数：
-    function func(): void{
+    function func(msg: string): void{
         // ...
     }
 
-6. any(任意值)：
+6. any(任意类型)：
 	// 普通类型赋值过程中是不允许改变类型的
 	// any类型则允许赋值为任意类型
 	let reandom: any = 'test';
@@ -47,8 +50,26 @@
 	表示定义时类型可选多个：| 隔开
 	let test: string | number // test可存 string类型或 number类型
     - 联合类型赋值时，会根据类型推断推断出一个类型
-    - 当不确定联合类型的变量到底是哪一个类型时，只能访问所有类型的共有属性和方		法
-    - 已知联合类型的类型时，访问联合类型的属性和方法，只能访问当前类型的属性和		方法
+    - 当不确定联合类型的变量到底是哪一个类型时，只能访问所有类型的共有属性和方法
+    - 已知联合类型的类型时，访问联合类型的属性和方法，只能访问当前类型的属性和方法
+
+10. 交叉类型：
+		利用extends合并两个对象的属性，从而创建一个新对象
+    function extend<T extends object, U extends object>(first: T, second: U): T & U {
+        const result = <T & U>{};
+        for(let id in first){
+            (<T>result[id]) = first[id];
+        }
+        for(let id in second){
+            if(!result.hasOwnProperty(id)){
+                <U>result[id] = second[id];
+            }
+        }
+        return result;
+    }
+	
+	const x = extend({a: 'hello'}, {b: 43});
+	// x便拥有了a 和 b 的属性
 ```
 
 ### 2. 对象的类型(接口)：
@@ -85,8 +106,9 @@ const tom: Person{
 
 ```typescript
 1. 基础定义：
-	`[类型] []`
-	let numArr : number[] = [1,2,3];
+	:[类型] []
+	let numArr : number[] = [1,2,3]; // 纯数字的数组
+	let boolArr : boolean[] = [true, false]; // 纯布尔值的数组
 	let anyArr : any[] = ['xx', 13, {}]; // 数组中可出现任意类型
 	- 定义一个类型后，数组中只能存在该类型
 	- 使用数组的方法时，也会受类型的限制，比如push只能推该类型的值
@@ -170,7 +192,11 @@ const tom: Person{
 7. 重载：
 	- 重载允许一个函数接收不同数量或类型的参数时，作出不同的处理
 	- 精确的表达==>输入为数字，输出也为数字;输入为字符串，输出也为字符串
-	
+	interface Overload {
+		(x: number): number;
+		(x: string): string;
+	}	
+
 	function reserve(x: number): number;
 	function reserve(x: string): string;
 	function reserve(x: number | string):number | string {
@@ -181,6 +207,19 @@ const tom: Person{
         }
     }
 	- 重复定义函数reserve,前几次是函数定义, 最后一次是函数实现
+
+	const overload: Overload = reserve;
+	const str = overload('string'); // str 被推断为string
+	const num = overload(123); // num 被推断为number
+
+8. 可实例化：
+- 使用new做前缀，需要用new关键字调用
+interface CallWithNew {
+    new (): string;
+}
+// 使用
+declare const Foo: CallWithNew;
+const bar = new Foo(); // bar被推断为string类型
 ```
 
 ### 5. 类型断言：(手动指定一个值的类型)
@@ -193,14 +232,14 @@ const tom: Person{
   
 2. 用途：
 	- 1. 将一个联合类型断言为其中一个类型：
-		// 尽量避免断言后调用方法或引用深层属性
-	interface Cat {
+// 尽量避免断言后调用方法或引用深层属性
+interface Cat {
     name: string;
     run(): void;
-  }
+}
 interface Fish{
-  name: string;
-  swim(): void;
+	name: string;
+	swim(): void;
 }
 function isFish(animal: Cat | Fish){
   // 将animal指定为Fish类型
@@ -211,13 +250,13 @@ function isFish(animal: Cat | Fish){
 }
 
 - 2. 将一个父类断言为更加具体的子类：
-		interface(或class) ApiError extends Error{
+	interface(或class) ApiError extends Error{
       code: number;
     }
-		interface(或class) HttpError extends Error{
+	interface(或class) HttpError extends Error{
       statusCode: number;
     }
-		function isApiError(error: Error){
+	function isApiError(error: Error){
       // 断言为具体的子类
       if(typeof (error as ApiError).code === 'number'){
         return true;
@@ -228,16 +267,16 @@ function isFish(animal: Cat | Fish){
 		如window.foo = 1; ts 会报错，可将它断言为(window as any).foo = 1;
 
 - 4. 将any断言为一个更具体的类型：
-		function getCache(key: string): any{
+	function getCache(key: string): any{
       return (window as any).cache[key];
     }
-		interface Cat{
+	interface Cat{
       name: string;
       run(): void
     }
     const tom = getCache('tom') as Cat;
-		tom.run();
-		// 调用完getCache后，将返回的值断言为Cat类型，这样明确了tom的类型
+	tom.run();
+	// 调用完getCache后，将返回的值断言为Cat类型，这样明确了tom的类型
 
 ```
 
@@ -248,13 +287,13 @@ function isFish(animal: Cat | Fish){
 	 B兼容A，则B可被断言为A，A也可被断言为B；
    // 例子：
    A为父类，B为子类；
-   interface Animal{
-     name: string;
-   }
-	 interface Cat{
-     name: string;
-     run(): void;
-   }
+interface Animal{
+	name: string;
+}
+interface Cat{
+	name: string;
+	run(): void;
+}
 function testAnimal(animal: Animal){
   return (animal as Cat);
 }
@@ -273,15 +312,15 @@ interface Cat extends Animal{
 
 ```typescript
 1. 将任何一个类型断言为任何另一个类型：
-	interface Cat{
+interface Cat{
     run():void;
-  }
-	interface Fish{
+}
+interface Fish{
     swim():void;
-  }
-	function testCat(cat: Cat){
+}
+function testCat(cat: Cat){
     return (cat as any as Fish);
-  }
+}
 // 直接将Cat类型断言为Fish类型会报错；
 // 借助any类型作中介即可
 除非迫不得已，否则不用双重断言
@@ -290,7 +329,7 @@ interface Cat extends Animal{
 - 类型断言 与 类型转换：
 
 ```typescript
-1. 类型断言只影响ts编译时的类型，类型断言语句在编译结果中会被删除，它不会真的影		响到变量的类型
+1. 类型断言只影响ts编译时的类型，类型断言语句在编译结果中会被删除，它不会真的影响到变量的类型
 2. 若要类型转换，直接调用类型转换的方法
 function toBoolean(some: any) boolean{
   return some as boolean;
@@ -342,7 +381,7 @@ tom.run();
     tom.run();
     ```
 
-### 6.  声明文件：
+### 6.  声明文件：(通常放在 xxx.d.ts文件里)
 
 - 全局变量的声明文件：(类型声明)
 
@@ -350,11 +389,11 @@ tom.run();
 - 声明语句只能定义类型，不能定义具体实现
 
 1. 声明全局变量:
-	declare var
-    declare let
-    // let 和 var 可以修改全局变量
-    declare const
-    // const 不允许修改
+declare var
+declare let
+// let 和 var 可以修改全局变量
+declare const
+// const 不允许修改
 
 // src/xxx.d.ts
 declare var jQuery: (sel: string) => any;
@@ -364,7 +403,7 @@ declare const jQuery: (sel: string) => any;
 
 
 2. 声明全局函数：
-	declare function 
+declare function 
 
 // src/xxx.d.ts
 declare function jQuery(sel: string): any;
@@ -402,14 +441,14 @@ delcare namespace jQuery {
     function ajax(url: string, settings?: AjaxSettings): void;
 }
 
-    // 在其他文件中即可使用该接口或类型
-    let settings: jQuery.AjaxSettings = {
-        methods: 'POST',
-        data:{
-            name: 'foo'
-        }
-    }
-    jQuery.ajax('', settings);
+// 在其他文件中即可使用该接口或类型
+let settings: jQuery.AjaxSettings = {
+	methods: 'POST',
+		data:{
+		name: 'foo'
+	}
+}
+jQuery.ajax('', settings);
     
 6. 声明合并：
 // 若jQuery既是函数，又是对象，可以组合多个声明语句，它们会合并起来
@@ -461,13 +500,15 @@ handleEvent(document.getElementById('world'), 'dbclick'); // 报错，EventNames
 ### 9.  元组：
 
 ```typescript
-1. 元组合并不同类型的对象：
+1. 元组合并不同类型的成员：
 let tom: [string, number] = ['Tom', 25];
+// 可与解构一起使用
+const [name, age] = tom;
 
 2. 越界的元素：
 - 添加的元素只能是定义类型的联合类型，不能添加未定义的类型
 tom.push('male');
-tom.push(true); // 
+tom.push(true); // error
 ```
 
 ### 10.  枚举(用于取值被限制在一定范围内)：
