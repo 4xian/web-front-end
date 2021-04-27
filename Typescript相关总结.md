@@ -489,6 +489,8 @@ documnet.addEventListener('click', function(e: MouseEvent)){
 ```typescript
 1. 约束取值只能取规定内的值：
 type EventNames = 'click' | 'scroll' | 'mousemove';
+type OneToFive = 1 | 2 | 3 | 4 |;
+type Bools = true | false;
 function handleEvent(ele: Element, event: EventNames){
     //
 }
@@ -743,10 +745,10 @@ printPoint(new Point(1, 2))
 
 ### 13.  泛型：
 
-- 泛型是指在定义函数，接口，类的时候，不预先指定具体的类型，而是使用的时候再指定
+- 泛型是指在定义函数(参数/返回值)，接口，类(类的实例/类的方法)的时候，不预先指定具体的类型，而是使用的时候再指定
 
 ```typescript
-// 例子：实现一个函数，创建一个指定长度的数组，同时将每一项都填默认值
+// 例子1：实现一个函数，创建一个指定长度的数组，同时将每一项都填默认值
 function createArr<T>(length: number, value: T): Array<T> {
     let result: T[] = [];
     for(let i = 0; i < length; i++){
@@ -756,6 +758,17 @@ function createArr<T>(length: number, value: T): Array<T> {
 }
 // 调用时可指定返回值具体的类型
 createArr<string>(3, 'x'); // ['x', 'x', 'x']
+
+// 例子2：创建一个泛型类，无论什么类型被推入队列，推出的类型都与推入的一样
+class Queue<T> {
+    private data: T[] = [];
+    push = (item: T) => this.data.push(item);
+    pop = (): T | undefined => this.data.shift();
+}
+// 使用：
+const queue = new Queue<number>();
+queue.push(0);
+queue.push('1'); // error 只允许推入number类型
 ```
 
 - 多个类型参数：
