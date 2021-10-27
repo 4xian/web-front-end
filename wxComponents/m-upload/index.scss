@@ -1,0 +1,39 @@
+@mixin bg-img($url) {
+  background-image: url($url + '.png');
+  background-repeat: no-repeat;
+  -moz-background-size: 100% 100%;
+  background-size: 100% 100%;
+}
+.upload-container {
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  width: 100%;
+  .img-list {
+    position: relative;
+    display: flex;
+    border-radius: 20rpx;
+    &:nth-child(2n + 1) {
+      margin: 0 20rpx 20rpx 0;
+    }
+    .img-item {
+      border-radius: 20rpx;
+    }
+    .delete-circle {
+      position: absolute;
+      top: 8rpx;
+      right: 8rpx;
+      width: 26rpx;
+      height: 26rpx;
+      @include bg-img('http://192.168.200.239/sy-merchant-applet-images/shop-manage/shanchutupian@2x');
+      &:active {
+        opacity: 0.6;
+      }
+    }
+  }
+}
+.upload-view {
+  //   width: 197rpx;
+  //   height: 197rpx;
+  border-radius: 20rpx;
+}

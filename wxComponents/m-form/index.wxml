@@ -1,0 +1,4 @@
+<!--components/m-form/index.wxml-->
+<view class="form-class" >
+	<slot ></slot>
+</view>

@@ -1,0 +1,31 @@
+.upload-video-box {
+  display: flex;
+  flex-wrap: wrap;
+}
+.video {
+  &-box {
+    position: relative;
+    width: min-content;
+    &:nth-child(2n + 1) {
+      margin: 0 20rpx 20rpx 0;
+    }
+  }
+  &-delete {
+    position: absolute;
+    top: -16rpx;
+    right: 0;
+    width: 26rpx;
+    height: 26rpx;
+    background-image: url(http://192.168.200.239/sy-merchant-applet-images/shop-manage/shanchutupian@2x.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+  }
+  &-item {
+    border-radius: 20rpx;
+  }
+  &-title {
+    color: #333333;
+    font-weight: bold;
+    font-size: 30rpx;
+  }
+}

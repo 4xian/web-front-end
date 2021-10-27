@@ -1,0 +1,20 @@
+<view class="textarea custom-class">
+	<view class="'label-class default-label', {{required ? 'required' : ''}}">{{label}}</view>
+<textarea 
+	style="{{forceHeight ? 'min-height' : 'height'}}: {{height}}rpx {{forceHeight ? '!important' : ''}}"
+	class="'default-textarea', 'textarea-class', {{disabled ? 'isDisabled' : ''}}"
+	model:value="{{value}}"
+	placeholder="{{placeholder}}"
+	placeholder-style="{{placeholderStyle}}"
+	disabled="{{disabled}}"
+	maxlength="{{maxlength}}"
+	fixed="{{fixed}}"
+	focus="{{focus}}"
+	auto-height="{{autoHeight}}"
+	bindinput="bindinput"
+	bindconfirm="bindconfirm" 
+	bindblur="bindblur"
+	bindlinechange="bindlinechange"
+	confirm-type="{{confirmType}}"
+/>
+</view>

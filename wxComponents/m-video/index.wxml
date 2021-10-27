@@ -1,0 +1,15 @@
+<view class="upload-video">
+    <view class="upload-video-box">
+        <block wx:if="{{allList.length}}">
+            <view class="video-box" wx:for="{{allList}}" wx:key="{{item}}">
+                <video class="video-item" show-center-play-btn="{{true}}" style="width:{{videoWidth}}rpx;height:{{videoHeight}}rpx" src="{{item}}" object-fit="fill" />
+                <view class="video-delete" bind:tap="deleteVideo" data-item="{{item}}"></view>
+            </view>
+        </block>
+        <block wx:if="{{allList.length < max}}">
+            <view>
+                <image bindtap="chooseVideo" class="video-item" style="width:{{videoWidth}}rpx;height:{{videoHeight}}rpx" src="{{uploadImg}}" />
+            </view>
+        </block>
+    </view>
+</view>

@@ -131,11 +131,11 @@ caret-color: red;
 			width: 5px; // 滚动条宽度
 		}
 		&::-webkit-scrollbar-track {
-			background-color: red; // 滚动条整个背景色
+			background-color: transparent; // 滚动条整个背景色
 		}
 		&::-webkit-scrollbar-thumb {
 			border-radius: 2px;
-			background-color: green; // 滚动条当前区块颜色
+			background-color: rgba(144, 147, 153, 0.5); // 滚动条当前区块颜色
 		}
 }
 

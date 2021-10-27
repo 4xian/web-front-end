@@ -1,0 +1,17 @@
+<view class="'input' , 'custom-class', {{disabled ? 'isDisabled' : ''}}">
+	<view class="'label-class default-label', {{required ? 'required' : ''}}">{{label}}</view>
+	<input class="input-class default-input" 
+		model:value="{{value}}" 
+		type="{{type}}" 
+		placeholder="{{placeholder}}"
+		placeholder-style="{{placeholderStyle}}" 
+		disabled="{{disabled}}" 
+		password="{{password}}" 
+		bindinput="bindinput"
+		bindconfirm="bindconfirm" 
+		bindblur="bindblur" 
+		maxlength="{{maxlength}}" 
+		focus="{{focus}}"
+		confirm-type="{{confirmType}}" />
+		<slot name="right" />
+</view>

@@ -1,0 +1,7 @@
+<view class="upload-container">
+    <view class="img-list" wx:for="{{imgList}}" wx:key="*this">
+        <image src="{{item}}" class="img-item" style="width:{{imgWidth}}rpx;height:{{imgHeight}}rpx" bind:tap="handleView" data-item="{{item}}" />
+        <view class="delete-circle" bind:tap="handleDelete" data-item="{{item}}" />
+    </view>
+    <image wx:if="{{ imgList.length !== maxSize }}" src="{{imgUrl}}" class="upload-view" style="width:{{imgWidth}}rpx;height:{{imgHeight}}rpx" bind:tap="handleUpload" />
+</view>
