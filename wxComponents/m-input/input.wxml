@@ -1,17 +1,13 @@
 <view class="'input' , 'custom-class', {{disabled ? 'isDisabled' : ''}}">
 	<view class="'label-class default-label', {{required ? 'required' : ''}}">{{label}}</view>
-	<input class="input-class default-input" 
-		model:value="{{value}}" 
-		type="{{type}}" 
-		placeholder="{{placeholder}}"
-		placeholder-style="{{placeholderStyle}}" 
-		disabled="{{disabled}}" 
-		password="{{password}}" 
-		bindinput="bindinput"
-		bindconfirm="bindconfirm" 
-		bindblur="bindblur" 
-		maxlength="{{maxlength}}" 
-		focus="{{focus}}"
+	<input class="input-class default-input" model:value="{{value}}" type="{{type}}" placeholder="{{placeholder}}"
+		placeholder-style="{{placeholderStyle}}" disabled="{{disabled}}" password="{{password}}" bindinput="bindinput"
+		bindconfirm="bindconfirm" bindblur="bindblur" maxlength="{{maxlength}}" focus="{{focus}}"
 		confirm-type="{{confirmType}}" />
-		<slot name="right" />
+	<slot name="right" />
+</view>
+<view wx:if="{{error}}" class="errmsg error-class">{{error}}</view>
+<view wx:if="{{wordLimit && maxlength}}" class="input-word-limit">
+	<text style="color:{{value.length === maxlength ? '#F84E55' : '#999999'}}">{{value.length}}</text> /
+	<text>{{maxlength}}</text>
 </view>

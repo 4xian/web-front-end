@@ -1,13 +1,7 @@
 <!--components/map/index.wxml
 运动轨迹
 -->
-<view class="box">
+<view class="input-box">
 	<include wx:if="{{type === 'textarea'}}" src="./textarea.wxml" />
 	<include wx:else src="./input.wxml" />
-	<view wx:if="{{wordLimit && maxlength}}" class="word-limit">
-		{{value.length}} / {{maxlength}}
-	</view>
-	<view wx:if="{{error}}" class="errmsg error-class">
-		{{error}}
-	</view> 
 </view>
