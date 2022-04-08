@@ -60,7 +60,7 @@ class FindSql {
     where(reg){
         const temp = this.data.filter(v=>{
             let f = true;
-            for(i in reg){
+            for(let i in reg){
                 let cur = v[i];
                 if(!(cur && reg[i].test(cur))){
                     f = false;
