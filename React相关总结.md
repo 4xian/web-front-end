@@ -604,6 +604,7 @@ store.dispatch(testAction(text))
                 return <input ref={inputRef} ... />;
             }
             FancyInput = forwardRef(FancyInput);
+            <FancyInput ref={inputRef} /> 的父组件可以调用 inputRef.current.focus()
 ```
 
 #### 10. 受控组件和非控组件：

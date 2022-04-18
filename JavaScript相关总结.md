@@ -1050,7 +1050,7 @@ outerText：内部文本，content
 4. 闭包(不合理的使用闭包)
 5. 对事件监听没有取消监听
 
-##### 26.判断浏览器的标识符：
+##### 26. 判断浏览器的标识符：
 
 ```js
 if (window.ActiveXObject)
@@ -1147,7 +1147,7 @@ return "Safari";
     }
     ```
 
-##### 28.事件循环：
+##### 28. 事件循环：
 
 1. 任务进入执行栈，同步任务进入主线程，异步任务进入任务队列，
 2. 执行宏任务，遇到微任务就加到微任务队列
@@ -1189,13 +1189,13 @@ return "Safari";
 
 		
 执行栈：	---------任务队列{ 宏任务，微任务}
-  |
-  |
+  |  |
+  |--|
 事件队列
 
 ```
 
-##### 29.  深浅拷贝的实现：
+##### 29. 深浅拷贝的实现：
 
 1. 浅拷贝：(浅拷贝是拷贝一层，深层次的引用类型则共享内存地址)
 
@@ -1364,7 +1364,7 @@ function curry(fn, args) {
 }
 ```
 
-##### 32.  异步编程的方式：
+##### 32. 异步编程的方式：
 
 1. async 函数
 2. Promise函数
@@ -1388,37 +1388,6 @@ const myInterval = function(fn, time){
     return flag;
 }
 ```
-
-##### 34. var let const：
-
-1. let const：
-
-    ```html
-    1.声明的变量只在声明时的代码块内有效({}内)(块级作用域)
-    2.不存在变量提升
-    3.存在暂时性死区，如果在变量声明前使用，会报错
-    4.相同作用域内不允许重复声明，重复声明会报错
-    ```
-
-2. const：
-
-    ```html
-    1.声明只读的常量，声明后不可改变(引用类型是地址不可变，属性还可以改变)
-    2.声明时必须初始化值
-    3.暂时性死区
-    4.如果用var 或 let 声明过，再用const会报错
-    ```
-
-3.  var：
-
-    ```html
-    1.var声明的既是全局变量，也是顶层变量
-    2.存在变量提升
-    3.可以对一个变量重复声明，会覆盖
-    4.函数内使用var声明，变量时局部的
-    ```
-
-##### 35. Reflect对象创建目的：
 
 
 
@@ -1523,7 +1492,7 @@ MyPromise.prototype.then = function(onResolved, onRejected) {
 };
 ```
 
-##### 37.  常用的Content-Type：
+##### 37. 常用的Content-Type：
 
 ```html
 application/x-www-form-urlencoded
@@ -1702,16 +1671,9 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
 
 ```
 
-##### 43. 扩展运算符(...)：
 
-1. 可用于：
-    - 展开数组/对象
-    - 浅拷贝
-    - 合并数组
-    - 生成数组
-    - 定义了Iterator接口的类数组可转为数组
 
-##### 44.  JS中数组常用的方法：
+##### 44. JS中数组常用的方法：
 
 1. 增：
 
@@ -1764,7 +1726,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     - filter()：返回true的项会组成新数组返回
     - map()：返回函数执行后的结果构成的新数组
 
-##### 			ES6数组中新增的内容：
+##### ES6. 数组中新增的内容：
 
 1. **Array.from(likeArr, callback)**：将类数组和具有iterable的对象转为数组
 
@@ -1858,7 +1820,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
         
         ```
 
-#####  45. ES6对象中新增的内容：
+##### 45. ES6对象中新增的内容：
 
 1. 属性的简写：
 
