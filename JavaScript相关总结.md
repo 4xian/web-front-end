@@ -1,6 +1,6 @@
 # JavaScript相关总结
 
-##### 1.  JS的数据类型：
+#### 1.  JS的数据类型：
 
 1. 基本数据类型：
     - Number / String / Boolean / 
@@ -13,71 +13,81 @@
 
 3. 基本数据类型值存储于栈中；引用数据类型指针存储于栈中，值存储于堆中
 
-##### 2. null 和undefined的区别：
+#### 2. null 和undefined的区别：
 
 1. null ：空对象指针，未指向任何对象，一般作初始化返回对象的遍历使用
 2. undefined：未定义，声明了没有给值，为了安全的获取undefined值可使用void 0 代替undefined   (xxx === void 0)
 
-##### 3. JS中原型 | 原型链：
+#### 3. JS中原型 | 原型链：
 
-1. 原型：构造函数内部都有一个prototype属性，该对象包含可以由该构造函数所有实例共享的属性和方法，当构造函数新建一个对象时，对象中包含一个\__proto\__属性，指向构造函数的prototype，可以使用Object.getPrototypeOf()获取对象的原型
+1. 原型：每个构造函数内部都有一个prototype属性(一个对象)，该对象包含可以由该构造函数所有实例共享的属性和方法，当构造函数新建一个对象时，对象中包含一个___proto___属性(指针)，指向构造函数的prototype，ES5中这个指针成为对象的原型，可以使用Object.getPrototypeOf()获取对象的原型
 
 2. 原型链：当访问一个对象的属性时，如果对象内部无该属性，则会向创建该实例的原型对象上寻找，原型对象也有自己的原型，一直找下去，最后到Object.prototype形成原型链
 
     ```js
     1. 每个函数都有一个特殊的属性叫作原型(prototype)
-    2. prototype是一个对象(原型对象)，有属constructor，指向该函数(func.prototype.coustructor === func)
+    2. prototype是一个对象(原型对象)，有属constructor，指向该函数(func.prototype.constructor === func)
     3. 原型对象也可能有原型，并从中继承方法和属性，一层一层以此类推，这种关系称为原型链
     func.prototype = {
     	constructor:func(),
-    	_proto_:{
+    	__proto__:{
     		// 各种方法
-    		_proto_:{
+    		__proto__:{
     			// 各种方法
-    			_proto_:{
+    			__proto__:{
     				...
     			}
     		}
     	}
     }
     
-    4. function Func(){
-       		// 构造函数Func() 
-       }
-    	let instance = new Func();
-    instance._proto_ = Func.prototype;
-    Func.prototype._proto_ 指向内置对象(Object.prototype)
+    4. 
+    // 构造函数Func() 
+    function Func(){
+       		
+    }
+    let instance = new Func();
+    instance.___proto___ === Func.prototype;
+    Func.prototype.___proto___ 指向内置对象(Object.prototype)
     
-    5. _proto_ 指向创建它的构造函数的原型prototype
-    instance._proto_ = Func.prototype;
+    5. ___proto___ 指向创建它的构造函数的原型prototype
+    instance.___proto___ === Func.prototype;
+
     构造函数式一个函数对象，通过Function构造器产生的
-    Func._proto_ = Function.prototype;
+    Func.__proto__ === Function.prototype;
+
     原型本身是一个普通对象，通过Object构造器产生
-    Func.prototype._proto_ = Object.prototype;
+    Func.prototype.__proto__ === Object.prototype;
+
     所有的构造器都是函数对象，都由Function构造产生
-    Object._proto_ = Function.prototype;
-    Object的原型对象也有_proto_，指向null(原型链的顶端)
+    Object.__proto__ === Function.prototype;
+
+    Object的原型对象也有__proto__，指向null(原型链的顶端)
+    Object.prototype.___proto___ === null
+
     ```
 
 3. 获取原型的方法：
-    - instance.\__proto\__
+    - instance.__proto__
     - instance.constructor.prototype
     - Object.getPrototypeOf(instance)
 
-##### 4. JS中整数的安全范围：
+4. 使用obj.hasOwnProperty()判断是否属于原型链的属性：obj.hasOwnProperty(key)
+
+#### 4. JS中整数的安全范围：
 
 1. 安全整数：在该范围内转换为二进制不会丢失精度，最大安全整数为2^53 - 1，ES6中定义为Number.MAX.SAFE_INTEGER，最小安全整数为-2^53 - 1，Number.MIN.SAFE_INTEGER
 
-##### 5. isNaN和Number.isNaN
+#### 5. isNaN和Number.isNaN
 
 1. isNaN先将参数转为数值，不能转为数值的都返回true
 2. Number.isNaN先判断是否为数字，是数字再判断是否为NaN
 
-###### 6. Array构造函数只有一个参数值时
+##### 6. Array构造函数只有一个参数值时
 
 1. 该参数会作为数组的预设长度(length)，创建的是空数组
 
-##### 7. JS中的类型转换规则：(显示转换，隐式转换)
+#### 7. JS中的类型转换规则：(显示转换，隐式转换)
 
 1. 其他值转为数字：Number() / parseInt() / parseFloat()
 
@@ -156,11 +166,11 @@
     undefined + 1 // NaN
     ```
 
-##### 8. 生成[min , max]范围内的随机整数：
+#### 8. 生成[min , max]范围内的随机整数：
 
 1. Math.floor(Math.random() * (max - min + 1)) + min
 
-##### 9. JS创建对象的方式：
+#### 9. JS创建对象的方式：
 
 1. 字面量方式
 
@@ -216,7 +226,7 @@
 6. 动态原型模式：将原型方法赋值的创建过程移动到了构造函数的内部，通过对属性是否存在的判断，实现第一次调用函数的时对原型对象赋值一次的效果
 7. 寄生构造函数模式：和工厂函数原理相同，基于已有的类型，对实例化对象进行扩展
 
-##### 10. JS实现继承的方式：
+#### 10. JS实现继承的方式：
 
 1.  **原型链**的方式：
 
@@ -329,30 +339,34 @@
     asuna.getName() // 成功访问到父类的方法
     ```
 
-##### 11. JS的作用域链：
+#### 11. JS的作用域，作用域链：
 
 1. **作用域**：(变量和函数生效的区域)
-    - 全局作用域：
+    - 全局作用域：(污染全局命名空间，引起命名冲突)
         - 不在函数中或是大括号中声明的变量，都是在全局作用域下
+        - 未定义直接赋值的变量自动声明为全局作用域
+        - window对象的属性拥有全局作用域
+
     - 函数作用域(局部)：
         - 变量是在函数内部声明
-        - 变量只能在函数内部访问，不能在函数以外去访问
-    - 块级作用域：
-        - 大括号中使用`let`和`const`声明的变量存在于块级作用域中
+        - 变量只能在函数内部访问，不能在函数以外去访问(内层作用域可访问外层，反之不行)
+
+    - 块级作用域(ES6)：
+        - 大括号中{ }使用`let`和`const`声明的变量存在于块级作用域中
         - 大括号之外不能访问这些变量
+
 2. 词法作用域(静态作用域)：
     - 变量被创建时就确定好了，而非执行阶段确定
     - JS遵循的是词法作用域
+
 3. 作用域链：
-    - 当使用变量时，首先在当前作用下寻找，若没有找到则向上层作用域寻找，以此类推最终到全局作用域，若还未找到则报错
+    - 当使用变量时，首先在当前作用域下查找，若没有找到则依次向上层作用域寻找，直到访问到全局作用域，这一层层的关系就是作用域链
+    - 通过作用域链，可以访问到外层环境的变量和函数
 
-- 作用域链是一个指向变量对象的指针列表，变量对象包含执行环境所有变量和函数
+    - 作用域链本质是一个指向变量对象的指针列表，变量对象包含执行环境所有变量和函数
+    - 当前环境的变量对象是作用域链中第一个对象，全局对象是最后一个对象
 
-- 通过作用域链，可以访问到外层环境的变量和函数
-
-- 当前环境的变量对象时作用域链中第一个对象，全局对象是最后一个对象
-
-##### 12. this的理解：(执行时绑定调用它的对象)
+#### 12. this的理解：(执行时绑定调用它的对象)
 
 1. 执行上下文的一个属性，**`this`永远指向的是最后调用它的对象**
 
@@ -390,7 +404,7 @@
 
 6. **箭头函数**：(编译时绑定this的指向)，定义时的位置就确定了this，而不是执行时的位置
 
-##### 13. JS中的事件模型：
+#### 13. JS中的事件模型：
 
 1. **事件**：在html文档或浏览器中发生的交互操作，常见的加载事件，鼠标事件，自定义事件等
 
@@ -513,14 +527,41 @@ const EventUtils = {
 };
 ```
 
-##### 14. 闭包：(内层函数中访问到外层函数的作用域)
+#### 14. 闭包：(内层函数中访问到外层函数的作用域)
 
-1. 有权访问另一个函数作用域中变量的函数，创建方式为在一个函数内创建另一个函数
+1. 闭包是指有权访问另一个函数作用域中变量的函数，创建方式为在一个函数内创建另一个函数，创建的函数可以访问到当前函数的局部变量
 
 2. 用途：
 
     - 外部调用闭包函数，外部可以访问函数内部变量，**创建私有变量**
     - 运行结束的函数上下文的变量对象继续留在内存中，避免回收(**延长变量的生命周期**)
+
+    ```js
+    // 函数 A 内部有一个函数 B，函数 B 可以访问到函数 A 中的变量，那么函数 B 就是闭包
+    function A() {
+        let a = 1
+        window.B = function () {
+            console.log(a)
+        } 
+    }
+    A()
+    B() // 1
+
+    例：闭包解决循环中var定义问题
+        for (var i = 1; i <= 5; i++) {
+            setTimeout(function timer() {
+                console.log(i)
+            }, i * 1000)
+        }
+        改后：
+        for(var i = 1; i <= 5; i++){
+            ;(function(j){
+                    setTimeout(function timer(){
+                        console.log(j)
+                    },i * 1000)
+            })(i)
+        }
+    ```
 
 3. 柯里化函数：(避免频繁调用具有相同参数函数的同时，又可轻松复用)
 
@@ -586,13 +627,13 @@ const EventUtils = {
     console.log(Counter1.value()); /* logs 1 */
     ```
 
-##### 15. 判断对象是否属于某个类：
+#### 15. 判断对象是否属于某个类：
 
 1. instanceof判断构造函数的prototype是否出现在该对象的原型链中
 2. 通过对象的constructor属性是否指向该对象的构造函数(不安全，constructor可改写)
 3. 若判断某个内置的引用类型，可使用Object.prototype.toString()
 
-##### 16. AJAX：异步通信，局部刷新
+#### 16. AJAX：异步通信，局部刷新
 
 1. 创建XMLHttpRequest对象
 
@@ -668,7 +709,7 @@ const EventUtils = {
     
     ```
 
-##### 17. 浏览器的缓存机制：
+#### 17. 浏览器的缓存机制：
 
 1. 强缓存策略：
     - 设置http头信息的Expires 和Cache-Control属性
@@ -680,7 +721,7 @@ const EventUtils = {
     - 服务器在响应头中添加Last-Modified属性记录最后一次修改时间，浏览器请求时，在请求头中加If-Modified-Since,值为上一次返回的Last-Modified，然后服务端会进行比较(只能精确到秒级，会出现命中不准确)
     - 服务器在响应头中添加Etag属性，资源变化该值也会变化，浏览器请求时，在请求头中加If-None-Match,值为上一次返回的Etag，然后服务端会进行比较是否需要返回资源
 
-##### 18. 解决跨域问题：
+#### 18. 解决跨域问题：
 
 1. 实现主域名下的不同子域名跨域，可通过document.domain设置为主域名，此时cookie即可共享
 2. 通过postMessage发送信息，在窗口中通过对message监听来接收消息
@@ -692,7 +733,7 @@ const EventUtils = {
 5. 使用websocket协议，该协议无同源限制
 6. nginx代理：有跨域请求时发送给后端，让后端代为请求，然后把结果返回
 
-##### 19.  JS中的模块规范：
+#### 19.  JS中的模块规范：
 
 1. CommonJS：通过require()来引入模块，通过module.exports定义输出接口，服务器端的解决方案，以同步方式引入，运行时加载模块
 
@@ -793,7 +834,7 @@ const EventUtils = {
         });
         ```
 
-##### 20. 常见 DOM(文档对象模型)操作：
+#### 20. 常见 DOM(文档对象模型)操作：
 
 ```js
 Node.nodeName   //返回节点名称，只读
@@ -988,7 +1029,7 @@ Element.remove()  //用于将当前元素节点从DOM中移除
 Element.focus()   //用于将当前页面的焦点，转移到指定元素上
 ```
 
-##### 21. innerHTML 与 outerHTML：
+#### 21. innerHTML 与 outerHTML：
 
 ```
 对于这样一个 HTML 元素：
@@ -1000,7 +1041,7 @@ innerText：内部文本，content
 outerText：内部文本，content
 ```
 
-##### 22. 类数组转为数组的方法：拥有length属性和若干索引属性的对象被称为类数组对象
+#### 22. 类数组转为数组的方法：拥有length属性和若干索引属性的对象被称为类数组对象
 
 1. call方法调用数组的slice / splice / 方法：
     - Array.prototype.slice.call(likeArr)
@@ -1012,7 +1053,7 @@ outerText：内部文本，content
 3. Array.form：
     - Array.form(likeArr)
 
-##### 23. 常见数组的原生方法：
+#### 23. 常见数组的原生方法：
 
 1. 数组和字符串的转换：
     - toString() / toLocalString() / join() / 
@@ -1028,7 +1069,7 @@ outerText：内部文本，content
 10. 数组迭代：every() / some() / filter() / map() / forEach() / 
 11. 数组归并：reduce() / reduceRight() / 
 
-##### 24. V8引擎的垃圾回收机制：
+#### 24. V8引擎的垃圾回收机制：
 
 基于分代回收机制  将内存分为新生代和老生代
 
@@ -1042,7 +1083,7 @@ outerText：内部文本，content
     - To空间占比是否超过限制，若To空间超过25%，则对象直接晋升到老生代中，老生代采用了标记清除法和标记压缩法，标记清除法先对存活的对象进行标记，标记结束后清除没有标记的对象，清除后会引起内存碎片，因而引入标记压缩法；
     - 老生代垃圾回收时间过长，引入增量标记，将一次停顿分为多步，应用逻辑和垃圾回收交替执行
 
-##### 25. 哪些操作会造成内存泄漏：某些变量一直留在内存中无法回收
+#### 25. 哪些操作会造成内存泄漏：某些变量一直留在内存中无法回收
 
 1. 意外的全局变量(window.xxx)
 2. 被遗忘的计时器或回调函数(setInterval 定时器, 引用外部的变量)
@@ -1050,7 +1091,7 @@ outerText：内部文本，content
 4. 闭包(不合理的使用闭包)
 5. 对事件监听没有取消监听
 
-##### 26. 判断浏览器的标识符：
+#### 26. 判断浏览器的标识符：
 
 ```js
 if (window.ActiveXObject)
@@ -1065,7 +1106,7 @@ else if (window.openDatabase)
 return "Safari";
 ```
 
-##### 27. 节流与防抖：
+#### 27. 节流与防抖：
 
 1. 节流(**控制频率**)：规定时间内，多次触发事件**只执行一次回调函数**(scroll，mousemove等事件)
 
@@ -1147,7 +1188,7 @@ return "Safari";
     }
     ```
 
-##### 28. 事件循环：
+#### 28. 事件循环：
 
 1. 任务进入执行栈，同步任务进入主线程，异步任务进入任务队列，
 2. 执行宏任务，遇到微任务就加到微任务队列
@@ -1195,7 +1236,7 @@ return "Safari";
 
 ```
 
-##### 29. 深浅拷贝的实现：
+#### 29. 深浅拷贝的实现：
 
 1. 浅拷贝：(浅拷贝是拷贝一层，深层次的引用类型则共享内存地址)
 
@@ -1269,7 +1310,7 @@ const deepClone = function(obj){
 }
 ```
 
-##### 30. 手写apply call bind方法：(改变函数执行时的上下文，即this指向)
+#### 30. 手写apply call bind方法：(改变函数执行时的上下文，即this指向)
 
 1. call(obj,  x, y, z, ...)：改变this指向后原函数立即执行，**临时改变this指向一次**
 
@@ -1328,7 +1369,7 @@ const deepClone = function(obj){
 
 4. 若没有给指向的对象，则默认指向全局window
 
-##### 31. 函数柯里化的实现：
+#### 31. 函数柯里化的实现：
 
 1. ```js
     function curry(fn, ...args){
@@ -1364,7 +1405,7 @@ function curry(fn, args) {
 }
 ```
 
-##### 32. 异步编程的方式：
+#### 32. 异步编程的方式：
 
 1. async 函数
 2. Promise函数
@@ -1373,7 +1414,7 @@ function curry(fn, args) {
 5. 事件监听
 6. Generator函数
 
-##### 33. 用setTimeout模拟setInterval：
+#### 33. 用setTimeout模拟setInterval：
 
 ```js
 const myInterval = function(fn, time){
@@ -1391,7 +1432,7 @@ const myInterval = function(fn, time){
 
 
 
-##### 36. 手写一个Promise原理：
+#### 36. 手写一个Promise原理：
 
 ```js
 const PENDING = "pending";
@@ -1491,8 +1532,7 @@ MyPromise.prototype.then = function(onResolved, onRejected) {
   }
 };
 ```
-
-##### 37. 常用的Content-Type：
+#### 37. 常用的Content-Type：
 
 ```html
 application/x-www-form-urlencoded
@@ -1509,7 +1549,7 @@ text/xml
 该种方式主要用来提交 XML 格式的数据。
 ```
 
-##### 38. 解释一下事件代理(事件委托)：
+#### 38. 解释一下事件代理(事件委托)：
 
 1. **事件委托**：把一个或一组元素的事件委托的它的父层或更外层元素上，真正绑定事件的是外层元素，而不是目标元素(利用事件冒泡机制)，然后对目标元素进行匹配
 2. 适合事件委托的情况：click`，`mousedown`，`mouseup`，`keydown`，`keyup`，`keypress
@@ -1521,7 +1561,7 @@ text/xml
     - mousemove， mouseout对性能消耗高，不适用事件委托
     - 都用事件代理，可能会出现事件误判，不该触发的事件绑定了事件
 
-##### 39. 手写一个JSONP：
+#### 39. 手写一个JSONP：
 
 ```js
 function jsonp(url, params, callback) {
@@ -1561,7 +1601,7 @@ function jsonp(url, params, callback) {
 }
 ```
 
-##### 40. 手写一个观察者模式：
+#### 40. 手写一个观察者模式：
 
 ```js
 var events = (function() {
@@ -1611,7 +1651,7 @@ var events = (function() {
 })();
 ```
 
-##### 41. 实现事件触发器(EventEmitter)：
+#### 41. 实现事件触发器(EventEmitter)：
 
 ```js
 class EventEmitter {
@@ -1656,7 +1696,7 @@ class EventEmitter {
 }
 ```
 
-##### 42. 计算页面从加载到完成的时间：
+#### 42. 计算页面从加载到完成的时间：
 
 ```html
 ECMAScript 5引入“高精度时间戳”这个 API，部署在 performance 对象上。它的精度可以达到1毫秒
@@ -1673,13 +1713,13 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
 
 
 
-##### 44. JS中数组常用的方法：
+#### 44. JS中数组常用的方法：
 
 1. 增：
 
     - push()：尾部加入任意数量的值
     - unshfit()：头部加入任意数量的值
-    - splice(start, num, add)：三参数，(开始位置，删除的数量，插入的元素)
+    - splice(start, num, add)：三参数，(开始位置，删除的数量，插入的元素)(相当于剪切，影响原数组)
     - concat()：相当于拼接，返回新数组
 
 2. 删：
@@ -1687,7 +1727,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     - pop()：删除最后一项，返回删除的项
     - shift()：删除数组的第一项，返回删除的项
     - splice()：前两参数分别为删除起始位，删除的个数
-    - slice(start, end)：返回原数组的子集(相当于剪切)，(起始位，结束位)
+    - slice(start, end)：返回原数组的子集，(起始位，结束位)(相当于复制，不影响原数组)
 
 3. 查：
 
@@ -1725,370 +1765,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     - forEach()：无返回值
     - filter()：返回true的项会组成新数组返回
     - map()：返回函数执行后的结果构成的新数组
-
-##### ES6. 数组中新增的内容：
-
-1. **Array.from(likeArr, callback)**：将类数组和具有iterable的对象转为数组
-
-    - ```js
-        Array.from([1, 2, 3], (x) => x * x)
-        // [1, 4, 9]
-        ```
-
-2. **Array.of()**：用于将一组值转为数组
-
-    - ```js
-        Array.of(3, 11, 8) // [3,11,8]
-        ```
-
-3. **copyWithin(target, start, end)**：用于选定成员并复制到其他位置
-
-    - ```js
-        [1, 2, 3, 4, 5].copyWithin(0, 3) // 将从 3 号位直到数组结束的成员（4 和 5），复制到从 0 号位开始的位置，结果覆盖了原来的 1 和 2
-        // [4, 5, 3, 4, 5] 
-        ```
-
-4. **find(callback(value, index, arr), this) / findIndex(callback(value, index, arr), this)**：找出第一个符合条件的数组成员 / 数组成员的位置(无则返回-1)
-
-    - 这两个方法都可以接受第二个参数，用来绑定回调函数的`this`对象
-
-    - ```js
-        [1, 5, 10, 15].find(function(value, index, arr) {
-          return value > 9;
-        }) // 10
-        
-        [1, 5, 10, 15].findIndex(function(value, index, arr) {
-          return value > 9;
-        }) // 2
-        ```
-
-5. **fill(data, start, end)**：用给定值填充数组，有起始位置和结束位置
-
-    - 如果填充的类型为对象，则是浅拷贝
-
-    - ```javascript
-        ['a', 'b', 'c'].fill(7)
-        // [7, 7, 7]
-        ```
-
-6. **keys() / values() / entries()**：对键名，键值，键值对的遍历
-
-    - ```js
-        for (let elem of ['a', 'b'].values()) {
-          console.log(elem);
-        }
-        // 'a'
-        // 'b'
-        
-        for (let [index, elem] of ['a', 'b'].entries()) {
-          console.log(index, elem);
-        }
-        // 0 "a"
-        ```
-
-7. **includes()**：判断数组是否包含给定的值
-
-    - ```js
-        [1, 2, 3].includes(2)     // true
-        [1, 2, 3].includes(4)     // false
-        ```
-
-8. **flat(num)**  ：数组扁平化处理，返回新数组，num为拉平的层数，不填默认一层
-
-    **flatMap(map方法，this)**：可操作每个成员，相当于执行map方法，第二个参数，用来绑定遍历函数里面的`this`
-
-    - ```js
-        [1, 2, [3, 4]].flat()
-        // [1, 2, 3, 4]
-        
-        // 相当于 [[2, 4], [3, 6], [4, 8]].flat()
-        [2, 3, 4].flatMap((x) => [x, x * 2])
-        // [2, 4, 3, 6, 4, 8]
-        
-        利用尾递归自己实现数组扁平化：
-        // 具体实现
-        function flat(arr = [], result = []) {
-            arr.forEach(v => {
-                if(Array.isArray(v)) {
-                    result = result.concat(flat(v, []))
-                }else {
-                    result.push(v)
-                }
-            })
-            return result
-        }
-        
-        ```
-
-##### 45. ES6对象中新增的内容：
-
-1. 属性的简写：
-
-    - 键名与值名相等可简写
-    - 方法可省略function声明词(省略后的方法不可作构造函数)
-
-2. 属性名表达式：
-
-    - 字面量定义对象时，表达式放在括号内 
-
-        ```js
-        const a = {
-          'first word': 'hello',
-          [lastWord]: 'world'  // 表达式作键名
-        };
-        
-        ```
-
-    - 表达式还可定义方法名
-
-    - 属性名表达式如果是一个对象，默认情况下会自动将对象转为字符串`[object Object]`
-
-    - ```js
-        let obj = {
-          ['h' + 'ello']() {  // 定义方法名
-            return 'hi';
-          }
-        };
-        obj.hello() // hi
-        
-        const keyA = {a: 1};
-        const keyB = {b: 2};
-        const myObject = {
-          [keyA]: 'valueA',
-          [keyB]: 'valueB'
-        };
-        myObject // Object {[object Object]: "valueB"}
-        ```
-
-3. super关键词：指向当前对象的原型对象
-
-    ```javascript
-    const proto = {
-      foo: 'hello'
-    };
-    const obj = {
-      foo: 'world',
-      find() {
-        return super.foo;
-      }
-    };
-    Object.setPrototypeOf(obj, proto); // 为obj设置原型对象
-    obj.find() // "hello"
-    ```
-
-4. 属性的遍历：
-
-    - for...in ：遍历**自身**和**继承**的可枚举属性(不含Symbol属性)
-    - Object.keys(obj)：遍历自身的可枚举属性(不含继承)的键名，(不含Symbol属性)，返回数组
-    - Object.getOwnPropertyNames(obj)：遍历自身的所有属性，包括不可枚举属性的键名，(不含Symbol属性)，返回数组
-    - Object.getOwnPropertySymbol(obj)：遍历自身所有Symbol属性的键名，返回数组
-    - Reflect.ownKeys(obj)：遍历对象自身(不含继承)的所有键名，不管是Symbol或字符串，或是否可枚举
-
-    - 
-
-    - 上述遍历，都遵守同样的属性遍历的次序规则：
-
-        - 首先遍历所有数值键，按照数值升序排列
-        - 其次遍历所有字符串键，按照加入时间升序排列
-        - 最后遍历所有 Symbol 键，按照加入时间升序排
-
-    - ```js
-        Reflect.ownKeys({ [Symbol()]:0, b:0, 10:0, 2:0, a:0 })
-        // ['2', '10', 'b', 'a', Symbol()]
-        ```
-
-5. 对象新增的方法：
-
-    - **Object.is()**：严格判断两值是否相等，与===基本一致，不同之处：+0不等于-0，NaN等于自身
-
-        ```js
-        +0 === -0 //true
-        NaN === NaN // false
-        
-        Object.is(+0, -0) // false
-        Object.is(NaN, NaN) // true
-        ```
-
-    - **Object.assign(target, source1, source2, ...)**：对象的合并，将源对象source所有可枚举属性复制到目标对象(target为目标对象，source可有多个)（浅拷贝）
-
-    - **Object.getOwnPropertyDescriptors(obj)**：获取指定对象所有自身属性(非继承属性)的描述对象
-
-        ```js
-        Object.getOwnPropertyDescriptors(obj)
-        // { foo:
-        //    { value: 123,
-        //      writable: true,
-        //      enumerable: true,
-        //      configurable: true },
-        //   bar:
-        //    { get: [Function: get bar],
-        //      set: undefined,
-        //      enumerable: true,
-        //      configurable: true } 
-        // }
-        ```
-
-        
-
-    - **Object.setPrototypeOf(obj, prototype)**：设置一个对象的原型
-
-    - **Object.getPrototypeOf(obj)**：获取一个对象的原型
-
-    - **Object.keys(obj) / Object.values(obj) / Object.entries(obj)**：对键名，键值，键值对的遍历（不含继承，所有可枚举属性）
-
-    - **Object.fromEntries()**：将一个键值对数组转为对象
-
-        ```js
-        Object.fromEntries([
-          ['foo', 'bar'],
-          ['baz', 42]
-        ])
-        // { foo: "bar", baz: 42 }
-        ```
-
-##### 46. ES6函数中新增哪些内容：
-
-1. 为参数设置默认值：
-
-    - 参数默认值可以与解构赋值的默认值结合起来使用
-    - 函数的形参是默认声明的，不能使用`let`或`const`再次声明
-    - 参数默认值应该是函数的尾参数，如果不是非尾部的参数设置默认值，实际上这个参数是没发省略的
-
-    ```js
-    function log(x, y = 'World') {
-      console.log(x, y);
-    }
-    
-    function foo({x, y = 5} = {}){//设置默认值避免无参
-      console.log(x, y);
-    }
-    ```
-
-2. 属性：
-
-    - length属性：返回没有指定默认值的参数个数，rest参数不计入length，设置默认参数不是尾参数，length也不计入后面的参数
-
-        ```js
-        (function (a) {}).length // 1
-        (function (a = 5) {}).length // 0
-        (function(...args) {}).length // 0
-        (function (a = 0, b, c) {}).length // 0
-        (function (a, b = 1, c) {}).length // 1
-        ```
-
-        
-
-    - name属性：返回函数的函数名
-
-        
-
-3. 作用域：
-    - 参数设置默认值，函数在声明初始化时，会形成单独的作用域，初始化结束，这个作用域消失
-
-4. 箭头函数：
-    - 函数体内的this对象，是**定义时**所在的对象，而不是使用时所在的对象
-    - 不可当构造函数，不可使new命令，无原型无constructor
-    - 不可使用arguments，可用...rest参数代替
-    - 不可使用yield命令，因此不能用作Generator函数
-
-##### 47. ES6中的Set 和 Map：
-
-1. Set：**集合**的数据结构，无序的，相关联的，且不重复的元素组成的集合[键，键]
-
-    - 类似于数组，成员值都唯一
-
-        ```js
-        const s = new Set()
-        Set的增删改查：
-        s.add(xx); // 已存在的值不会添加
-        s.delelte(xx); //返回布尔值，表示是否删除成功
-        s.has(xx); // 判断某值是否为Set的成员
-        s.clear(); // 清除所有成员
-        ```
-
-    - 遍历方法：
-
-        ```js
-        keys(); // 返回键名的遍历器
-        values(); // 返回键值的遍历器
-        entries(); //返回所有键值对的遍历器
-        
-        for (let item of set.entries()) {
-          console.log(item);
-        }
-        // ["red", "red"]
-        // ["green", "green"]
-        // ["blue", "blue"]
-        
-        forEach(); // 使用回调函数遍历每个成员,第二个参数绑定this
-        let set = new Set([1, 4, 9]);
-        set.forEach((value, key) => console.log(key + ' : ' + value))
-        // 1 : 1
-        // 4 : 4
-        // 9 : 9
-        ```
-
-    - 快速实现数组或字符串去重
-
-    - 实现并集，交集，差集
-
-2. Map：**字典**的数据结构，元素的集合 [键，值]，键和值可以是任意类型
-
-    - 键值对的有序列表
-
-        ```js
-        const m = new Map();
-        Map的增删改查：
-        m.size; // 返回Map的成员个数
-        m.set(key, value); // 新增键名和键值
-        m.get(key);//读取key对应的值,无返回undefined
-        m.has(key); // 查询某个键是否在Map中，返回布尔值
-        m.delete(key); // 删除某个键，返回布尔值
-        m.clear(); // 清除所有成员
-        ```
-
-    - 遍历方法：
-
-        ```js
-        keys(); // 返回键名的遍历器
-        values(); // 返回键值的遍历器
-        entries(); //返回所有键值对的遍历器
-        forEach(); // 遍历Map的所有成员
-        
-        for (let [key, value] of map.entries()
-        {
-          console.log(key, value);
-        }
-        // "F" "no"
-        // "T" "yes"
-        
-        // 等同于使用map.entries()
-        for (let [key, value] of map) {
-          console.log(key, value);
-        }
-        // "F" "no"
-        // "T" "yes"
-        
-        map.forEach(function(value, key, map) {
-          console.log("Key: %s, Value: %s", key, value);
-        });
-        ```
-
-3. Set和Map存储不重复的值
-
-4. WeakSet：接受一个具有 `Iterable`接口的对象作为参数
-
-    - 没有遍历操作的`API`
-    - 没有`size`属性
-    - 成员只能是引用类型，而不能是其他类型的值
-
-5. WeakMap：也是用于生成键值对的集合
-    - 没有遍历操作的`API`
-    - 没有`clear`清空方法
-    - 只接受对象作为键名（不包括`null`），不接受其他类型的值作为键名
-    - 弱引用的只是键名，而不是键值。键值依然是正常引用
-
-##### 48. ES6中的Promise：异步编程的一种解决方案
+#### 48. ES6中的Promise：异步编程的一种解决方案
 
 1. promise只有三种状态：状态不受外界影响，只有异步操作的结果可以决定状态，状态一旦变化便不再改变且只有pending-->fuifilled | pending-->rejected
     - pending：进行中
@@ -2194,7 +1871,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
 
         
 
-##### 49. ES6的Generator：
+#### 49. ES6的Generator：
 
 1. 会返回一个遍历器对象，可以依次遍历 `Generator` 函数内部的每一个状态
 
@@ -2252,7 +1929,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     - generator函数
     - async/await
 
-##### 50. ES6中Decorator(装饰器)
+#### 50. ES6中Decorator(装饰器)
 
 1.  一个普通的函数，用于扩展类属性和类方法
 
@@ -2302,7 +1979,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
 
     - 装饰器不能用于修饰函数，因为函数存在变量声明情况
 
-##### 51. ES6中的Proxy：定义基本操作的自定义行为(元编程)
+#### 51. ES6中的Proxy：定义基本操作的自定义行为(元编程)
 
 1.  Proxy构造函数：
 
@@ -2448,7 +2125,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
         //观察者函数都放进Set集合，当修改obj的值，在会set函数中拦截，自动执行Set所有的观察者
         ```
 
-##### 52.  JS中字符串的常用方法：字符串一旦创建，就不可变(都是新建副本，在副本上操作再返回新的)
+#### 52.  JS中字符串的常用方法：字符串一旦创建，就不可变(都是新建副本，在副本上操作再返回新的)
 
 1. 增：
     - concat()：用于拼接新字符串
@@ -2472,7 +2149,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     - search()：接收一个参数，可以是一个正则表达式字符串，也可以是一个`RegExp`对象，找到则返回匹配索引，否则返回 -1，(string.search(reg))
     - replace()：接收两个参数，第一个参数为匹配的内容，第二个参数为替换的元素（可用函数）(string,replace('a', 'b'))
 
-##### 53.  == 和 === ：
+#### 53.  == 和 === ：
 
 1. == ：(先进行类型转换，再判断值是否相等)
     - 都为简单类型：字符串 / 布尔值 ==> 先转数值，再比较
@@ -2485,7 +2162,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     - null === undefined  // false
 3. 除了在比较对象属性为`null`或者`undefined`的情况下，我们可以使用相等操作符（==），其他情况建议一律使用全等操作符（===）
 
-##### 54. JS中执行上下文和执行栈：
+#### 54. JS中执行上下文和执行栈：
 
 1. 执行上下文：(JS代码执行环境)
 
@@ -2579,7 +2256,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     - 所有的函数执行上下文执行完毕，然后执行全局上下文
     - 全局上下文出栈，结束
 
-##### 55.  typeof 与 instanceof：
+#### 55.  typeof 与 instanceof：
 
 1. typeof：返回一个基本类型字符串，表示未经计算的操作数的类型
 
@@ -2645,7 +2322,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     }
     ```
 
-##### 56. 常见的BOM(浏览器对象模型)对象：
+#### 56. 常见的BOM(浏览器对象模型)对象：
 
 1. BOM的核心对象是window，表示浏览器的一个实例
 2. 窗口控制方法：
@@ -2672,34 +2349,42 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     - history.back()：向后跳转一个页面
     - history.length：获取历史记录数
 
-##### 57. 对尾递归的理解：
+#### 57. 尾递归 尾调用：
 
 ```js
-// 其他格式化例子
-function format(obj){
-    if(!obj instanceof Object)return;
-    const temp= {};
-    Object.keys(obj).forEach(it=>{
-           let props =  it.toLowerCase();
-            temp[props] = obj[it] instanceof Object ? format(obj[it]) : obj[it];
+1. 尾调用：函数的最后一步调用另一个函数
+    - 代码执行基于执行栈，当一个函数里调用另一个函数时，会保留当前的执行上下文，再新建一个执行上下文加入执行栈中
+    - 使用尾调用，由于是函数的最后一步，所以可不再保留当前的执行上下文，节省了内存，这就是尾调用优化(ES6中只能在严格模式中开启)
 
-    });
-    return temp;
-}
+2. 尾递归：函数在最后一步调用自身的递归函数(特殊的尾调用)
+    - 编译器检测到函数调用时尾递归时，会覆盖当前的活动记录而不是在栈中创建新的(减少栈空间，防止栈溢出)
+    - 可通过优化，计算仅占用常量栈空间
 
-function format(obj){
-    const temp = {};
-    for(let key in obj){
-        if(obj.hasOwnProperty(key)){
-            let props = key.toLowerCase();
-            temp[props] = obj[key] instanceof Object ? format(obj[key]) : obj[key];
-        }
-    }
-    return temp;
-}
+        例：一个阶乘递归函数
+            const factorial = (function f(n){
+                if(n <= 2) return 1
+                return n * f(n - 1)
+            })
+            斐波那契数列
+            const fib = (function fn(n){
+                if(n <= 2) return 1
+                return fn(n - 1) + fn(n-2)
+            })
+
+            改成尾递归：
+            const factorial = (function f(n, total){
+                if(n <= 2) return total
+                return f(n -1, n * total)
+            })
+
+            const fib = (function fn(n, a1, a2){
+                if(n <= 2) return 1
+                return fn(n - 1, a2, a1 + a2)
+            })
+
 ```
 
-##### 58. JS本地存储的方式及区别：
+#### 58. JS本地存储的方式及区别：
 
 1. cookie(小型文本文件)：辨别用户身份而存储在用户本地终端上的数据
 
@@ -2733,9 +2418,106 @@ function format(obj){
     - 与localStorage用法基本一致
     - 页面关闭，数据删除
 
-##### 59. 
+#### 59. 函数的arguments参数是类数组，如何转为数组？遍历类数组？：
 
+```js
+1. arguments是一个对象，属性是从0开始递增的数字，有callee和length属性，与数组类似，但没有数组常见的方法
+
+2. 转为数组：
+    - 使用 Array.from() 将类数组转为类数组(Array.from(args))
+    - 使用展开运算符将类数组转为类数组([...args])
+
+2. 遍历类数组：
+    - 使用 Array.from() 将类数组转为类数组
+    - 使用展开运算符将类数组转为类数组
+    - 通过call调用数组的slice / splice 方法
+        Array.prototype.slice.call(args)
+        Array.prototype.splice.call(args,0)
+
+    - 通过apply调用数组的concat方法
+        Array.prototype.concat.apply([], args)
+
+    - 将数组方法应用到类数组上，可用call和apply方法
+        function foo(){ 
+            Array.prototype.forEach.call(arguments, a => console.log(a))
+        }
 ```
 
+#### 60. JS的变量提升? 导致什么问题？：
+
+```js
+1. 变量提升的本质原因：
+    - js引擎在代码执行时有解析的过程，创建了执行上下文，初始化了一些代码执行时需要用到的对象
+    - 访问一个变量时，会到当前执行上下文中的作用域链中去查找，作用域链的首端指向的是当前执行上下文的变量对象，
+    - 这个变量对象是执行上下文的一个属性，它包含了函数的形参，所有的函数和变量声明(代码解析的时候会创建该对象)
+
+2. JS处理变量或函数时，有两步操作：
+    - 解析：JS检查语法，对函数预编译。解析时会创建一个全局执行上下文环境，先把代码中即将执行的变量，函数声明拿出来，变量先赋值undefined，函数先声明好。函数执行前，也会创建一个函数执行上下文环境，类似全局执行上下文，函数执行上下文会多出this，arguments和函数的参数
+        - 全局上下文：变量定义，函数声明
+        - 函数上下文：变量定义，函数声明，this，arguments
+
+    - 执行：执行阶段，按照代码的顺序依次执行
+
+3. 变量提升的作用：
+    - 提高性能：语法检查和预编译，不用每次执行前都重新解析一遍变量或函数，每次执行函数时可直接为该函数分配栈空间
+    - 提高JS代码的容错性，使一些不规范的代码也可以正常执行
+
+4. 导致的问题：
+    - 由于遍历时定义的i会变量提升成为一个全局变量，在函数结束之后不会被销毁，所以打印出来11
+        var tmp = 'hello world';
+        for (var i = 0; i < tmp.length; i++) {
+	        console.log(tmp[i]);
+        }
+        console.log(i); // 11
+```
+
+#### 61. for...in | for...of ：
+
+```js
+1. for...of：遍历含有iterator接口的数据结构(数组，类数组对象，Set，Map，字符串等)，并返回各项的值
+    - 普通对象不能使用
+    - 遍历获取的是键值，只遍历当前对象不遍历原型链
+    - 遍历数组只返回数组下标对应的属性值
+
+2. for...in：主要遍历对象
+    - 获取的是对象的键名
+    - 会遍历对象的整个原型链，性能差
+    - 遍历对象会返回数组中的所有可枚举的属性(包括原型链的可枚举属性)
+
+3. 使用for...of遍历对象：
+    - 类数组对象时，可先用Array.from()转成数组，再遍历
+    - 普通对象时，先给对象添加一个[Symbol.iterator]属性，并指向一个迭代器
+        法1：
+            obj[Symbol.iterator] = function(){
+                let keys = Object.keys(this),
+                    count = 0;
+                    return {
+                        next(){
+                            if(count < keys.length){
+                                return {
+                                    value: obj[keys[count++]], done: false
+                                } 
+                            }else{
+                                return {
+                                    value: undefined: done: true
+                                }
+                            } 
+                        }
+                    }
+            }
+            for(var k of obj){
+	            console.log(k)
+            }
+
+        法2：
+            obj[Symbol.iterator] = function*(){
+                let keys = Object.keys(obj)
+                for(let k of keys){
+                    yield [k,obj[k]]
+                }
+            }
+            for(var [k,v] of obj){
+                console.log(k,v);
+            }
 ```
 

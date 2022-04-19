@@ -218,3 +218,27 @@ div{
 //  width: 15px;
 }
 ```
+
+### 12. %百分号：
+
+```scss
+1. 类似占位符，不会输出代码，用@extend扩展使用
+
+%one{
+    color: red;
+    font-size: 12;
+}
+.two{
+    @extend %one;
+    border: 1px solid blue;
+}
+
+生成的css代码：
+.two{
+    color: red;
+    font-size:12;
+}
+.two{
+    border: 1px solid blue;
+}
+```

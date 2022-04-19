@@ -696,4 +696,10 @@ store.dispatch(testAction(text))
 
 3. setState的第二个参数作用：
     - 可选的回调函数，在组件重新渲染后执行，等价于componentDidUpdate
+
+4. 同步或异步的原因：
+    - 在setState的实现中，有个变量isBatchingUpdates判断是直接更新this.state还是加入队列
+    - isBatchingUpdates默认为false，及默认同步更新，batchingUpdates可以修改isBatchingUpdates
+    - React使用事务机制，在生命周期和合成事件都处于一个大事务中，事务的前置钩子中调用batchingUpdates修改isBatchingUpdates为true，后置钩子中则变为false
+    - 原生绑定事件和setTimeout没有进入React的事务中，或者她们执行时，事务已经结束了，后置钩子触发了，此时的setState会直接进入非批量更新模式，表现在我们看来成为了同步SetState
 ```
