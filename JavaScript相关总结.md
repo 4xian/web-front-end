@@ -1,9 +1,9 @@
 # JavaScript相关总结
 
-#### 1.  JS的数据类型：
+#### 1. JS的数据类型
 
 1. 基本数据类型：
-    - Number / String / Boolean / 
+    - Number / String / Boolean /
     - null / undefined
     - Symbol  创建独一无二的不可改变数据(确保对象属性唯一)
     - BigInt   安全的存储和操作大整数
@@ -13,12 +13,12 @@
 
 3. 基本数据类型值存储于栈中；引用数据类型指针存储于栈中，值存储于堆中
 
-#### 2. null 和undefined的区别：
+#### 2. null 和undefined的区别
 
 1. null ：空对象指针，未指向任何对象，一般作初始化返回对象的遍历使用
 2. undefined：未定义，声明了没有给值，为了安全的获取undefined值可使用void 0 代替undefined   (xxx === void 0)
 
-#### 3. JS中原型 | 原型链：
+#### 3. JS中原型 | 原型链
 
 1. 原型：每个构造函数内部都有一个prototype属性(一个对象)，该对象包含可以由该构造函数所有实例共享的属性和方法，当构造函数新建一个对象时，对象中包含一个___proto___属性(指针)，指向构造函数的prototype，ES5中这个指针成为对象的原型，可以使用Object.getPrototypeOf()获取对象的原型
 
@@ -29,22 +29,22 @@
     2. prototype是一个对象(原型对象)，有属constructor，指向该函数(func.prototype.constructor === func)
     3. 原型对象也可能有原型，并从中继承方法和属性，一层一层以此类推，这种关系称为原型链
     func.prototype = {
-    	constructor:func(),
-    	__proto__:{
-    		// 各种方法
-    		__proto__:{
-    			// 各种方法
-    			__proto__:{
-    				...
-    			}
-    		}
-    	}
+     constructor:func(),
+     __proto__:{
+      // 各种方法
+      __proto__:{
+       // 各种方法
+       __proto__:{
+        ...
+       }
+      }
+     }
     }
     
     4. 
     // 构造函数Func() 
     function Func(){
-       		
+         
     }
     let instance = new Func();
     instance.___proto___ === Func.prototype;
@@ -74,7 +74,7 @@
 
 4. 使用obj.hasOwnProperty()判断是否属于原型链的属性：obj.hasOwnProperty(key)
 
-#### 4. JS中整数的安全范围：
+#### 4. JS中整数的安全范围
 
 1. 安全整数：在该范围内转换为二进制不会丢失精度，最大安全整数为2^53 - 1，ES6中定义为Number.MAX.SAFE_INTEGER，最小安全整数为-2^53 - 1，Number.MIN.SAFE_INTEGER
 
@@ -132,7 +132,7 @@
     - undefined / null / false / +0 / -0 / 0 / NaN / " "   ==> false
     - true / 非空字符串 / 非零数值(无穷) / 任意对象(除null) / ==>true
 
-4. **隐式转换**：(要求运算符两边的操作数不是同一类型)
+4. __隐式转换__：(要求运算符两边的操作数不是同一类型)
 
     - 比较运算（`==`、`!=`、`>`、`<`）、`if`、`while`需要布尔值地方
     - 算术运算（`+`、`-`、`*`、`/`、`%`）
@@ -141,7 +141,7 @@
     1. 自动转成布尔值：(系统内部会调用Boolean函数)
     
     2. 自动转成字符串：(常发生在+运算中，一旦存在字符串，则会进行字符串拼接操作)
-    	- 先将复合类型的值转为原始类型的值，再将原始类型的转	     为字符串
+     - 先将复合类型的值转为原始类型的值，再将原始类型的转      为字符串
     '5' + 1 // '51'
     '5' + true // "5true"
     '5' + false // "5false"
@@ -152,8 +152,8 @@
     '5' + null // "5null"
     
     3. 自动转换成数值：(除了+有可能把运算子转为字符串，其他运算符都会把运算子自动转成数值)
-    	- null转为数值时，值为0 
-    	- undefined转为数值时，值为NaN
+     - null转为数值时，值为0 
+     - undefined转为数值时，值为NaN
     '5' - '2' // 3
     '5' * '2' // 10
     true - 1  // 0
@@ -166,11 +166,11 @@
     undefined + 1 // NaN
     ```
 
-#### 8. 生成[min , max]范围内的随机整数：
+#### 8. 生成[min , max]范围内的随机整数
 
 1. Math.floor(Math.random() * (max - min + 1)) + min
 
-#### 9. JS创建对象的方式：
+#### 9. JS创建对象的方式
 
 1. 字面量方式
 
@@ -188,7 +188,7 @@
 
     - 根据构造函数返回类型判断：无指定返回值或指定为原始值，则默认返回创建的对象，否则返回指定的对象
 
-    - 
+    -
 
     - 缺点：
 
@@ -226,9 +226,9 @@
 6. 动态原型模式：将原型方法赋值的创建过程移动到了构造函数的内部，通过对属性是否存在的判断，实现第一次调用函数的时对原型对象赋值一次的效果
 7. 寄生构造函数模式：和工厂函数原理相同，基于已有的类型，对实例化对象进行扩展
 
-#### 10. JS实现继承的方式：
+#### 10. JS实现继承的方式
 
-1.  **原型链**的方式：
+1. __原型链__的方式：
 
     ```js
     Child.prototype = new Parent();
@@ -236,7 +236,7 @@
 
     - 包含引用类型数据时，会被所有实例共享，创建子类时无法向父类传参
 
-2. **构造函数**方式：子类型中调用父类型的构造函数，
+2. __构造函数__方式：子类型中调用父类型的构造函数，
 
     ```javascript
     function Child(name,age){
@@ -245,9 +245,9 @@
     ```
 
     - 解决了向父类传参问题
-    - 无法实现函数方法的复用，**父类的方法子类型无法访问**
+    - 无法实现函数方法的复用，__父类的方法子类型无法访问__
 
-3. **组合式继承**：将原型链和构造函数结合，原型链继承方法，构造函数继承属性
+3. __组合式继承__：将原型链和构造函数结合，原型链继承方法，构造函数继承属性
 
     ```js
     function Child(name,age){
@@ -260,17 +260,17 @@
 
     - 调用了两次父类的构造函数，造成子类原型汇总出现不必要的属性
 
-4. **原型式继承**：基于已有的对象创建新的对象，向函数中传入一个对象，**以这个对象为原型返回新的对象**，借助**Object.create()**，**缺点与原型链方式一样**
+4. __原型式继承__：基于已有的对象创建新的对象，向函数中传入一个对象，__以这个对象为原型返回新的对象__，借助__Object.create()__，__缺点与原型链方式一样__
 
     ```js
     const obj = {
-    	// 属性和方法
+     // 属性和方法
     };
     const newobj = Object.create(obj);
     newobj可以使用父对象的属性和方法
     ```
 
-5. **寄生式继承**：创建一个用于封装继承过程的函数，传入一个对象，复制这个对象，并进行扩展，最后返回该复制的对象（无法实现函数复用）
+5. __寄生式继承__：创建一个用于封装继承过程的函数，传入一个对象，复制这个对象，并进行扩展，最后返回该复制的对象（无法实现函数复用）
 
     ```js
     let parent5 = {
@@ -292,7 +292,7 @@
     console.log(person5.getFriends()); // ["p1", "p2", "p3"]
     ```
 
-6. **寄生组合式继承**：使用父类原型的副本作为子类的原型，避免创建不必要的属性
+6. __寄生组合式继承__：使用父类原型的副本作为子类的原型，避免创建不必要的属性
 
     ```js
     function Person(name) {
@@ -314,7 +314,7 @@
     };
     ```
 
-7. **ES6的继承**：
+7. __ES6的继承__：
 
     - extends和super()：
 
@@ -339,9 +339,9 @@
     asuna.getName() // 成功访问到父类的方法
     ```
 
-#### 11. JS的作用域，作用域链：
+#### 11. JS的作用域，作用域链
 
-1. **作用域**：(变量和函数生效的区域)
+1. __作用域__：(变量和函数生效的区域)
     - 全局作用域：(污染全局命名空间，引起命名冲突)
         - 不在函数中或是大括号中声明的变量，都是在全局作用域下
         - 未定义直接赋值的变量自动声明为全局作用域
@@ -368,9 +368,9 @@
 
 #### 12. this的理解：(执行时绑定调用它的对象)
 
-1. 执行上下文的一个属性，**`this`永远指向的是最后调用它的对象**
+1. 执行上下文的一个属性，__`this`永远指向的是最后调用它的对象__
 
-2. **构造函数new绑定**：生成实例对象时，this指向该实例对象
+2. __构造函数new绑定__：生成实例对象时，this指向该实例对象
 
     ```js
     1. new过程遇到return一个对象，此时this指向return的对象
@@ -386,35 +386,116 @@
         this.user = 'xxx';  
         return 1;
     }
-    var a = new fn;  
+    var a = new fn();  
     console.log(a.user); //xxx
     ```
 
-3. **apply，call，bind**方式：显示指定调用函数的this指向(改变函数的调用对象)
-
-4. **方法调用**：作为对象的方法调用时，this指向该对象(包含多对象时，只向上一层)
-
-5. **函数调用**(默认绑定)：该函数非对象属性，直接作为函数调用，this指向全局对象(非严格模式)
+3. __apply，call，bind__方式：显示指定调用函数的this指向(改变函数的调用对象)
 
     ```js
-    apply(obj,[1,'string']);// (this指向, 参数数组)
+    apply(obj,[1,'string']);// (this指向, 参数数组/类数组)
     call(obj, 1,string); //(this指向, 参数1, 参数2,...)
     bind(obj,1,'string'); // 传入一个对象，返回一个this绑定了传入对象的新函数
     ```
 
-6. **箭头函数**：(编译时绑定this的指向)，定义时的位置就确定了this，而不是执行时的位置
+4. __方法调用__：作为对象的方法调用时，this指向该对象(包含多对象时，只指向上一层)
 
-#### 13. JS中的事件模型：
+5. __函数调用__(默认绑定)：该函数非对象属性，直接作为函数调用，this指向全局对象(非严格模式)
 
-1. **事件**：在html文档或浏览器中发生的交互操作，常见的加载事件，鼠标事件，自定义事件等
+6. __箭头函数__：(编译时绑定this的指向)，定义时的位置就确定了this，而不是执行时的位置
 
-2. **事件流**：
+7. 优先级顺序： 构造函数new > apply call bind > 方法调用 > 函数调用
 
-    - **事件捕获阶段**(向下延伸)：与事件冒泡相反，事件由最高节点开始，一直到目标节点
-    - **处于目标阶段**：
-    - **事件冒泡阶段**(向上追溯)：由目标节点逐渐向上传播到DOM最高层的父节点
+##### 手写apply call bind方法
 
-3. **事件模型**：
+1. call(obj,  x, y, z, ...)：改变this指向后原函数立即执行，__临时改变this指向一次__：
+    - 判断调用者是否为函数
+    - 判断传入的对象是否存在，不存在则设为window
+    - 处理参数，获取第一个参数后的所有参数
+    - 将调用者作为传入的对象的方法并执行保存结果
+    - 删除传入的对象新增的方法
+    - 返回结果
+
+    ```js
+    Function.prototype.mycall = function(ctx){
+        if(typeof this !== 'function'){
+            throw new Error('调用类型错误!');
+        }
+        let args = [...arguments].slice(1),
+            result = null;
+        ctx = ctx || window;
+        ctx.fn = this;
+        result = ctx.fn(...args);
+        delete ctx.fn;
+        return result;
+    }
+
+    // 使用：func即为this, context即为ctx
+    obj.func.mycall(context)
+
+    ```
+
+2. apply(obj, [ x, y, z, ...])：改变this指向后原函数立即执行，__临时改变this指向一次__
+
+    ```js
+    Function.prototype.myapply = function(ctx){
+        if(typeof this !== 'function'){
+            throw new Error('调用类型错误')
+        }
+        let args = [...arguments].slice(1),
+            res = null;
+        ctx = ctx || window
+        ctx.fn = this;
+        res = ctx.fn(args)
+        delete ctx.fn
+        return res
+    }
+
+    ```
+
+3. bind(obj,  x, y, z, ...)：改变this指向后不会立即执行，返回一个 __永久改变this指向__ 的函数：
+    - 判断调用者是否为函数
+    - 获取传入的参数，保存调用者
+    - 创建一个函数返回
+    - 函数内部使用apply绑定函数调用，需判断函数作为构造函数情况，这时需传入当前函数的this给apply调用，其余情况传入指定的对象
+
+    ```js
+    Function.prototype.mybind = function(ctx){
+        if(typeof this !== 'function'){
+            throw new Error('调用类型错误!');
+        }
+        let args = [...arguments].slice(1),
+            fn = this;
+        return function Fn(){
+            return fn.apply(
+             this instanceof Fn ? new fn(...arguments) : ctx, args.concat(...arguments);
+            )
+        }
+    }
+
+    Function.prototype.mybind = function(ctx){
+        let args = [...arguments].slice(1),
+            fn = this;
+        return function Fn(){
+            return fn.apply(this instanceof Fn ? this : ctx, [...args,...arguments])
+        }
+    }
+
+    ```
+
+4. 若没有给指向的对象，则默认指向全局window
+
+#### 13. JS中的事件模型
+
+1. __事件__：在html文档或浏览器中发生的交互操作，常见的加载事件，鼠标事件，自定义事件等
+
+2. __事件流__：
+
+    - __事件捕获阶段__(向下延伸)：与事件冒泡相反，事件由最高节点开始，一直到目标节点
+    - __处于目标阶段__：
+    - __事件冒泡阶段__(向上追溯)：由目标节点逐渐向上传播到DOM最高层的父节点
+
+3. __事件模型__：
 
     - 原始事件模型(DOM0级)：
 
@@ -533,8 +614,8 @@ const EventUtils = {
 
 2. 用途：
 
-    - 外部调用闭包函数，外部可以访问函数内部变量，**创建私有变量**
-    - 运行结束的函数上下文的变量对象继续留在内存中，避免回收(**延长变量的生命周期**)
+    - 外部调用闭包函数，外部可以访问函数内部变量，__创建私有变量__
+    - 运行结束的函数上下文的变量对象继续留在内存中，避免回收(__延长变量的生命周期__)
 
     ```js
     // 函数 A 内部有一个函数 B，函数 B 可以访问到函数 A 中的变量，那么函数 B 就是闭包
@@ -627,7 +708,7 @@ const EventUtils = {
     console.log(Counter1.value()); /* logs 1 */
     ```
 
-#### 15. 判断对象是否属于某个类：
+#### 15. 判断对象是否属于某个类
 
 1. instanceof判断构造函数的prototype是否出现在该对象的原型链中
 2. 通过对象的constructor属性是否指向该对象的构造函数(不安全，constructor可改写)
@@ -666,27 +747,27 @@ const EventUtils = {
             }else if(options.type === 'POST'){
                 xhr.open('POST', options.url, true);
             }
-    		
-    		//3. 设置监听服务器端状态
-    		xhr.onreadystatechange = function(){
+      
+      //3. 设置监听服务器端状态
+      xhr.onreadystatechange = function(){
                 //readyState=4时,表示服务器返回数据接收完成
-        		if(this.readyState === 4) {
+          if(this.readyState === 4) {
                     if(this.status === 200){
-            			resolve(this.responseText);
-        			}else{
-            			reject(new Error(this.responseText));
-        			}
+               resolve(this.responseText);
+           }else{
+               reject(new Error(this.responseText));
+           }
                 }
-    		};
-    		//4. 请求失败时
-    		xhr.onerror = function(){
-        		reject(new Error(this.statusText));
-    		};
-    		//5. 设置请求头信息
-    		xhr.responseType = 'json';
-    		xhr.setRequestHeader('Accept', 'application/json');
-    		//发送请求
-    		if(options.type === 'GET'){
+      };
+      //4. 请求失败时
+      xhr.onerror = function(){
+          reject(new Error(this.statusText));
+      };
+      //5. 设置请求头信息
+      xhr.responseType = 'json';
+      xhr.setRequestHeader('Accept', 'application/json');
+      //发送请求
+      if(options.type === 'GET'){
                 xhr.send();
             }else if(options.type === 'POST'){
                 xhr.send(options.data);
@@ -709,7 +790,7 @@ const EventUtils = {
     
     ```
 
-#### 17. 浏览器的缓存机制：
+#### 17. 浏览器的缓存机制
 
 1. 强缓存策略：
     - 设置http头信息的Expires 和Cache-Control属性
@@ -721,7 +802,7 @@ const EventUtils = {
     - 服务器在响应头中添加Last-Modified属性记录最后一次修改时间，浏览器请求时，在请求头中加If-Modified-Since,值为上一次返回的Last-Modified，然后服务端会进行比较(只能精确到秒级，会出现命中不准确)
     - 服务器在响应头中添加Etag属性，资源变化该值也会变化，浏览器请求时，在请求头中加If-None-Match,值为上一次返回的Etag，然后服务端会进行比较是否需要返回资源
 
-#### 18. 解决跨域问题：
+#### 18. 解决跨域问题
 
 1. 实现主域名下的不同子域名跨域，可通过document.domain设置为主域名，此时cookie即可共享
 2. 通过postMessage发送信息，在窗口中通过对message监听来接收消息
@@ -733,7 +814,7 @@ const EventUtils = {
 5. 使用websocket协议，该协议无同源限制
 6. nginx代理：有跨域请求时发送给后端，让后端代为请求，然后把结果返回
 
-#### 19.  JS中的模块规范：
+#### 19.  JS中的模块规范
 
 1. CommonJS：通过require()来引入模块，通过module.exports定义输出接口，服务器端的解决方案，以同步方式引入，运行时加载模块
 
@@ -761,20 +842,20 @@ const EventUtils = {
 
 3. CMD：异步加载模块，
 
-4. ES6：使用import 和export 来导入导出模块，**编译时**就能确定模块的依赖关系，以及输入和输出的变量
+4. ES6：使用import 和export 来导入导出模块，__编译时__就能确定模块的依赖关系，以及输入和输出的变量
 
     - JS引擎对脚本静态解析时，遇到import会生成一个只读引用，等脚本执行时，再根据只读引用去对应的模块中取值
 
         ```js
         export相关：
-        	const A = '';
-        	const B = '';
-        	const func = function(){
-        		
-        	};
-        	const func1 = function(){
-        		
-        	};
+         const A = '';
+         const B = '';
+         const func = function(){
+          
+         };
+         const func1 = function(){
+          
+         };
         // 导出模块
         export{A, B, func, func1 as Alias};
         
@@ -805,13 +886,11 @@ const EventUtils = {
           });
         ```
 
-        
-
 5. AMD与CMD的区别：
 
-    - **模块定义时对依赖的处理不同**，AMD推崇依赖前置，定义模块时要声明其依赖的模块；CMD推崇就近依赖，用到的时候再去require()
+    - __模块定义时对依赖的处理不同__，AMD推崇依赖前置，定义模块时要声明其依赖的模块；CMD推崇就近依赖，用到的时候再去require()
 
-    - **对依赖模块的执行时机不同**，AMD在依赖模块加载完成后执行依赖，执行顺序与书写的不一定一致；CMD在依赖模块加载完成后并不执行，等所有依赖模块都加载好，进入回调函数逻辑，遇到require()的时候才执行对应模块，这样执行顺序就与书写顺序一致
+    - __对依赖模块的执行时机不同__，AMD在依赖模块加载完成后执行依赖，执行顺序与书写的不一定一致；CMD在依赖模块加载完成后并不执行，等所有依赖模块都加载好，进入回调函数逻辑，遇到require()的时候才执行对应模块，这样执行顺序就与书写顺序一致
 
         ```js
         // CMD
@@ -834,7 +913,7 @@ const EventUtils = {
         });
         ```
 
-#### 20. 常见 DOM(文档对象模型)操作：
+#### 20. 常见 DOM(文档对象模型)操作
 
 ```js
 Node.nodeName   //返回节点名称，只读
@@ -1029,9 +1108,9 @@ Element.remove()  //用于将当前元素节点从DOM中移除
 Element.focus()   //用于将当前页面的焦点，转移到指定元素上
 ```
 
-#### 21. innerHTML 与 outerHTML：
+#### 21. innerHTML 与 outerHTML
 
-```
+```html
 对于这样一个 HTML 元素：
 <div id='test'><p>content<br/></p></div>。
 
@@ -1053,10 +1132,10 @@ outerText：内部文本，content
 3. Array.form：
     - Array.form(likeArr)
 
-#### 23. 常见数组的原生方法：
+#### 23. 常见数组的原生方法
 
 1. 数组和字符串的转换：
-    - toString() / toLocalString() / join() / 
+    - toString() / toLocalString() / join() /
 
 2. 尾部操作：pop() / push()
 3. 首部操作：shift() / unshift()
@@ -1066,10 +1145,10 @@ outerText：内部文本，content
 7. 数组插入：splice()
 8. 数组填充：fill() // (value, start, end) 填充固定值value
 9. 数组查找索引项：indexOf() / lastIndexOf() /
-10. 数组迭代：every() / some() / filter() / map() / forEach() / 
-11. 数组归并：reduce() / reduceRight() / 
+10. 数组迭代：every() / some() / filter() / map() / forEach() /
+11. 数组归并：reduce() / reduceRight() /
 
-#### 24. V8引擎的垃圾回收机制：
+#### 24. V8引擎的垃圾回收机制
 
 基于分代回收机制  将内存分为新生代和老生代
 
@@ -1091,7 +1170,7 @@ outerText：内部文本，content
 4. 闭包(不合理的使用闭包)
 5. 对事件监听没有取消监听
 
-#### 26. 判断浏览器的标识符：
+#### 26. 判断浏览器的标识符
 
 ```js
 if (window.ActiveXObject)
@@ -1106,9 +1185,9 @@ else if (window.openDatabase)
 return "Safari";
 ```
 
-#### 27. 节流与防抖：
+#### 27. 节流与防抖
 
-1. 节流(**控制频率**)：规定时间内，多次触发事件**只执行一次回调函数**(scroll，mousemove等事件)
+1. 节流(__控制频率__)：规定时间内，多次触发事件__只执行一次回调函数__(scroll，mousemove等事件)
 
     ```js
     // 时间戳写法
@@ -1128,9 +1207,9 @@ return "Safari";
         return function(...args){
             if(!timer){
                timer = setTimeout(()=>{
-                	func.apply(this, args);
+                 func.apply(this, args);
                    timer = null;
-            	}, delay)
+             }, delay)
             }
         }
     }
@@ -1152,11 +1231,11 @@ return "Safari";
     }
     ```
 
-2. 防抖(**减少次数**)：触发事件n秒后再执行回调，**n秒内多次触发则重新计时**(resize，点击请求的事件上，搜索框输入)
+2. 防抖(__减少次数__)：触发事件n秒后再执行回调，__n秒内多次触发则重新计时__(resize，点击请求的事件上，搜索框输入)
 
     ```js
     function debounce(fn, time = 500){
-    	let timer = null;
+     let timer = null;
         return function(...args){
             clearTimeout(timer);
             timer = setTimeout(()=>{
@@ -1170,25 +1249,24 @@ return "Safari";
         let timer;
         return function(...args){
             if(timer) clearTimeout(timer);
-        	if(immediate){
-            	let temp = !timer;
-            	timer = setTimeou(()=>{
-                	timer = null
-            	}, delay)
-            	if(temp){
-                	fn.apply(this, args)
-            	}
-        	}else{
+         if(immediate){
+             let temp = !timer;
+             timer = setTimeout(()=>{
+                 timer = null
+             }, delay)
+             if(temp){
+                 fn.apply(this, args)
+             }
+         }else{
                 timer = setTimeout(()=>{
                     fn.apply(this, args)
                 }, delay)
             }
         }
-        
     }
     ```
 
-#### 28. 事件循环：
+#### 28. 事件循环
 
 1. 任务进入执行栈，同步任务进入主线程，异步任务进入任务队列，
 2. 执行宏任务，遇到微任务就加到微任务队列
@@ -1196,55 +1274,55 @@ return "Safari";
 
 - 微任务：(主函数执行之后，当前宏任务结束之前)
 
-    - promise.then
+  - promise.then
 
-    - node中的process.nextTick
+  - node中的process.nextTick
 
-    - 监听DOM的MutationObserver
+  - 监听DOM的MutationObserver
 
 - 宏任务
 
-    - 整体script代码
+  - 整体script代码
 
-    - setTimeout / setInterval
+  - setTimeout / setInterval
 
-    - postMessage
+  - postMessage
 
-    - requestAnimationFrame
+  - requestAnimationFrame
 
-    - I/O操作 / setImmediate
+  - I/O操作 / setImmediate
 
-    - UI渲染
+  - UI渲染
 
 - async / await ：
 
-    - async 用来声明一个异步方法
+  - async 用来声明一个异步方法
 
-    - await 用来等待异步方法执行
+  - await 用来等待异步方法执行
 
-    - 不管await后面跟的什么，都会阻塞后面的代码(加入到微任务队列)，先执行async外面的同步代码，同步执行完，再回到async中，执行await阻塞的代码
+  - 不管await后面跟的什么，都会阻塞后面的代码(加入到微任务队列)，先执行async外面的同步代码，同步执行完，再回到async中，执行await阻塞的代码
 
 - promise 和 async 的代码是当作同步任务立即执行的
 
 ```
 
-		
-执行栈：	---------任务队列{ 宏任务，微任务}
+  
+执行栈： ---------任务队列{ 宏任务，微任务}
   |  |
   |--|
 事件队列
 
 ```
 
-#### 29. 深浅拷贝的实现：
+#### 29. 深浅拷贝的实现
 
 1. 浅拷贝：(浅拷贝是拷贝一层，深层次的引用类型则共享内存地址)
 
     - 将一个对象的属性值复制到另一个对象，属性是基本类型，拷贝的就是基本类型的值；属性为引用类型，拷贝的就是内存地址
-    - const newobj = Object.assign({}, oldobj, ...) 
+    - const newobj = Object.assign({}, oldobj, ...)
     - const newobj = {...oldobj}  / [...oldarr]
-    - const newobj = oldobj. slice(0) 
-    - const newobj = oldobj. concat()
+    - const newobj = oldobj.slice(0)
+    - const newobj = oldobj.concat()
 
     ```js
     const shallowCopy = function(obj){
@@ -1280,15 +1358,15 @@ return "Safari";
 
 2. 深拷贝：(两对象属性相同，但对应两个不同地址，互不影响)
     - 遇到引用类型时，会新建一个引用类型并将值复制给它
-    - JSON.parse(JSON.stringfy(obj)) (遇到函数，正则，undefined，日期，Symbol则失效)
+    - JSON.parse(JSON.stringify(obj)) (遇到函数，正则，undefined，日期，Symbol则失效)
 
 ```js
 const deepCopy = function(obj){
-    if(typeof obj !=== 'object') return obj;
+    if(typeof obj !== 'object') return obj;
     const temp = Array.isArray(obj) ? []:{};
     for(let key in obj){
         if(obj.hasOwnProperty(key)){
-            temp[key] = Array.isArray(obj[key]) || 							obj[key] instanceof Object  ? 						deepCopy(obj[key]) : obj[key];
+            temp[key] = Array.isArray(obj[key]) || obj[key] instanceof Object ? deepCopy(obj[key]) : obj[key];
         }
     }
     return temp;
@@ -1310,76 +1388,17 @@ const deepClone = function(obj){
 }
 ```
 
-#### 30. 手写apply call bind方法：(改变函数执行时的上下文，即this指向)
 
-1. call(obj,  x, y, z, ...)：改变this指向后原函数立即执行，**临时改变this指向一次**
 
-    ```js
-    Fucntion.prototype.mycall = function(context){
-        if(typeof this !== 'function'){
-            throw new Error('调用类型错误!');
-        }
-        let args = [...arguments].slice(1),
-            result = null;
-        context = context || window;
-        context.fn = this;
-        result = context.fn(...args);
-        delete context.fn;
-        return result;
-    }
-    ```
-
-2. apply(obj, [ x, y, z, ...])：改变this指向后原函数立即执行，**临时改变this指向一次**
-
-    ```js
-    Function.prototype.myapply = function(ctx){
-        if(typeof this !== 'function'){
-            throw new Error('调用类型错误!');
-        }
-        let result = null;
-        ctx = ctx || window;
-        ctx.fn = this;
-        if(arguments[1]){
-            result = ctx.fn([...arguments[1]])
-        }else{
-            result = ctx.fn();
-        }
-        
-        delete ctx.fn;
-        return result;
-    }
-    ```
-
-3. bind(obj,  x, y, z, ...)：改变this指向后不会立即执行，返回一个**永久改变this指向**的函数
-
-    ```js
-    Function.prototype.mybind = function(ctx){
-        if(typeof this !== 'function'){
-            throw new Error('调用类型错误!');
-        }
-        let args = [...arguments].slice(1),
-            fn = this;
-        return function Fn(){
-            return fn.apply(
-            	this instanceof Fn ? new fn(...arguments) : ctx, args.concat(...arguments);
-            )
-        }
-    }
-    ```
-
-4. 若没有给指向的对象，则默认指向全局window
-
-#### 31. 函数柯里化的实现：
+#### 31. 函数柯里化的实现
 
 1. ```js
     function curry(fn, ...args){
-        return fn.length <= args.length ? 				fn(...args) : curry.bind(null, fn, ...args)
+        return fn.length <= args.length ?     fn(...args) : curry.bind(null, fn, ...args)
     }
     ```
 
-    
-
-2. 
+2.
 
 ```js
 // 函数柯里化指的是一种将使用多个参数的一个函数转换成一系列使用一个参数的函数的技术。
@@ -1405,134 +1424,16 @@ function curry(fn, args) {
 }
 ```
 
-#### 32. 异步编程的方式：
+#### 32. 异步编程的方式
 
-1. async 函数
-2. Promise函数
-3. 发布/订阅(观察者模式)
-4. 回调函数
+1. 回调函数：嵌套地狱，不利于维护
+2. Promise函数：造成多个then的链式调用
+3. Generator函数
+4. async 函数
 5. 事件监听
-6. Generator函数
+6. 发布/订阅(观察者模式)
 
-#### 33. 用setTimeout模拟setInterval：
-
-```js
-const myInterval = function(fn, time){
-	let flag  = true;
-    function interval(){
-        if(flag){
-            fn();
-            setTimeout(interval, time);
-        }
-    }
-    setTimeout(interval, time);
-    return flag;
-}
-```
-
-
-
-#### 36. 手写一个Promise原理：
-
-```js
-const PENDING = "pending";
-const RESOLVED = "resolved";
-const REJECTED = "rejected";
-
-function MyPromise(fn) {
-  // 保存初始化状态
-  var self = this;
-  // 初始化状态
-  this.state = PENDING;
-  // 用于保存 resolve 或者 rejected 传入的值
-  this.value = null;
-  // 用于保存 resolve 的回调函数
-  this.resolvedCallbacks = [];
-  // 用于保存 reject 的回调函数
-  this.rejectedCallbacks = [];
-
-  // 状态转变为 resolved 方法
-  function resolve(value) {
-    // 判断传入元素是否为 Promise 值，如果是，则状态改变必须等待前一个状态改变后再进行改变
-    if (value instanceof MyPromise) {
-      return value.then(resolve, reject);
-    }
-    // 保证代码的执行顺序为本轮事件循环的末尾
-    setTimeout(() => {
-      // 只有状态为 pending 时才能转变，
-      if (self.state === PENDING) {
-        // 修改状态
-        self.state = RESOLVED;
-
-        // 设置传入的值
-        self.value = value;
-
-        // 执行回调函数
-        self.resolvedCallbacks.forEach(callback => {
-          callback(value);
-        });
-      }
-    }, 0);
-  }
-
-  // 状态转变为 rejected 方法
-  function reject(value) {
-    // 保证代码的执行顺序为本轮事件循环的末尾
-    setTimeout(() => {
-      // 只有状态为 pending 时才能转变
-      if (self.state === PENDING) {
-        // 修改状态
-        self.state = REJECTED;
-        // 设置传入的值
-        self.value = value;
-        // 执行回调函数
-        self.rejectedCallbacks.forEach(callback => {
-          callback(value);
-        });
-      }
-    }, 0);
-  }
-
-  // 将两个方法传入函数执行
-  try {
-    fn(resolve, reject);
-  } catch (e) {
-    // 遇到错误时，捕获错误，执行 reject 函数
-    reject(e);
-  }
-}
-
-MyPromise.prototype.then = function(onResolved, onRejected) {
-  // 首先判断两个参数是否为函数类型，因为这两个参数是可选参数
-  onResolved =
-    typeof onResolved === "function"
-      ? onResolved
-      : function(value) {
-          return value;
-        };
-  onRejected =
-    typeof onRejected === "function"
-      ? onRejected
-      : function(error) {
-          throw error;
-        };
-
-  // 如果是等待状态，则将函数加入对应列表中
-  if (this.state === PENDING) {
-    this.resolvedCallbacks.push(onResolved);
-    this.rejectedCallbacks.push(onRejected);
-  }
-
-  // 如果状态已经凝固，则直接执行对应状态的函数
-  if (this.state === RESOLVED) {
-    onResolved(this.value);
-  }
-  if (this.state === REJECTED) {
-    onRejected(this.value);
-  }
-};
-```
-#### 37. 常用的Content-Type：
+#### 37. 常用的Content-Type
 
 ```html
 application/x-www-form-urlencoded
@@ -1549,9 +1450,9 @@ text/xml
 该种方式主要用来提交 XML 格式的数据。
 ```
 
-#### 38. 解释一下事件代理(事件委托)：
+#### 38. 解释一下事件代理(事件委托)
 
-1. **事件委托**：把一个或一组元素的事件委托的它的父层或更外层元素上，真正绑定事件的是外层元素，而不是目标元素(利用事件冒泡机制)，然后对目标元素进行匹配
+1. __事件委托__：把一个或一组元素的事件委托的它的父层或更外层元素上，真正绑定事件的是外层元素，而不是目标元素(利用事件冒泡机制)，然后对目标元素进行匹配
 2. 适合事件委托的情况：click`，`mousedown`，`mouseup`，`keydown`，`keyup`，`keypress
 3. 优点：
     - 减少页面所需的缓存，提升整体性能
@@ -1561,7 +1462,7 @@ text/xml
     - mousemove， mouseout对性能消耗高，不适用事件委托
     - 都用事件代理，可能会出现事件误判，不该触发的事件绑定了事件
 
-#### 39. 手写一个JSONP：
+#### 39. 手写一个JSONP
 
 ```js
 function jsonp(url, params, callback) {
@@ -1601,7 +1502,7 @@ function jsonp(url, params, callback) {
 }
 ```
 
-#### 40. 手写一个观察者模式：
+#### 40. 手写一个观察者模式
 
 ```js
 var events = (function() {
@@ -1651,7 +1552,7 @@ var events = (function() {
 })();
 ```
 
-#### 41. 实现事件触发器(EventEmitter)：
+#### 41. 实现事件触发器(EventEmitter)
 
 ```js
 class EventEmitter {
@@ -1696,7 +1597,7 @@ class EventEmitter {
 }
 ```
 
-#### 42. 计算页面从加载到完成的时间：
+#### 42. 计算页面从加载到完成的时间
 
 ```html
 ECMAScript 5引入“高精度时间戳”这个 API，部署在 performance 对象上。它的精度可以达到1毫秒
@@ -1711,9 +1612,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
 
 ```
 
-
-
-#### 44. JS中数组常用的方法：
+#### 44. JS中数组常用的方法
 
 1. 增：
 
@@ -1758,120 +1657,17 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
 
     - join(' , ')：
 
-6. 迭代方法：**对每一项都执行传入的函数**
+6. 迭代方法：__对每一项都执行传入的函数__
 
     - some()：有一项返回true，结果都返回true
     - every()：每一项都返回true，结果才为true，有一项为false，都为false
     - forEach()：无返回值
     - filter()：返回true的项会组成新数组返回
     - map()：返回函数执行后的结果构成的新数组
-#### 48. ES6中的Promise：异步编程的一种解决方案
 
-1. promise只有三种状态：状态不受外界影响，只有异步操作的结果可以决定状态，状态一旦变化便不再改变且只有pending-->fuifilled | pending-->rejected
-    - pending：进行中
-    - fulfilled：已成功
-    - rejected：已失败
 
-2. reslove将状态由''未完成''变为''成功''，reject将由''未完成''变为''失败''
 
-    - 实例有then()方法
-
-    ```js
-    const promise = new Promise((resolve, reject)=>{
-    	// 
-    })
-    
-    getJSON("/posts.json").then(function(json) {
-      return json.post;
-    }).then(function(post) {
-      // ...链式书写
-    });
-    
-    ```
-
-    -  catch()：`catch()`方法是`.then(null, rejection)`或`.then(undefined, rejection)`的别名，用于指定发生错误时的回调函数；
-
-        ```js
-        getJSON('/posts.json').then(function(posts) {
-          // ...
-        }).catch(function(error) {
-          // 处理 getJSON 和 前一个回调函数运行时发生的错误
-          console.log('发生错误！', error);
-        });
-        
-        
-        // 错误具有“冒泡”性质，会一直向后传递，直到被捕获为止
-        getJSON('/post/1.json').then(function(post) {
-          return getJSON(post.commentURL);
-        }).then(function(comments) {
-          // some code
-        }).catch(function(error) {
-          // 处理前面三个Promise产生的错误
-        });
-        
-        // 一般这样写
-        promise.then((res)=>{
-            //...
-        }).catch(error=>{
-            //...
-        });
-        ```
-
-    -  finally()：用于指定不管 Promise 对象最后状态如何，都会执行的操作
-
-        ```js
-        promise
-        .then(result => {···})
-        .catch(error => {···})
-        .finally(() => {···});
-        ```
-
-        
-
-3. Promise构造函数方法：
-
-    - all()：
-
-        ```html
-        1. 用于将多个 `Promise`实例，包装成一个新的 `Promise`实例
-        2. 接受一个数组（迭代对象）作为参数，数组成员都应为`Promise`实例
-        3. 如果作为参数的 Promise 实例，自己定义了catch方法，那么它一旦被rejected，并不会触发Promise.all()的catch方法
-        ```
-
-    - race()：
-
-        ```
-        1. 同样是将多个 Promise 实例，包装成一个新的 Promise 实例
-        2. 有一个实例率先改变状态，p的状态就跟着改变
-        ```
-
-    - allSettled()：
-
-        ```
-        1. 接受一组 Promise 实例作为参数，包装成一个新的 Promise 实例
-        2. 只有等到所有这些参数实例都返回结果，不管是fulfilled还是rejected，包装实例才会结束
-        ```
-
-    - reslove()：
-
-        ```
-        1. 将现有对象转为 Promise对象
-        2. 参数是一个 Promise 实例，promise.resolve将不做任何修改、原封不动地返回这个实例
-        3. 参数是一个thenable对象，promise.resolve会将这个对象转为 Promise对象，然后就立即执行thenable对象的then()方法
-        4. 参数不是具有then()方法的对象，或根本就不是对象，Promise.resolve()会返回一个新的 Promise 对象，状态为resolved
-        5. 没有参数时，直接返回一个resolved状态的 Promise 对象
-        ```
-
-    - reject()：
-
-        ```
-        1. 返回一个新的 Promise 实例，该实例的状态为rejected
-        2. reject()方法的参数，会原封不动地变成后续方法的参数
-        ```
-
-        
-
-#### 49. ES6的Generator：
+#### 49. ES6的Generator
 
 1. 会返回一个遍历器对象，可以依次遍历 `Generator` 函数内部的每一个状态
 
@@ -1931,7 +1727,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
 
 #### 50. ES6中Decorator(装饰器)
 
-1.  一个普通的函数，用于扩展类属性和类方法
+1. 一个普通的函数，用于扩展类属性和类方法
 
     - 类的装饰：
 
@@ -1981,7 +1777,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
 
 #### 51. ES6中的Proxy：定义基本操作的自定义行为(元编程)
 
-1.  Proxy构造函数：
+1. Proxy构造函数：
 
     ```js
     const proxy = new Proxy(target, handler);
@@ -2109,7 +1905,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
 
     - 在复杂操作前对操作进行校验或对所需资源进行管理
 
-    - **实现观察者模式**：函数自动观察数据对象，一旦对象有变化，函数就会自动执行`observable`函数返回一个原始对象的 `Proxy` 代理，拦截赋值操作，触发充当观察者的各个函数
+    - __实现观察者模式__：函数自动观察数据对象，一旦对象有变化，函数就会自动执行`observable`函数返回一个原始对象的 `Proxy` 代理，拦截赋值操作，触发充当观察者的各个函数
 
     - ```js
         const queuedObservers = new Set();
@@ -2149,7 +1945,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     - search()：接收一个参数，可以是一个正则表达式字符串，也可以是一个`RegExp`对象，找到则返回匹配索引，否则返回 -1，(string.search(reg))
     - replace()：接收两个参数，第一个参数为匹配的内容，第二个参数为替换的元素（可用函数）(string,replace('a', 'b'))
 
-#### 53.  == 和 === ：
+#### 53.  == 和 ===
 
 1. == ：(先进行类型转换，再判断值是否相等)
     - 都为简单类型：字符串 / 布尔值 ==> 先转数值，再比较
@@ -2162,22 +1958,30 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     - null === undefined  // false
 3. 除了在比较对象属性为`null`或者`undefined`的情况下，我们可以使用相等操作符（==），其他情况建议一律使用全等操作符（===）
 
-#### 54. JS中执行上下文和执行栈：
+#### 54. JS中执行上下文和执行栈
 
 1. 执行上下文：(JS代码执行环境)
 
-    - **全局执行上下文**：只有一个，window全局对象
-    - **函数执行上下文**：无数个，**函数调用时创建**，每次调用都会创建新的执行上下文，会创建一个私有作用域，函数内部声明的任何变量都不能在当前函数作用域外部直接访问
-    - **eval函数执行上下文**：运行在eval函数中的代码
+    - __全局执行上下文__：只有一个，window全局对象
+    - __函数执行上下文__：无数个，__函数调用时创建__，每次调用都会创建新的执行上下文，会创建一个私有作用域，函数内部声明的任何变量都不能在当前函数作用域外部直接访问
+    - __eval函数执行上下文__：运行在eval函数中的代码
 
-2. 生命周期：
+2. 创建执行上下文：
 
-    - **创建阶段**：
+    - __创建阶段__：
 
-        - 绑定this
-        - 词法环境被创建(存储函数声明和变量let/const绑定)
-        - 变量环境被创建(存储变量var绑定)
-        - let 和 const定义的变量在创建阶段没有赋值(保持uninitialized未初始化状态)，但var声明的变量被赋值为undefined(**变量提升的原因**)
+        - 绑定this：
+            - 全局执行上下文中，this指向全局对象(window)
+            - 函数执行上下文中，this取决于函数如何调用，被引用对象调用，this为那个对象，否则this为全局对象或undefined
+
+        - 创建词法环境(存储函数声明和变量let/const绑定)：
+            - 词法环境是一种有标识符(变量映射)的数据结构，标识符指变量/函数名，变量是对实际对象或原始数据的引用
+            - 词法环境内部： __环境记录器__(储存变量函数声明的实际位置)，__外部环境的引用__(可以访问父级作用域)
+
+        - 创建变量环境(存储变量var绑定)：
+            - 变量环境也是一个词法环境，环境记录器记录变量声明语句在执行上下文中创建的绑定关系
+
+        - let 和 const定义的变量在创建阶段没有赋值(保持uninitialized未初始化状态)，但var声明的变量被赋值为undefined(__变量提升的原因__)
 
         ```js
         ExecutionContext = {  
@@ -2244,19 +2048,23 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
         }
         ```
 
-    - **执行阶段**：执行变量赋值，代码执行
+    - __执行阶段__：执行变量赋值，代码执行
 
-    - **回收阶段**：执行上下文出栈等待虚拟机回收执行上下文
+    - __回收阶段__：执行上下文出栈等待虚拟机回收执行上下文
+
+    - 总结：
+        - 执行JS代码前先解析，解析时会先创建一个全局执行上下文环境，先把代码中即将执行的变量 函数声明都拿出来，变量先赋值undefined，函数先声明好
+        - 函数执行前，也会创建函数执行上下文环境，类似全局执行上下文，不过会多出this，arguments和函数的参数
 
 3. 执行栈：(后进先出) 用于存储在代码执行期间创建的所有执行上下文
 
-    - 创建全局执行上下文压入执行栈
-    - 按顺序将函数执行上下文压入执行栈
-    - 函数执行，对应的执行上下文出栈，继续执行下面的函数
+    - 执行代码时首先创建全局执行上下文压入执行栈
+    - 遇到函数调用，则为该函数创建新的执行上下文压入栈顶
+    - 执行栈顶的函数，执行完毕后对应的执行上下文弹出栈，继续执行下面的函数
     - 所有的函数执行上下文执行完毕，然后执行全局上下文
     - 全局上下文出栈，结束
 
-#### 55.  typeof 与 instanceof：
+#### 55.  typeof 与 instanceof
 
 1. typeof：返回一个基本类型字符串，表示未经计算的操作数的类型
 
@@ -2281,7 +2089,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     }
     ```
 
-2.  instanceof：检测某个构造函数的prototype是否在某个实例对象的原型链上(返回布尔值)
+2. instanceof：检测某个构造函数的prototype是否在某个实例对象的原型链上(返回布尔值)
 
     - instanceof可以准确判断复杂引用类型，但不能正确判断基本数据类型
 
@@ -2289,12 +2097,12 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
 
         ```js
         const myInstanceof = function(left, right){
-        	if(typeof left !== 'object' || typeof left === null) return false;
+         if(typeof left !== 'object' || typeof left === null) return false;
             let proto = Object.getPrototypeOf(left);
             while(true){
                 if(proto === null) return false;
                 if(proto == right.prototype) return true;
-                proto = Object.getprototypeOf(proto);
+                proto = Object.getPrototypeOf(proto);
             }
         }
         ```
@@ -2307,22 +2115,20 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     const isType = function(value){
         // 判断数据是 null 的情况
       if (value === null) return value;
-      
         // 判断数据时基本类型
       if (typeof value !== "object") {
           return typeof value;
-        
       } 
         // 判断数据是引用类型
        let valueClass = Object.prototype.toString.call(value),
-          	type = valueClass.split(" ")[1].split("");
-        	type.pop();
-        	return type.join("").toLowerCase();
+           type = valueClass.split(" ")[1].split("");
+         type.pop();
+         return type.join("").toLowerCase();
         // (或者 ：return Object.prototype.toString.call(obj).replace(/^\[object (\S+)\]$/, '$1'); )
     }
     ```
 
-#### 56. 常见的BOM(浏览器对象模型)对象：
+#### 56. 常见的BOM(浏览器对象模型)对象
 
 1. BOM的核心对象是window，表示浏览器的一个实例
 2. 窗口控制方法：
@@ -2332,7 +2138,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     - resizeTo(w, h)：把窗体调整成宽为w，高为h
     - scrollTo(x, y)：有滚动条时，将横向滚动条移动到相对于窗体宽度为x个像素的位置，将纵向移动到相对于窗体高度为y个像素的位置
     - scrollBy(x, y)：有滚动条时，横向滚动条向左移动x个像素，纵向滚动条移动y个像素
-3. **location**：
+3. __location__：
     - hash：URL中#后面的字符
     - host：域名+端口号
     - hostname：域名(不带端口)
@@ -2349,7 +2155,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     - history.back()：向后跳转一个页面
     - history.length：获取历史记录数
 
-#### 57. 尾递归 尾调用：
+#### 57. 尾递归 尾调用
 
 ```js
 1. 尾调用：函数的最后一步调用另一个函数
@@ -2384,7 +2190,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
 
 ```
 
-#### 58. JS本地存储的方式及区别：
+#### 58. JS本地存储的方式及区别
 
 1. cookie(小型文本文件)：辨别用户身份而存储在用户本地终端上的数据
 
@@ -2418,7 +2224,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     - 与localStorage用法基本一致
     - 页面关闭，数据删除
 
-#### 59. 函数的arguments参数是类数组，如何转为数组？遍历类数组？：
+#### 59. 函数的arguments参数是类数组，如何转为数组？遍历类数组？
 
 ```js
 1. arguments是一个对象，属性是从0开始递增的数字，有callee和length属性，与数组类似，但没有数组常见的方法
@@ -2443,7 +2249,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
         }
 ```
 
-#### 60. JS的变量提升? 导致什么问题？：
+#### 60. JS的变量提升? 导致什么问题？
 
 ```js
 1. 变量提升的本质原因：
@@ -2466,12 +2272,12 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     - 由于遍历时定义的i会变量提升成为一个全局变量，在函数结束之后不会被销毁，所以打印出来11
         var tmp = 'hello world';
         for (var i = 0; i < tmp.length; i++) {
-	        console.log(tmp[i]);
+         console.log(tmp[i]);
         }
         console.log(i); // 11
 ```
 
-#### 61. for...in | for...of ：
+#### 61. for...in | for...of
 
 ```js
 1. for...of：遍历含有iterator接口的数据结构(数组，类数组对象，Set，Map，字符串等)，并返回各项的值
@@ -2506,7 +2312,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
                     }
             }
             for(var k of obj){
-	            console.log(k)
+             console.log(k)
             }
 
         法2：
@@ -2520,4 +2326,3 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
                 console.log(k,v);
             }
 ```
-

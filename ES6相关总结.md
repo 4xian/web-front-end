@@ -1,6 +1,6 @@
-# ES6相关总结：
+# ES6相关总结
 
-#### 1. let const var：
+#### 1. let const var
 
 ```js
 1. let const：
@@ -24,7 +24,7 @@
     - 函数内使用var声明，变量时局部的
 ```
 
-#### 2. 可以new一个键头函数吗？：
+#### 2. 可以new一个键头函数吗？
 
 ```js
 箭头函数 没有prototype，没有自己的this指向，也不能使用arguments参数，无法new箭头函数
@@ -50,7 +50,7 @@ new操作符的实现：
     newFactory(构造函数, 参数)
 ```
 
-#### 3. 箭头函数和普通函数的区别：
+#### 3. 箭头函数和普通函数的区别
 
 ```js
 1. 箭头函数更简洁：
@@ -73,7 +73,7 @@ new操作符的实现：
 5. 箭头函数不能用作Generator函数，不能用yield关键字
 ```
 
-#### 4. 扩展运算符(...)：
+#### 4. 扩展运算符(...)
 
 ```js
 1. 可用于：
@@ -84,7 +84,7 @@ new操作符的实现：
     - 可将定义了Iterator接口的类数组转为数组(如arguments)
 ```
 
-#### 5. Proxy可实现什么功能：
+#### 5. Proxy可实现什么功能
 
 ```js
     - 创建一个对象的代理，实现基本操作的拦截和自定义
@@ -115,8 +115,7 @@ new操作符的实现：
     }
 ```
 
-
-#### 6. ES6新增的字符串方法：
+#### 6. ES6新增的字符串方法
 
 ```js
     // str中是否包括xxx
@@ -130,7 +129,7 @@ new操作符的实现：
     - str.repeat(n)
 ```
 
-#### 7. ES6数组新增的方法：
+#### 7. ES6数组新增的方法
 
 ```js
 1. Array.from：将类数组和具有iterable的对象(如Set,Map)转为数组
@@ -212,7 +211,7 @@ new操作符的实现：
 
 ```
 
-#### 8. ES6对象新增的方法：
+#### 8. ES6对象新增的方法
 
 ```js
 1. 对象键名和值名相等时可简写，方法也可简写
@@ -317,7 +316,7 @@ new操作符的实现：
         // { foo: "bar", baz: 42 }
 ```
 
-#### 9. ES6函数新增相关：
+#### 9. ES6函数新增相关
 
 ```js
 1. 参数相关：
@@ -363,7 +362,7 @@ new操作符的实现：
 4. 函数内部开启严格模式时，参数使用默认值，解构赋值，扩展运算符会报错
 ```
 
-#### 10. ES6中Set Map相关：
+#### 10. ES6中Set Map相关
 
 ```js
 1. Set：无序的，不重复的元素组成的集合
@@ -476,4 +475,141 @@ new操作符的实现：
         - Object需要先获取键才能迭代
 ```
 
-#### 11. 
+#### 11. ES6中的Promise
+
+```js
+1. Promise只有三种状态：状态不受外界影响，只有异步操作的结果可以决定状态，状态一旦变化便不再改变且只有 pending-->fulfilled | pending-->rejected
+    - pending：进行中
+    - fulfilled：已成功
+    - rejected：已失败
+
+    -缺点：
+        - 无法中途取消Promise
+        - 不设置回调函数，Promise内部抛出的错误，不会反应到外部
+        - 处于pending时，无法确定目前是哪个阶段(刚开始还是即将完成)
+```
+
+```js
+2. Promise构造函数：接受一个函数作为参数，函数的两个参数为resolve和reject，resolve将状态由 未完成 变为 成功，reject将由 未完成 变为 失败
+    - all()：
+        - 用于将多个 `Promise`实例，包装成一个新的 `Promise`实例
+        - 接受一个数组（迭代对象）作为参数，数组成员都应为`Promise`实例
+        - 数组中所有成员状态都resolved时，all方法才会变成resolved，有一个rejected，all方法将变成rejected
+        - 如果作为参数的 Promise 实例，自己定义了catch方法，那么它一旦被rejected，并不会触发Promise.all()的catch方法，而是走then方法
+        - 成功时回调函数的参数也是一个数组，按顺序保存着每一个promise实例resolve的值，失败时则返回最先reject的值
+
+    - race()：
+        - 同样是将多个 Promise 实例，包装成一个新的 Promise 实例
+        - 有一个实例率先改变状态(resolved/rejected)，它的状态就跟着改变
+
+    - allSettled()：
+        - 接受一组 Promise 实例作为参数，包装成一个新的 Promise 实例
+        - 只有等到所有这些参数实例都返回结果，不管是fulfilled还是rejected，包装实例才会结束
+
+    - resolve()：
+        - 将现有对象转为 Promise对象
+        - 参数是一个 Promise 实例，promise.resolve将不做任何修改、原封不动地返回这个实例
+        - 参数是一个thenable对象，promise.resolve会将这个对象转为 Promise对象，然后就立即执行thenable对象的then()方法
+        - 参数不是具有then()方法的对象，或根本就不是对象，Promise.resolve()会返回一个新的 Promise 对象，状态为resolved
+        - 没有参数时，直接返回一个resolved状态的 Promise 对象
+
+    - reject()：
+        - 返回一个新的 Promise 实例，该实例的状态为rejected
+        - reject()方法的参数，会原封不动地变成后续方法的参数
+```
+
+```js
+3. Promise实例： 
+    - then()：
+        - 接受两个回调函数作参数，第一个为状态resolved时使用，第二个为状态为rejected时使用(第二个参数可省略)
+        - 可链式调用(用于顺序的异步事件)
+
+        const promise = new Promise((resolve, reject)=>{
+            if(/* 异步成功 */){
+                resolve()
+            }else{
+                reject()
+            }
+        })
+
+        promise.then(function(msg){
+            console.log(msg);
+        },function(error){
+            console.log(error);
+        });
+
+        getJSON("/posts.json").then(function(json) {
+            return json.post;
+        }).then(function(post) {
+            // ...链式书写
+        });
+
+    - catch()：`catch()`方法是`.then(null, rejection)`或`.then(undefined, rejection)`的别名(即then的第二个参数)，用于指定发生错误时的回调函数；
+
+        getJSON('/posts.json').then(function(posts) {
+          // ...
+        }).catch(function(error) {
+          // 处理 getJSON 和 前一个回调函数运行时发生的错误
+          console.log('发生错误！', error);
+        });
+        
+        
+        // 错误具有“冒泡”性质，会一直向后传递，直到被捕获为止
+        getJSON('/post/1.json').then(function(post) {
+          return getJSON(post.commentURL);
+        }).then(function(comments) {
+          // some code
+        }).catch(function(error) {
+          // 处理前面三个Promise产生的错误
+        });
+        
+        // 一般这样写
+        promise.then((res)=>{
+            //...
+        }).catch(error=>{
+            //...
+        });
+
+    - finally()：用于指定不管 Promise 对象最后状态如何，都会执行的操作(在then/catch后执行)
+        promise
+        .then(result => {···})
+        .catch(error => {···})
+        .finally(() => {···});
+
+```
+
+#### 12. async / await(Generator的语法糖)
+
+```js
+1. async：
+    - async函数返回的是一个promise对象，可用then()处理，如果在函数中return一个直接量，async会把这个直接量通过Promise.resolve()封装成Promise对象
+    - 在没有await的情况下执行async函数，会立即执行，返回一个Promise对象，并且不会阻塞后面的语句
+        async function test(){
+            return 'xxx'
+        }
+        let res = test()
+        console.log(res)
+        res.then(v=>{
+            console.log(v) // xxx
+        })
+
+2. await：等待表达式的结果
+    - 如果不是等待Promise对象，那么表达式的运算结果即为它等待的东西
+    - 如果是Promise对象，await便会阻塞后面的代码，等待Promise对象resolve作为表达式的结果
+
+3. async/await 与 Promise的区别：
+    - 摆脱了Promise的链式调用，解决了Promise传递中间值的繁琐行为
+    - 使用try/catch处理错误
+    - 断点调试友好，调试器只能跟踪同步代码，无法进入.then代码块
+
+4. 捕获异常：
+    async function fn(){
+        try{
+            let res = await Promise.reject('err')
+        }catch(err){
+            console.log(err)
+        }
+    }
+```
+
+#### 13. 

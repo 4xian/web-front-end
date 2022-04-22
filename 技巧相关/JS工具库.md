@@ -1,6 +1,7 @@
-# JS题目:
+# JS题目
 
-### 1. 实现一个document.getElementById功能的函数:
+### 1. 实现一个document.getElementById功能的函数
+
 ```js
 1. 方法1: 递归
 
@@ -32,7 +33,8 @@ findId('id').nextNode();
 
 ```
 
-### 2. 实现一个模拟sql语句的查找方法：
+### 2. 实现一个模拟sql语句的查找方法
+
 ```js
 var data = [
     {title: 't1', userId: '10086', name: 'Jay'},
@@ -50,6 +52,7 @@ name: /\d$/,
     {title: 't2', userId: '10087', name: 'Tom1'}
 ]
 ```
+
 ```js
 class FindSql {
     constructor(data){
@@ -89,7 +92,8 @@ let find = (d) => new FindSql(d);
 find(data).where({name: /\d$/}).orderBy('userId','desc');
 ```
 
-### 3. 将字符串转为/消除千分位格式:
+### 3. 将字符串转为/消除千分位格式
+
 ```js
 1. 正则:
 let str = '12345678';
@@ -109,7 +113,8 @@ const clearFunc = (str) => {
 }
 ```
 
-### 4. 数组/对象扁平化flat方法:
+### 4. 数组/对象扁平化flat方法
+
 ```js
 1. 数组扁平化:
 
@@ -156,7 +161,8 @@ const clearFunc = (str) => {
     }
 ```
 
-### 5. 格式化时间戳：
+### 5. 格式化时间戳
+
 ```js
 /* 
 time(时间戳);
@@ -188,7 +194,8 @@ formatTime(time, type = 'YYYY-MM-DD HH:mm:ss', zero = true) {
 
 ```
 
-### 6. 打乱数组顺序：
+### 6. 打乱数组顺序
+
 ```js
 let arr = [0,1,2,3,4,5,6,7,8,9]
 function randomArray(arr){
@@ -199,7 +206,8 @@ function randomArray(arr){
 }
 ```
 
-### 7. 实现数组的push,filter,map方法:
+### 7. 实现数组的push,filter,map方法
+
 ```js
     1. push方法:
     Array.prototype._push = function(...args){
@@ -234,7 +242,8 @@ function randomArray(arr){
     }
 ```
 
-### 8. 实现字符串的repeat方法:
+### 8. 实现字符串的repeat方法
+
 ```js
 1.
 function repeat(s,n){
@@ -247,14 +256,16 @@ function repeat(s,n){
 }
 ```
 
-### 9. 实现字符串的翻转:
+### 9. 实现字符串的翻转
+
 ```js
 function reverse(str){
     return [...str].reverse().join('')
 }
 ```
 
-### 10. 类数组转为数组:
+### 10. 类数组转为数组
+
 ```js
 Array.prototype.slice.call(arr);
 Array.prototype.splice.call(arr,0);
@@ -262,7 +273,8 @@ Array.prototype.concat.apply([],arr);
 Array.from(arr);
 ```
 
-### 11. 对象与树形结构相互转化:
+### 11. 对象与树形结构相互转化
+
 ```js
     1. 将数组对象转为树形结构:
     function toTree(arr = [], cid="id", pid="pid"){
@@ -298,7 +310,8 @@ Array.from(arr);
     }
 ```
 
-### 12. url的params参数与对象相互转化:
+### 12. url的params参数与对象相互转化
+
 ```js
 1. 将params转为对象:
 function parseUrl(str){
@@ -320,11 +333,10 @@ function mergeParams(obj = {}){
 }
 ```
 
-### 13.  获取任意区间的两整数：
+### 13.  获取任意区间的两整数
 
 ```js
 function random(min = 0, max = 255) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 ```
-
