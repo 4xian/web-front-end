@@ -89,10 +89,10 @@
 
 #### 7. JS中的类型转换规则：(显示转换，隐式转换)
 
-1. 其他值转为数字：Number() / parseInt() / parseFloat()
+1. 其他值转为数字：Number() / parseInt(取整，无进位) / parseFloat(取浮点数)
 
-    - undefined || 'string(非数字)'=> NaN
-    - null || ' '  || false=> 0
+    - undefined || 'string(非数字)' => NaN
+    - null || ' '  || false => 0
     - true => 1
     - 对象类型先调用toPrimitive转为基本类型，再遵循基本类型转为数字规则(转为基本类型时，先检查值是否有valueOf()方法，如果有并返回基本类型值，则使用该值转换，没有则使用toString()的返回值来进行转换，若都不返回基本类型值，则报错)
 
@@ -126,6 +126,7 @@
 
     - 一般都是直接加" "
     - 对象转成字符串为"[object Object]"
+    - 数组也符合上面两条
 
 3. 其他值转为布尔值：Boolean()
 
@@ -134,14 +135,14 @@
 
 4. __隐式转换__：(要求运算符两边的操作数不是同一类型)
 
-    - 比较运算（`==`、`!=`、`>`、`<`）、`if`、`while`需要布尔值地方
-    - 算术运算（`+`、`-`、`*`、`/`、`%`）
+    - __比较运算__（`==`、`!=`、`>`、`<`）、`if`、`while`需要布尔值的地方
+    - __算术运算__（`+`、`-`、`*`、`/`、`%`）
 
     ```js
     1. 自动转成布尔值：(系统内部会调用Boolean函数)
     
     2. 自动转成字符串：(常发生在+运算中，一旦存在字符串，则会进行字符串拼接操作)
-     - 先将复合类型的值转为原始类型的值，再将原始类型的转      为字符串
+     - 先将复合类型的值转为原始类型的值，再将原始类型的转为字符串
     '5' + 1 // '51'
     '5' + true // "5true"
     '5' + false // "5false"
@@ -816,13 +817,15 @@ const EventUtils = {
 
 #### 19.  JS中的模块规范
 
-1. CommonJS：通过require()来引入模块，通过module.exports定义输出接口，服务器端的解决方案，以同步方式引入，运行时加载模块
+1. CommonJS：通过require()来引入模块，通过module.exports定义输出接口，服务器端的解决方案，以同步方式引入，__运行时加载模块__
 
-    - CommonJS模块输出的是值的拷贝，当模块内部发生变化将无法影响输出的值
+    - 单个值导出
+    - 动态语法可写在判断里
+    - CommonJS模块输出的是 __值的拷贝__，当模块内部发生变化将无法影响输出的值
 
 2. AMD：异步加载模块，所有依赖这个模块的语句都定义在回调函数里，等加载完毕再执行回调函数(require.js实现了AMD规范)
 
-    - reuqire.js原理是动态创建script脚本来异步引入模块，然后对脚本的load事件进行监听，每个脚本都加载完后，再执行回调函数
+    - require.js原理是动态创建script脚本来异步引入模块，然后对脚本的load事件进行监听，每个脚本都加载完后，再执行回调函数
 
         ```js
         function require(path) {
@@ -842,8 +845,9 @@ const EventUtils = {
 
 3. CMD：异步加载模块，
 
-4. ES6：使用import 和export 来导入导出模块，__编译时__就能确定模块的依赖关系，以及输入和输出的变量
-
+4. ES6：使用import 和export 来导入导出模块，__编译时__ 就能确定模块的依赖关系，以及输入和输出的变量
+    - 输出的是 __值的引用__，可导出多个
+    - 静态语法只能卸载顶层
     - JS引擎对脚本静态解析时，遇到import会生成一个只读引用，等脚本执行时，再根据只读引用去对应的模块中取值
 
         ```js
@@ -1390,7 +1394,7 @@ const deepClone = function(obj){
 
 
 
-#### 31. 函数柯里化的实现
+#### 30. 函数柯里化的实现
 
 1. ```js
     function curry(fn, ...args){
@@ -1424,7 +1428,7 @@ function curry(fn, args) {
 }
 ```
 
-#### 32. 异步编程的方式
+#### 31. 异步编程的方式
 
 1. 回调函数：嵌套地狱，不利于维护
 2. Promise函数：造成多个then的链式调用
@@ -1433,7 +1437,7 @@ function curry(fn, args) {
 5. 事件监听
 6. 发布/订阅(观察者模式)
 
-#### 37. 常用的Content-Type
+#### 32. 常用的Content-Type
 
 ```html
 application/x-www-form-urlencoded
@@ -1450,7 +1454,7 @@ text/xml
 该种方式主要用来提交 XML 格式的数据。
 ```
 
-#### 38. 解释一下事件代理(事件委托)
+#### 33. 解释一下事件代理(事件委托)
 
 1. __事件委托__：把一个或一组元素的事件委托的它的父层或更外层元素上，真正绑定事件的是外层元素，而不是目标元素(利用事件冒泡机制)，然后对目标元素进行匹配
 2. 适合事件委托的情况：click`，`mousedown`，`mouseup`，`keydown`，`keyup`，`keypress
@@ -1462,7 +1466,7 @@ text/xml
     - mousemove， mouseout对性能消耗高，不适用事件委托
     - 都用事件代理，可能会出现事件误判，不该触发的事件绑定了事件
 
-#### 39. 手写一个JSONP
+#### 34. 手写一个JSONP
 
 ```js
 function jsonp(url, params, callback) {
@@ -1502,7 +1506,7 @@ function jsonp(url, params, callback) {
 }
 ```
 
-#### 40. 手写一个观察者模式
+#### 35. 手写一个观察者模式
 
 ```js
 var events = (function() {
@@ -1552,7 +1556,7 @@ var events = (function() {
 })();
 ```
 
-#### 41. 实现事件触发器(EventEmitter)
+#### 36. 实现事件触发器(EventEmitter)
 
 ```js
 class EventEmitter {
@@ -1597,7 +1601,7 @@ class EventEmitter {
 }
 ```
 
-#### 42. 计算页面从加载到完成的时间
+#### 37. 计算页面从加载到完成的时间
 
 ```html
 ECMAScript 5引入“高精度时间戳”这个 API，部署在 performance 对象上。它的精度可以达到1毫秒
@@ -1612,7 +1616,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
 
 ```
 
-#### 44. JS中数组常用的方法
+#### 38. JS中数组常用的方法
 
 1. 增：
 
@@ -1667,261 +1671,11 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
 
 
 
-#### 49. ES6的Generator
 
-1. 会返回一个遍历器对象，可以依次遍历 `Generator` 函数内部的每一个状态
 
-    - `function`关键字与函数名之间有一个星号
 
-    - 函数体内部使用`yield`表达式，定义不同的内部状态
 
-        ```js
-        1. 遇到yield表达式，就暂停执行后面的操作，并将紧跟在yield后面的那个表达式的值，作为返回的对象的value属性值。
-        2. 下一次调用next方法时，再继续往下执行，直到遇到下一个yield表达式
-        3. 如果没有再遇到新的yield表达式，就一直运行到函数结束，直到return语句为止，并将return语句后面的表达式的值，作为返回的对象的value属性值。
-        4. 如果该函数没有return语句，则返回的对象的value属性值为undefined
-        
-        5. done用来判断是否存在下个状态，value对应状态值
-        6. yield表达式本身没有返回值，或者说总是返回undefined
-        7. 通过调用next方法可以带一个参数，该参数就会被当作上一个yield表达式的返回值
-        
-        function* helloWorldGenerator() {
-          yield 'hello';
-          yield 'world';
-          return 'ending';
-        }
-        var hw = helloWorldGenerator();
-        hw.next()
-        // { value: 'hello', done: false }
-        hw.next()
-        // { value: 'world', done: false }
-        hw.next()
-        // { value: 'ending', done: true }
-        hw.next()
-        // { value: undefined, done: true }
-        
-        正因为Generator函数返回Iterator对象，因此我们还可以通过for...of进行遍历
-        
-        原生对象没有遍历接口，通过Generator函数为它加上这个接口，就能使用for...of进行遍历了
-        
-        function* objectEntries(obj) {
-          let propKeys = Reflect.ownKeys(obj);
-        
-          for (let propKey of propKeys) {
-            yield [propKey, obj[propKey]];
-          }
-        }
-        let jane = { first: 'Jane', last: 'Doe' };
-        for (let [key, value] of objectEntries(jane)) {
-          console.log(`${key}: ${value}`);
-        }
-        // first: Jane
-        // last: Doe
-        ```
-
-2. 异步解决方案：
-    - 回调函数
-    - Promise对象
-    - generator函数
-    - async/await
-
-#### 50. ES6中Decorator(装饰器)
-
-1. 一个普通的函数，用于扩展类属性和类方法
-
-    - 类的装饰：
-
-        ```js
-        //想要传递参数，可在装饰器外层再封装一层函数
-        
-        function testable(isTestable) {
-          return function(target) {
-            target.isTestable = isTestable;
-          }
-        }
-        
-        @testable(true) // 带参数
-        class MyTestableClass {}
-        MyTestableClass.isTestable // true
-        
-        @testable(false)
-        class MyClass {}
-        MyClass.isTestable // false
-        ```
-
-    - 类属性的装饰：
-
-        ```js
-        对类属性进行装饰的时候，能够接受三个参数:
-        1. 类的原型对象
-        2. 需要装饰的属性名
-        3. 装饰属性名的描述对象
-        
-        //首先定义一个readonly装饰器
-        function readonly(target, name, descriptor){
-          descriptor.writable = false; // 将可写属性设为false
-          return descriptor;
-        }
-        
-        //使用readonly装饰类的name方法
-        class Person {
-          @readonly
-          name() { return `${this.first} ${this.last}` }
-        }
-        
-        相当于以下调用
-        readonly(Person.prototype, 'name', descriptor);
-        ```
-
-    - 装饰器不能用于修饰函数，因为函数存在变量声明情况
-
-#### 51. ES6中的Proxy：定义基本操作的自定义行为(元编程)
-
-1. Proxy构造函数：
-
-    ```js
-    const proxy = new Proxy(target, handler);
-    //target：拦截的目标对象(对象，数组，函数，代理...)
-    //handler：通常以函数作为属性的对象，各属性中的函数分别定义了在执行各种操作时代理 p 的行为
-    
-    关于handler拦截属性，有如下：
-    get(target,propKey,receiver)：
-    //拦截对象属性的读取
-    set(target,propKey,value,receiver)：
-    //拦截对象属性的设置
-    has(target,propKey)：
-    //拦截propKey in proxy的操作，返回一个布尔值
-    deleteProperty(target,propKey)：
-    //拦截delete proxy[propKey]的操作，返回一个布尔值
-    ownKeys(target)：
-    //拦截Object.keys(proxy)、for...in等循环，返回一个数组
-    getOwnPropertyDescriptor(target, propKey)：
-    //拦截Object.getOwnPropertyDescriptor(proxy, propKey)，返回属性的描述对象
-    defineProperty(target, propKey, propDesc)：
-    //拦截Object.defineProperty(proxy, propKey, propDesc），返回一个布尔值
-    preventExtensions(target)：
-    //拦截Object.preventExtensions(proxy)，返回一个布尔值
-    getPrototypeOf(target)：
-    //拦截Object.getPrototypeOf(proxy)，返回一个对象
-    isExtensible(target)：
-    //拦截Object.isExtensible(proxy)，返回一个布尔值
-    setPrototypeOf(target, proto)：
-    //拦截Object.setPrototypeOf(proxy, proto)，返回一个布尔值
-    apply(target, object, args)：
-    //拦截 Proxy 实例作为函数调用的操作
-    construct(target, args)：
-    //拦截 Proxy 实例作为构造函数调用的操作2.Reflect：
-    ```
-
-2. Reflect：
-
-    - 在proxy内部调用对象的默认行为
-    - Proxy对象有的代理方法，Reflect对象都有
-    - 修改某些Object方法的返回结果
-    - 让Object操作都变成函数行为
-
-    ```
-    1.将 Object 对象的一些明显属于语言内部的方法（比如 Object.defineProperty，放到 Reflect 对象上。
-    
-    2.修改某些 Object 方法的返回结果，让其变得更合理。
-    
-    3.让 Object 操作都变成函数行为。
-    
-    4.Reflect 对象的方法与 Proxy 对象的方法一一对应，只要是 Proxy 对象的方法，就能在 Reflect 对象上找到对应的方法。这就让 Proxy 对象可以方便地调用对应的 Reflect 方法，完成默认行为，作为修改行为的基础。也就是说，不管 Proxy 怎么修改默认行为，你总可以在 Reflect 上获取默认行为
-    ```
-
-3. Proxy的几种用法：
-
-    - get()：get接受三个参数，依次为目标对象、属性名和 proxy 实例本身，最后一个参数可选
-
-    - (如果一个属性不可配置（configurable）且不可写（writable），则 Proxy 不能修改该属性，否则会报错)
-
-        ```
-        var person = {
-          name: "张三"
-        };
-        var proxy = new Proxy(person, {
-          get: function(target, propKey) {
-            return Reflect.get(target,propKey)
-          }
-        });
-        proxy.name // "张三"
-        ```
-
-    - set()：set方法用来拦截某个属性的赋值操作，可以接受四个参数，依次为目标对象、属性名、属性值和 Proxy 实例本身
-
-    - (如果目标对象自身的某个属性，不可写且不可配置，那么`set`方法将不起作用)
-
-    - (严格模式下，`set`代理如果没有返回`true`，就会报错)
-
-        ```js
-        let validator = {
-          set: function(obj, prop, value) {
-            if (prop === 'age') {
-              if (!Number.isInteger(value)) {
-                throw new TypeError('The age is not an integer');
-              }
-              if (value > 200) {
-                throw new RangeError('The age seems invalid');
-              }
-            }
-            // 对于满足条件的 age 属性以及其他属性，直接保存
-            obj[prop] = value;
-          }
-        };
-        let person = new Proxy({}, validator);
-        ```
-
-    - deleteProperty()：用于拦截delete操作，如果这个方法抛出错误或者返回`false`，当前属性就无法被`delete`命令删除
-
-    - (目标对象自身的不可配置（configurable）的属性，不能被`deleteProperty`方法删除，否则报错)
-
-        ```js
-        var handler = {
-          deleteProperty (target, key) {
-            invariant(key, 'delete');
-            Reflect.deleteProperty(target,key)
-            return true;
-          }
-        };
-        function invariant (key, action) {
-          if (key[0] === '_') {
-            throw new Error(`无法删除私有属性`);
-          }
-        }
-        var target = { _prop: 'foo' };
-        var proxy = new Proxy(target, handler);
-        delete proxy._prop
-        // Error: 无法删除私有属性
-        ```
-
-4. 取消代理：Proxy.revocable(target, handler)
-
-5. 使用场景：
-
-    - 拦截和监视外部对对象的访问
-
-    - 降低函数或类的复杂度
-
-    - 在复杂操作前对操作进行校验或对所需资源进行管理
-
-    - __实现观察者模式__：函数自动观察数据对象，一旦对象有变化，函数就会自动执行`observable`函数返回一个原始对象的 `Proxy` 代理，拦截赋值操作，触发充当观察者的各个函数
-
-    - ```js
-        const queuedObservers = new Set();
-        
-        const observe = fn => queuedObservers.add(fn);
-        const observable = obj => new Proxy(obj, {set});
-        
-        function set(target, key, value, receiver) {
-          const result = Reflect.set(target, key, value, receiver);
-          queuedObservers.forEach(observer => observer());
-          return result;
-        }
-        //观察者函数都放进Set集合，当修改obj的值，在会set函数中拦截，自动执行Set所有的观察者
-        ```
-
-#### 52.  JS中字符串的常用方法：字符串一旦创建，就不可变(都是新建副本，在副本上操作再返回新的)
+#### 39.  JS中字符串的常用方法：字符串一旦创建，就不可变(都是新建副本，在副本上操作再返回新的)
 
 1. 增：
     - concat()：用于拼接新字符串
@@ -1945,7 +1699,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     - search()：接收一个参数，可以是一个正则表达式字符串，也可以是一个`RegExp`对象，找到则返回匹配索引，否则返回 -1，(string.search(reg))
     - replace()：接收两个参数，第一个参数为匹配的内容，第二个参数为替换的元素（可用函数）(string,replace('a', 'b'))
 
-#### 53.  == 和 ===
+#### 40.  == 和 ===
 
 1. == ：(先进行类型转换，再判断值是否相等)
     - 都为简单类型：字符串 / 布尔值 ==> 先转数值，再比较
@@ -1958,7 +1712,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     - null === undefined  // false
 3. 除了在比较对象属性为`null`或者`undefined`的情况下，我们可以使用相等操作符（==），其他情况建议一律使用全等操作符（===）
 
-#### 54. JS中执行上下文和执行栈
+#### 41. JS中执行上下文和执行栈
 
 1. 执行上下文：(JS代码执行环境)
 
@@ -2064,7 +1818,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     - 所有的函数执行上下文执行完毕，然后执行全局上下文
     - 全局上下文出栈，结束
 
-#### 55.  typeof 与 instanceof
+#### 42.  typeof 与 instanceof
 
 1. typeof：返回一个基本类型字符串，表示未经计算的操作数的类型
 
@@ -2128,7 +1882,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     }
     ```
 
-#### 56. 常见的BOM(浏览器对象模型)对象
+#### 43. 常见的BOM(浏览器对象模型)对象
 
 1. BOM的核心对象是window，表示浏览器的一个实例
 2. 窗口控制方法：
@@ -2155,7 +1909,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     - history.back()：向后跳转一个页面
     - history.length：获取历史记录数
 
-#### 57. 尾递归 尾调用
+#### 44. 尾递归 尾调用
 
 ```js
 1. 尾调用：函数的最后一步调用另一个函数
@@ -2190,7 +1944,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
 
 ```
 
-#### 58. JS本地存储的方式及区别
+#### 45. JS本地存储的方式及区别
 
 1. cookie(小型文本文件)：辨别用户身份而存储在用户本地终端上的数据
 
@@ -2224,7 +1978,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
     - 与localStorage用法基本一致
     - 页面关闭，数据删除
 
-#### 59. 函数的arguments参数是类数组，如何转为数组？遍历类数组？
+#### 46. 函数的arguments参数是类数组，如何转为数组？遍历类数组？
 
 ```js
 1. arguments是一个对象，属性是从0开始递增的数字，有callee和length属性，与数组类似，但没有数组常见的方法
@@ -2249,7 +2003,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
         }
 ```
 
-#### 60. JS的变量提升? 导致什么问题？
+#### 47. JS的变量提升? 导致什么问题？
 
 ```js
 1. 变量提升的本质原因：
@@ -2277,7 +2031,7 @@ var pageLoadTime = t.loadEventEnd - t.navigationStart;
         console.log(i); // 11
 ```
 
-#### 61. for...in | for...of
+#### 48. for...in | for...of
 
 ```js
 1. for...of：遍历含有iterator接口的数据结构(数组，类数组对象，Set，Map，字符串等)，并返回各项的值

@@ -22,6 +22,9 @@
     - 存在变量提升
     - 可以对一个变量重复声明，会覆盖
     - 函数内使用var声明，变量时局部的
+
+4. 暂时性死区：
+    - 当前的执行上下文，会有变量提升，未被初始化，在执行上下文执行阶段，执行代码如果没有执行到变量赋值，引用此变量会报错
 ```
 
 #### 2. 可以new一个键头函数吗？
@@ -53,7 +56,7 @@ new操作符的实现：
 #### 3. 箭头函数和普通函数的区别
 
 ```js
-1. 箭头函数更简洁：
+1. 箭头函数语法更简洁清晰：
     - 无参数，直接写空括号
     - 一个参数，省略括号
     - 多个参数，逗号分割
@@ -61,8 +64,8 @@ new操作符的实现：
     - 函数体无返回值，且只有一句话，可在语句前加void关键字(如调用函数)
         let fn = () => void doesNotReturn();
 
-2. 箭头函数没有自己的this:
-    - 不会创建自己的this，在自己作用域的上一层继承this，因此this的指向在定义时即确定，继承来的this指向永远不会改变
+2. 箭头函数没有自己的this：(定义时捕获外层环境的this)
+    - 不会创建自己的this，在自己作用域的上一层继承this，因此this的指向在**定义时**会捕获外层环境的this，继承来的this指向永远不会改变(箭头函数定义的作为对象的方法调用，this指向的依旧是Window)
     - call apply bind 等方法不能改变箭头函数的this指向
 
 3. 箭头函数不能作为构造函数使用，也没有prototype
@@ -115,6 +118,153 @@ new操作符的实现：
         return new Proxy(obj,handler)
     }
 ```
+
+
+#### ES6中的Proxy：定义基本操作的自定义行为(元编程)
+
+1. Proxy构造函数：
+
+    ```js
+    const proxy = new Proxy(target, handler);
+    //target：拦截的目标对象(对象，数组，函数，代理...)
+    //handler：通常以函数作为属性的对象，各属性中的函数分别定义了在执行各种操作时代理 p 的行为
+    
+    关于handler拦截属性，有如下：
+    get(target,propKey,receiver)：
+    //拦截对象属性的读取
+    set(target,propKey,value,receiver)：
+    //拦截对象属性的设置
+    has(target,propKey)：
+    //拦截propKey in proxy的操作，返回一个布尔值
+    deleteProperty(target,propKey)：
+    //拦截delete proxy[propKey]的操作，返回一个布尔值
+    ownKeys(target)：
+    //拦截Object.keys(proxy)、for...in等循环，返回一个数组
+    getOwnPropertyDescriptor(target, propKey)：
+    //拦截Object.getOwnPropertyDescriptor(proxy, propKey)，返回属性的描述对象
+    defineProperty(target, propKey, propDesc)：
+    //拦截Object.defineProperty(proxy, propKey, propDesc），返回一个布尔值
+    preventExtensions(target)：
+    //拦截Object.preventExtensions(proxy)，返回一个布尔值
+    getPrototypeOf(target)：
+    //拦截Object.getPrototypeOf(proxy)，返回一个对象
+    isExtensible(target)：
+    //拦截Object.isExtensible(proxy)，返回一个布尔值
+    setPrototypeOf(target, proto)：
+    //拦截Object.setPrototypeOf(proxy, proto)，返回一个布尔值
+    apply(target, object, args)：
+    //拦截 Proxy 实例作为函数调用的操作
+    construct(target, args)：
+    //拦截 Proxy 实例作为构造函数调用的操作2.Reflect：
+    ```
+
+2. Reflect：
+
+    - 在proxy内部调用对象的默认行为
+    - Proxy对象有的代理方法，Reflect对象都有
+    - 修改某些Object方法的返回结果
+    - 让Object操作都变成函数行为
+
+    ```js
+    1.将 Object 对象的一些明显属于语言内部的方法（比如 Object.defineProperty，放到 Reflect 对象上。
+    
+    2.修改某些 Object 方法的返回结果，让其变得更合理。
+    
+    3.让 Object 操作都变成函数行为。
+    
+    4.Reflect 对象的方法与 Proxy 对象的方法一一对应，只要是 Proxy 对象的方法，就能在 Reflect 对象上找到对应的方法。这就让 Proxy 对象可以方便地调用对应的 Reflect 方法，完成默认行为，作为修改行为的基础。也就是说，不管 Proxy 怎么修改默认行为，你总可以在 Reflect 上获取默认行为
+    ```
+
+3. Proxy的几种用法：
+
+    - get()：get接受三个参数，依次为目标对象、属性名和 proxy 实例本身，最后一个参数可选
+
+    - (如果一个属性不可配置（configurable）且不可写（writable），则 Proxy 不能修改该属性，否则会报错)
+
+        ```js
+        var person = {
+          name: "张三"
+        };
+        var proxy = new Proxy(person, {
+          get: function(target, propKey) {
+            return Reflect.get(target,propKey)
+          }
+        });
+        proxy.name // "张三"
+        ```
+
+    - set()：set方法用来拦截某个属性的赋值操作，可以接受四个参数，依次为目标对象、属性名、属性值和 Proxy 实例本身
+
+    - (如果目标对象自身的某个属性，不可写且不可配置，那么`set`方法将不起作用)
+
+    - (严格模式下，`set`代理如果没有返回`true`，就会报错)
+
+        ```js
+        let validator = {
+          set: function(obj, prop, value) {
+            if (prop === 'age') {
+              if (!Number.isInteger(value)) {
+                throw new TypeError('The age is not an integer');
+              }
+              if (value > 200) {
+                throw new RangeError('The age seems invalid');
+              }
+            }
+            // 对于满足条件的 age 属性以及其他属性，直接保存
+            obj[prop] = value;
+          }
+        };
+        let person = new Proxy({}, validator);
+        ```
+
+    - deleteProperty()：用于拦截delete操作，如果这个方法抛出错误或者返回`false`，当前属性就无法被`delete`命令删除
+
+    - (目标对象自身的不可配置（configurable）的属性，不能被`deleteProperty`方法删除，否则报错)
+
+        ```js
+        var handler = {
+          deleteProperty (target, key) {
+            invariant(key, 'delete');
+            Reflect.deleteProperty(target,key)
+            return true;
+          }
+        };
+        function invariant (key, action) {
+          if (key[0] === '_') {
+            throw new Error(`无法删除私有属性`);
+          }
+        }
+        var target = { _prop: 'foo' };
+        var proxy = new Proxy(target, handler);
+        delete proxy._prop
+        // Error: 无法删除私有属性
+        ```
+
+4. 取消代理：Proxy.revocable(target, handler)
+
+5. 使用场景：
+
+    - 拦截和监视外部对对象的访问
+
+    - 降低函数或类的复杂度
+
+    - 在复杂操作前对操作进行校验或对所需资源进行管理
+
+    - __实现观察者模式__：函数自动观察数据对象，一旦对象有变化，函数就会自动执行`observable`函数返回一个原始对象的 `Proxy` 代理，拦截赋值操作，触发充当观察者的各个函数
+
+    - ```js
+        const queuedObservers = new Set();
+        
+        const observe = fn => queuedObservers.add(fn);
+        const observable = obj => new Proxy(obj, {set});
+        
+        function set(target, key, value, receiver) {
+          const result = Reflect.set(target, key, value, receiver);
+          queuedObservers.forEach(observer => observer());
+          return result;
+        }
+        //观察者函数都放进Set集合，当修改obj的值，在会set函数中拦截，自动执行Set所有的观察者
+        ```
 
 #### 6. ES6新增的字符串方法
 
@@ -488,10 +638,41 @@ new操作符的实现：
         - 无法中途取消Promise
         - 不设置回调函数，Promise内部抛出的错误，不会反应到外部
         - 处于pending时，无法确定目前是哪个阶段(刚开始还是即将完成)
+
+2. 如何中断Promise后面的链式调用：直接在then方法返回新的Promise实例，让状态保持pending时，原Promise链将会中止
+    Promise.resolve().then(()=>{
+        console.log('then 1')
+        return new Promise(()=>{})
+    }).then(()=>{
+        console.log('then 2')
+    }).then(()=>{
+        console.log('then 3')
+    })
+
+    - 例：给网络请求设置超时时间，超时后便中断
+        // 超时3秒后取消请求
+        const cancelRequest = (fn, time = 3000) => {
+            const wait = new Promise((resolve, reject)=>{
+                setTimeout(()=>{
+                    reject('请求超时')
+                },time)
+            })
+            return Promise.race([fn, wait])
+        }
+
+        function test(){
+            return new Promise((resolve, reject)=>{
+                setTimeout(()=>{
+                    resolve('请求成功')
+                },5000)
+            })
+        }
+
+        cancelRequest(test())  // 请求超时
 ```
 
 ```js
-2. Promise构造函数：接受一个函数作为参数，函数的两个参数为resolve和reject，resolve将状态由 未完成 变为 成功，reject将由 未完成 变为 失败
+3. Promise构造函数：接受一个函数作为参数，函数的两个参数为resolve和reject，resolve将状态由 未完成 变为 成功，reject将由 未完成 变为 失败
     - all()：
         - 用于将多个 `Promise`实例，包装成一个新的 `Promise`实例
         - 接受一个数组（迭代对象）作为参数，数组成员都应为`Promise`实例
@@ -520,7 +701,7 @@ new操作符的实现：
 ```
 
 ```js
-3. Promise实例： 
+4. Promise实例： 
     - then()：
         - 接受两个回调函数作参数，第一个为状态resolved时使用，第二个为状态为rejected时使用(第二个参数可省略)
         - 可链式调用(用于顺序的异步事件)
@@ -579,24 +760,34 @@ new操作符的实现：
 
 ```
 
-#### 12. async / await(Generator的语法糖)
+#### 12. async / await(Generator + Promise的语法糖)
 
 ```js
 1. async：
     - async函数返回的是一个promise对象，可用then()处理，如果在函数中return一个直接量，async会把这个直接量通过Promise.resolve()封装成Promise对象
-    - 在没有await的情况下执行async函数，会立即执行，返回一个Promise对象，并且不会阻塞后面的语句
+
+2.  - 函数内没有await时：执行async函数，会返回一个Promise实例对象，并且不会阻塞后面的语句
         async function test(){
             return 'xxx'
         }
         let res = test()
-        console.log(res)
+        console.log(res) // promise实例
         res.then(v=>{
             console.log(v) // xxx
         })
 
-2. await：等待表达式的结果
-    - 如果不是等待Promise对象，那么表达式的运算结果即为它等待的东西
-    - 如果是Promise对象，await便会阻塞后面的代码，等待Promise对象resolve作为表达式的结果
+    - 函数内有await时：
+        - 如果不是等待Promise对象，那么表达式的运算结果即为它等待的东西
+        - 如果是Promise对象，await便会阻塞后面的代码：
+            - Promise的resolve作为表达式的结果，然后继续向下执行
+            - Promise的reject会抛出异常，中止向下执行
+
+        async function awaitFn(){
+            let res = await new Promise((r,j)=>{
+                r('成功')
+            })
+            console.log(res) // 成功
+        }
 
 3. async/await 与 Promise的区别：
     - 摆脱了Promise的链式调用，解决了Promise传递中间值的繁琐行为
@@ -613,7 +804,116 @@ new操作符的实现：
     }
 ```
 
-#### 13. ES6Class(类) 和 ES5的类
+#### 13. ES6的Generator
+
+1. 会返回一个遍历器对象，可以依次遍历 `Generator` 函数内部的每一个状态
+
+    - `function`关键字与函数名之间有一个星号
+
+    - 函数体内部使用`yield`表达式，定义不同的内部状态
+
+        ```js
+        1. 遇到yield表达式，就暂停执行后面的操作，并将紧跟在yield后面的那个表达式的值，作为返回的对象的value属性值。
+        2. 下一次调用next方法时，再继续往下执行，直到遇到下一个yield表达式
+        3. 如果没有再遇到新的yield表达式，就一直运行到函数结束，直到return语句为止，并将return语句后面的表达式的值，作为返回的对象的value属性值。
+        4. 如果该函数没有return语句，则返回的对象的value属性值为undefined
+        
+        5. done用来判断是否存在下个状态，value对应状态值
+        6. yield表达式本身没有返回值，或者说总是返回undefined
+        7. 通过调用next方法可以带一个参数，该参数就会被当作上一个yield表达式的返回值
+        
+        function* helloWorldGenerator() {
+          yield 'hello';
+          yield 'world';
+          return 'ending';
+        }
+        var hw = helloWorldGenerator();
+        hw.next()
+        // { value: 'hello', done: false }
+        hw.next()
+        // { value: 'world', done: false }
+        hw.next()
+        // { value: 'ending', done: true }
+        hw.next()
+        // { value: undefined, done: true }
+        
+        正因为Generator函数返回Iterator对象，因此我们还可以通过for...of进行遍历
+        
+        原生对象没有遍历接口，通过Generator函数为它加上这个接口，就能使用for...of进行遍历了
+        
+        function* objectEntries(obj) {
+          let propKeys = Reflect.ownKeys(obj);
+        
+          for (let propKey of propKeys) {
+            yield [propKey, obj[propKey]];
+          }
+        }
+        let jane = { first: 'Jane', last: 'Doe' };
+        for (let [key, value] of objectEntries(jane)) {
+          console.log(`${key}: ${value}`);
+        }
+        // first: Jane
+        // last: Doe
+        ```
+
+2. 异步解决方案：
+    - 回调函数
+    - Promise对象
+    - generator函数
+    - async/await
+
+
+#### 14. ES6中Decorator(装饰器)
+
+1. 一个普通的函数，用于扩展类属性和类方法
+
+    - 类的装饰：
+
+        ```js
+        //想要传递参数，可在装饰器外层再封装一层函数
+        
+        function testable(isTestable) {
+          return function(target) {
+            target.isTestable = isTestable;
+          }
+        }
+        
+        @testable(true) // 带参数
+        class MyTestableClass {}
+        MyTestableClass.isTestable // true
+        
+        @testable(false)
+        class MyClass {}
+        MyClass.isTestable // false
+        ```
+
+    - 类属性的装饰：
+
+        ```js
+        对类属性进行装饰的时候，能够接受三个参数:
+        1. 类的原型对象
+        2. 需要装饰的属性名
+        3. 装饰属性名的描述对象
+        
+        //首先定义一个readonly装饰器
+        function readonly(target, name, descriptor){
+          descriptor.writable = false; // 将可写属性设为false
+          return descriptor;
+        }
+        
+        //使用readonly装饰类的name方法
+        class Person {
+          @readonly
+          name() { return `${this.first} ${this.last}` }
+        }
+        
+        相当于以下调用
+        readonly(Person.prototype, 'name', descriptor);
+        ```
+
+    - 装饰器不能用于修饰函数，因为函数存在变量声明情况
+
+#### 15. ES6d的Class(类) 和 ES5的类
 
 ```js
 1. 
@@ -624,10 +924,34 @@ new操作符的实现：
     - class类有static静态方法，只能通过类调用，实例无法调用，静态方法包含this，this指的是类，而不是实例，static声明的静态属性和方法可被子类继承
 ```
 
-#### 14. ES6中的Iterator迭代器
+#### 16. ES6中的Iterator迭代器
 
 ```js
 1. 提供统一的接口，为不同的数据结构提供统一的访问途径
 
-2. 
+2. Iterator规范：迭代器包含一个next()方法，方法返回两个属性：done(布尔值，表示遍历是否结束)和value(返回当前位置的成员)
+
+3. 定义一个对象的Symbol.iterator属性，可将此对象修改为迭代器对象，可使用for...of遍历
+
+4. obj[Symbol.iterator] = function(){
+        let that = this,
+            keys = Object.keys(that),
+            id = 0;
+        return {
+            next(){
+                return id < keys.length ? {
+                    // value: [keys[id],that[keys[id++]]]
+                    value: that[keys[id++]],
+                    done: false
+                } : {
+                    value: undefined,
+                    done: true
+                }
+            }
+        }
+   }
+
+   for(let v of obj){
+       console.log(v)
+   }
 ```

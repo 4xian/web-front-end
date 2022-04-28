@@ -1,23 +1,23 @@
-# git常用命令：
+# git常用命令
 
-## 1. git提交：
+## 1. git提交
 
 ```js
-	git remote rm origin // 删除origin
+ git remote rm origin // 删除origin
     git remote add origin [url] // 在远程地址[url]上添加origin
-	
-	git pull // 拉取并与本地当前分支合并
-	git fetch -p // 拉取远程仓库，不与本地合并
+ 
+ git pull // 拉取并与本地当前分支合并
+ git fetch -p // 拉取远程仓库，不与本地合并
 
-	git add . // 添加至缓存区
+ git add . // 添加至缓存区
     git commit -m '描述'  // 提交到本地
-	git push origin dev:dev // 推送  远端名 本地仓库：远端仓库
+ git push origin dev:dev // 推送  远端名 本地仓库：远端仓库
     
     git log // 查看提交记录ID
     git checkout -b [branch名] // 新建分支，并切换到该分支
 ```
 
-## 2. git 生成public key：
+## 2. git 生成public key
 
 ```js
 1. git config --global user.name 'xxx' // 设置全局用户名
@@ -26,7 +26,7 @@
 4. 将生成的pub key 添加到git账户ssh key中
 ```
 
-## 3. git clone后推到自己新仓库：
+## 3. git clone后推到自己新仓库
 
 ```js
 1. rm -r .git // 删除原有git文件
@@ -39,15 +39,15 @@
 6. git push --set-upstream origin master // 提交到远程仓库
 ```
 
-### 4. git 拉取/推送出现文件路径错误/文件名不规范：
+### 4. git 拉取/推送出现文件路径错误/文件名不规范
 
 ```js
 git config core.protectNTFS false // 关闭git文件校验
 ```
 
-### 5. git  提交规范：
+### 5. git  提交规范
 
-```
+```js
 feat: 增加新功能
 fix: 修复问题/BUG
 style: 代码风格相关无影响运行结果的
@@ -63,7 +63,7 @@ types: 类型定义文件更改
 wip: 开发中
 ```
 
-### 6. git rebase 和 git merge 区别：
+### 6. git rebase 和 git merge 区别
 
 ```js
 都用于分支合并，主要在commit记录上不同
@@ -80,7 +80,7 @@ git rebase：
 
 ```
 
-### 7. git reset 和 git revert 区别：
+### 7. git reset 和 git revert 区别
 
 ```js
 git revert: 撤销某次操作，之前提交的commit记录和history都会保留，并且把这次撤销作为新的提交
@@ -98,7 +98,8 @@ git rebase: 删除指定的commit，
 
 ```
 
-### 8. git stash:
+### 8. git stash
+
 ```js
 保存当前工作进度，后续可以将某次保存的内容推出来
 
