@@ -78,13 +78,13 @@ new操作符的实现：
 ```js
 1. 可用于：
     - 展开数组/对象
-    - 浅拷贝
+    - 浅拷贝(生成新的数组或对象，不复制继承的属性或类的属性，会复制ES6的 symbol属性)
     - 合并数组
     - 生成数组
     - 可将定义了Iterator接口的类数组转为数组(如arguments)
 ```
 
-#### 5. Proxy可实现什么功能
+#### 5. Proxy
 
 ```js
     - 创建一个对象的代理，实现基本操作的拦截和自定义
@@ -92,9 +92,10 @@ new操作符的实现：
     - 严格模式下，set代理如果没有返回true，就会报错
     - 取消代理：Proxy.revocable(target, handler);
 
-1. Reflect：需在Proxy内部调用对象的默认行为，可使用Reflect
+1. Reflect：
+    - 需在Proxy内部调用对象的默认行为，可使用Reflect
     - Proxy拥有的代理方法，Reflect对象都有，以静态方法存在
-    - 修改某些Object方法的返回结果
+    - 修改某些Object方法的返回结果，让其变的更合理
     - 让Object操作都变成函数行为
 
 2. 实现一个简易数据响应式：
@@ -612,4 +613,21 @@ new操作符的实现：
     }
 ```
 
-#### 13. 
+#### 13. ES6Class(类) 和 ES5的类
+
+```js
+1. 
+    - class类必须new调用，不能直接执行；ES5的类与普通函数一样，可以执行
+    - class类不存在变量提升；ES5的类可以变量提升
+    - class类无法遍历实例原型链的属性和方法；ES5的类则可以遍历
+    - ES6中为new命令引入一个new.target属性，返回new命令作用于的构造函数，不是通过new调用或Reflect.constructor调用的，new.target会返回undefined
+    - class类有static静态方法，只能通过类调用，实例无法调用，静态方法包含this，this指的是类，而不是实例，static声明的静态属性和方法可被子类继承
+```
+
+#### 14. ES6中的Iterator迭代器
+
+```js
+1. 提供统一的接口，为不同的数据结构提供统一的访问途径
+
+2. 
+```
