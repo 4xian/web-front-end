@@ -815,15 +815,16 @@ const EventUtils = {
 5. 使用websocket协议，该协议无同源限制
 6. nginx代理：有跨域请求时发送给后端，让后端代为请求，然后把结果返回
 
-#### 19.  JS中的模块规范
+#### 19.  JS中的模块(Module)规范
 
-1. CommonJS：通过require()来引入模块，通过module.exports定义输出接口，服务器端的解决方案，以同步方式引入，__运行时加载模块__
+1. CommonJS：通过require()来引入模块，通过module.exports定义输出接口，服务器端的解决方案
 
+    - 以 __同步方式__ 引入，__运行时加载模块__
     - 单个值导出
     - 动态语法可写在判断里
     - CommonJS模块输出的是 __值的拷贝__，当模块内部发生变化将无法影响输出的值
 
-2. AMD：异步加载模块，所有依赖这个模块的语句都定义在回调函数里，等加载完毕再执行回调函数(require.js实现了AMD规范)
+2. AMD：异步加载模块，所有依赖这个模块的语句都定义在回调函数里，等模块加载完毕再执行回调函数(require.js实现了AMD规范)
 
     - require.js原理是动态创建script脚本来异步引入模块，然后对脚本的load事件进行监听，每个脚本都加载完后，再执行回调函数
 
@@ -847,8 +848,8 @@ const EventUtils = {
 
 4. ES6：使用import 和export 来导入导出模块，__编译时__ 就能确定模块的依赖关系，以及输入和输出的变量
     - 输出的是 __值的引用__，可导出多个
-    - 静态语法只能卸载顶层
-    - JS引擎对脚本静态解析时，遇到import会生成一个只读引用，等脚本执行时，再根据只读引用去对应的模块中取值
+    - 静态语法只能写在顶层
+    - JS引擎对脚本 __静态解析__ 时，遇到import会生成一个只读引用，等脚本执行时，再根据只读引用去对应的模块中取值
 
         ```js
         export相关：
@@ -860,6 +861,7 @@ const EventUtils = {
          const func1 = function(){
           
          };
+        // as 可设置别名
         // 导出模块
         export{A, B, func, func1 as Alias};
         
@@ -879,6 +881,8 @@ const EventUtils = {
         // import-default.js
         import customName from './export-default';
         customName(); // 'foo'
+
+        // 输入的变量是只读的，不允许修改；对象允许修改属性
         ```
 
     - 允许动态加载模块，将import()作为函数调用将其作为参数传递给模块的路径。 它返回一个 `promise`，它用一个模块对象来实现，让你可以访问该对象的导出
@@ -888,6 +892,16 @@ const EventUtils = {
           .then((module) => {
             // Do something with the module.
           });
+        ```
+
+    - 复合写法： 同一模块中，先输入后输出同一个模块，import和export可简写
+
+        ```js
+            export {foo, bar} from 'xxx'
+
+            // 相当于
+            import {foo, bar} from 'xxx'
+            export {foo, bar}
         ```
 
 5. AMD与CMD的区别：

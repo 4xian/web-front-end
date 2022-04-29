@@ -119,7 +119,6 @@ new操作符的实现：
     }
 ```
 
-
 #### ES6中的Proxy：定义基本操作的自定义行为(元编程)
 
 1. Proxy构造函数：
@@ -820,7 +819,6 @@ new操作符的实现：
         
         5. done用来判断是否存在下个状态，value对应状态值
         6. yield表达式本身没有返回值，或者说总是返回undefined
-        7. 通过调用next方法可以带一个参数，该参数就会被当作上一个yield表达式的返回值
         
         function* helloWorldGenerator() {
           yield 'hello';
@@ -837,7 +835,19 @@ new操作符的实现：
         hw.next()
         // { value: undefined, done: true }
         
-        正因为Generator函数返回Iterator对象，因此我们还可以通过for...of进行遍历
+        7. 通过调用next方法可以带一个参数，该参数就会被当作上一个yield表达式的返回值
+
+        function* foo(x) {
+            var y = 2 * (yield (x + 1));
+            var z = yield (y / 3);
+            return (x + y + z);
+        }
+        var b = foo(5);
+        b.next() // { value:6, done:false }
+        b.next(12) // { value:8, done:false }
+        b.next(13) // { value:42, done:true }
+
+        8. 正因为Generator函数返回Iterator对象，因此我们还可以通过for...of进行遍历
         
         原生对象没有遍历接口，通过Generator函数为它加上这个接口，就能使用for...of进行遍历了
         
@@ -862,17 +872,17 @@ new操作符的实现：
     - generator函数
     - async/await
 
-
 #### 14. ES6中Decorator(装饰器)
 
 1. 一个普通的函数，用于扩展类属性和类方法
 
-    - 类的装饰：
+    - __类的装饰__：
 
         ```js
         //想要传递参数，可在装饰器外层再封装一层函数
         
         function testable(isTestable) {
+            // target可理解为 类名
           return function(target) {
             target.isTestable = isTestable;
           }
@@ -887,7 +897,7 @@ new操作符的实现：
         MyClass.isTestable // false
         ```
 
-    - 类属性的装饰：
+    - __类属性的装饰__：
 
         ```js
         对类属性进行装饰的时候，能够接受三个参数:
@@ -911,9 +921,61 @@ new操作符的实现：
         readonly(Person.prototype, 'name', descriptor);
         ```
 
+    - 如果有多个装饰器，则从外到内(从上往下)进入，再从内到外(从下往上)执行
+
+        ```js
+        function dec(id){
+            console.log('进入', id);
+            return (target, property, descriptor) =>console.log('执行', id);
+        }
+
+        class Example {
+            @dec(1)
+            @dec(2)
+            method(){}
+        }
+        // 进入 1
+        // 进入 2
+        // 执行 2
+        // 执行 1
+        ```
+
     - 装饰器不能用于修饰函数，因为函数存在变量声明情况
 
-#### 15. ES6d的Class(类) 和 ES5的类
+    - 使用场景：
+        1. 使用react-redux的时候：
+
+            ```js
+                class MyComponent extends React.Component {}
+                export default connect(mapStateToProps, mapDispatchToProps)(MyComponent)
+
+                // 使用装饰器
+                @connect(mapStateToProps, mapDispatchToProps)
+                export default class MyComponent extends React.Component{}
+            ```
+
+        2. 将mixins写成装饰器：
+
+            ```js
+                function mixins(...args){
+                    return function(target){
+                        Object.assign(target.prototype, ...args)
+                    }
+                }
+                // 使用
+                const Foo = {
+                    foo(){
+                        console.log('foo')
+                    }
+                }
+                @mixins(Foo)
+                class MyClass{}
+
+                let obj = new MyClass{}
+                obj.foo() // foo
+            ```
+
+#### 15. ES6的Class(类) 和 ES5的类
 
 ```js
 1. 
@@ -955,3 +1017,5 @@ new操作符的实现：
        console.log(v)
    }
 ```
+
+#### 17. 

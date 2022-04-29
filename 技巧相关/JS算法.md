@@ -115,7 +115,7 @@ const quickSort = (arr) => {
 ### 6. 冒泡排序
 
 ```js
-const sort = (arr)=> {
+const sort = (arr) => {
     for(let i=0;i<arr.length - 1;i++){
         for (let j=0;j<arr.length-i-1;j++){
            //两个for循环 依次比较 把较大的数记录下来给后面 依次类推 达到排序的结果
@@ -128,5 +128,18 @@ const sort = (arr)=> {
                 
     }
     return arr;
+}
+```
+
+### 7. 计算时钟时分间角度
+
+```js
+// h: 小时 m: 分钟
+const calcTime = (h,m) => {
+    let d = (h - 12) * 30,
+        d1 = (6 - 0.5) * m,
+        gap = d1 - d;
+    return Math.abs(Math.min(gap,360-gap))
+    // Math.abs(Math.min(5.5 * m - 30 * h + 360,5.5 * m - 30 * h))
 }
 ```
