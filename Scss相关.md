@@ -1,6 +1,7 @@
 # Scss相关
 
 ### 1. 变量
+
 ```scss
 $font: 14px;
 // 使用
@@ -8,6 +9,7 @@ font-size: $font;
 ```
 
 ### 2. mixin(预先定义一些样式)
+
 ```scss
 @mixin styleName($args1, $args2, ...){
     // 样式
@@ -23,7 +25,8 @@ div{
 }
 ```
 
-### 3. 继承/扩展:
+### 3. 继承/扩展
+
 ```scss
 .one{
     color: red;
@@ -47,7 +50,8 @@ div{
 }
 ```
 
-### 4. 计算:
+### 4. 计算
+
 ```scss
 $width: 20px;
 div{
@@ -61,7 +65,8 @@ div{
 }
 ```
 
-### 5. 颜色函数:
+### 5. 颜色函数
+
 ```scss
 // 1. hsl(色相, 饱和度, 明度)
 div{
@@ -91,6 +96,7 @@ div{
 ```
 
 ### 6. Interpolation: #{变量} (把一个值插入到另一个值)
+
 ```scss
 $custom : color;
 div{
@@ -99,7 +105,8 @@ div{
 }
 ```
 
-### 7. If -else:
+### 7. If -else
+
 ```scss
 @if 条件{
     ...
@@ -108,7 +115,8 @@ div{
 }
 ```
 
-### 8. for循环:
+### 8. for循环
+
 ```scss
 // (不包括结束值)
 @for 变量 from 开始 to 结束 {
@@ -142,7 +150,8 @@ div{
 }
 ```
 
-### 9. 遍历列表:
+### 9. 遍历列表
+
 ```scss
 @each 变量 in 列表{
     ...
@@ -170,7 +179,8 @@ $colors: red green blue white;
 }
 ```
 
-### 10. while循环:
+### 10. while循环
+
 ```scss
 @while 条件{
     ...
@@ -198,6 +208,7 @@ $num : 1;
 ```
 
 ### 11. function函数
+
 ```scss
 @function funcName($args1, $args2, ...){
     ...
@@ -219,7 +230,7 @@ div{
 }
 ```
 
-### 12. %百分号：
+### 12. %百分号
 
 ```scss
 1. 类似占位符，不会输出代码，用@extend扩展使用

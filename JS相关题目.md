@@ -449,8 +449,74 @@ const myTimeout = (fn, interval)=>{
 
 ```
 
-#### 18. 
+#### 18. 实现get方法(获取对象嵌套属性值)
 
 ```js
+function getObjValue(obj, attr){
+  let arr = attr.split('.'),
+      temp = obj;
+    //   for(let i = 0; i < arr.length; i++){
+    //       temp = temp[arr[i]]
+    //   }
+    //  return temp
+  return arr.reduce((o,v)=>{
+    console.log(o,v)
+    return o[v]
+  },obj)
+}
+```
 
+#### 19. 实现字符串repeat方法
+
+```js
+1. 使用join方法：
+
+function repeat(str, n){
+    return new Array(n + 1).join(str)
+}
+
+2. 使用递归：
+
+function repeat(str, n){
+    if(n === 1) return str
+    let s = repeat(str, Math.floor(n / 2))
+    s += s
+    if(n % 2){ // 奇数多加一次
+        s += str
+    }
+    return s
+}
+```
+
+#### 20. 使用promise封装一个异步加载图片
+
+```js
+function loadImg(url){
+    return new Promise((resolve, reject)=>{
+        let img = new Image()
+        img.onload = function(){
+            resolve(img)
+        }
+        img.onerror = function(){
+            reject(url'加载出错!')
+        }
+        img.src = url
+    })
+}
+```
+
+#### 21. 实现类似Promise.all()功能，按数组顺序执行
+
+```js
+function myPromise(arr){
+    let result = [],
+        promise = Promise.resolve();
+    arr.forEach(v=>{
+        promise = promise.then(v).then(res=>{
+            result.push(res)
+            return result
+        })
+    })
+    return promise
+}
 ```
