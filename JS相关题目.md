@@ -520,3 +520,166 @@ function myPromise(arr){
     return promise
 }
 ```
+
+#### 22. 实现根据运算优先级给字符串添加括号
+
+```js
+
+例：存在字符串 const str = '11+2-3*4+5/2*4+10/5'，现在需要将高优先级运算，用小括号包裹起来，例如结果为 '11+2-(3*4)+(5/2*4)+(10/5)'。注意可能会出现连续的乘除运算，需要包裹到一起
+
+    function addBrackets(exp){
+        // 存储结果
+        const res = []
+        // 运算符
+        const operator = ['+', '-', '*', '/']
+        // 高级运算符
+        const highOperator = ['*', '/']
+        const isOperator = (v)=>operator.includes(v)
+        const isHighOperator = (v)=>highOperator.includes(v)
+        const len = exp.length
+        // 是否处在高级运算符范围内
+        let flag = false
+        // 临时存储
+        let curr = ''
+
+        for(let i = 0; i<len; i++){
+            let isOp = isOperator(exp[i])
+            let isHighOp = isHighOperator(exp[i])
+            // 是运算符
+            if(isOp){
+                // 是高级运算符
+                if(isHighOp){
+                    // 不在高级范围内，说明高级运算符刚开始，添加左括号
+                    if(!flag){
+                        curr = '(' + curr
+                    }
+                    // 高级运算符为true
+                    flag = true
+                    curr += exp[i]
+                }else{
+                    if(flag){
+                        // 不是高级运算符 但在高级范围内，说明高级范围结束，添加右括号
+                        res.push(curr + ')')
+                        // 高级运算符结束为false
+                        flag = false
+                    }else{
+                        res.push(curr)
+                    }
+                    res.push(exp[i])
+                    curr = ''
+                }
+            }else{
+                curr += exp[i]
+            }
+        }
+        if(curr){
+            res.push(curr + (flag ? ')' : ''))
+        }
+        return res.join('')
+    }
+```
+
+#### 23. 实现所有维度的排列组合
+
+```js
+
+// 输出所有维度的组合，如 [['热', '冷''], ['大', '中']]  => 热+大，热+中，冷+大，冷+中
+
+1. for循环实现：
+
+function compose(list){
+    if(!list.length) return list
+    let res = []
+    for(let arr of list){
+        if(!res.length){
+            res = arr.map(v=>[v])
+        }else{
+            let temp = []
+            for(let item of arr){
+                temp.push(...res.map(v=>[...v,item]))
+            }
+            res = temp
+        } 
+    }
+    return res.map(v=>v.join(''))
+}
+
+2. 函数式编程实现：
+
+function compose(list){
+    let res = list.reduce((result, nextlist)=>{
+        return nextlist.reduce((subres, item)=>{
+            let tail = result.length ? res.map(v=>[...v,item]):[[item]]
+            return [...subres,...tail]
+        },[])
+    },[])
+    return res.map(v=>v.join(''))
+}
+```
+
+#### 24. 实现红绿灯交替重复亮
+
+```js
+红灯3秒亮一次，黄灯2秒亮一次，绿灯1秒亮一次；如何让三个灯不断交替重复亮灯？
+function red() {
+    console.log('red');
+}
+function green() {
+    console.log('green');
+}
+function yellow() {
+    console.log('yellow');
+}
+
+function light(fn,time){
+    return new Promise((resolve)=>{
+        setTimeout(()=>{
+           fn && fn()
+           resolve()
+        },time)
+    })
+}
+
+function circleLight(){
+    light(red,3000).then(()=>{
+        light(yellow,2000).then(()=>{
+            light(green,1000).then(()=>{
+                circleLight()
+            })
+        })
+    })
+}
+
+async function step(){
+  await light(red,3000)
+  await light(yellow,2000)
+  await light(green,1000)
+  console.log('下一波')
+}
+```
+
+#### 25. 随机生成多少位的某数组 | 随机生成范围(x, x+n)的数组
+
+```js
+1. 使用Array.from：
+
+function genArray(...args){
+    if((args.length === 1)){
+       return Array.from({
+            length: args[0][1] - args[0][0] + 1
+        },(_,i) => i + 1)
+    }else{
+       return Array.from({
+            length: args[0]
+        }).fill(args[1])
+    }
+}
+
+// 使用 genArray(10,6) | genArray([1, 10])
+
+2. 使用new Array()：
+
+function genArray(...args){
+    return new Array(args[0]).fill(args[1])
+}
+```
