@@ -303,16 +303,20 @@ function myRace(list){
     }
 ```
 
-#### 10. 实现通用数据类型检测方法
+#### 10. 实现一个通用数据类型检测方法
 
 ```js
 function getType(v){
     let temp;
     if(v === 'null') return null
-    if(typeof v !== 'object') return typeof v
-    temp = Object.prototype.toString.call(v).split(' ')[1].split('')
-    temp.pop()
-    return temp.join('').toLowerCase()
+    if(typeof v === 'object'){
+        temp = Object.prototype.toString.call(v).split(' ')[1].split('')
+        temp.pop()
+        return temp.join('').toLowerCase()
+    }else{
+        return typeof v
+    } 
+    
 }
 ```
 
@@ -397,7 +401,7 @@ function getType(v){
     }
 ```
 
-#### 15. 用setTimeout模拟setInterval
+#### 15. 实现用setTimeout模拟setInterval
 
 ```js
 const myInterval = function(fn, time){
@@ -521,65 +525,7 @@ function myPromise(arr){
 }
 ```
 
-#### 22. 实现根据运算优先级给字符串添加括号
-
-```js
-
-例：存在字符串 const str = '11+2-3*4+5/2*4+10/5'，现在需要将高优先级运算，用小括号包裹起来，例如结果为 '11+2-(3*4)+(5/2*4)+(10/5)'。注意可能会出现连续的乘除运算，需要包裹到一起
-
-    function addBrackets(exp){
-        // 存储结果
-        const res = []
-        // 运算符
-        const operator = ['+', '-', '*', '/']
-        // 高级运算符
-        const highOperator = ['*', '/']
-        const isOperator = (v)=>operator.includes(v)
-        const isHighOperator = (v)=>highOperator.includes(v)
-        const len = exp.length
-        // 是否处在高级运算符范围内
-        let flag = false
-        // 临时存储
-        let curr = ''
-
-        for(let i = 0; i<len; i++){
-            let isOp = isOperator(exp[i])
-            let isHighOp = isHighOperator(exp[i])
-            // 是运算符
-            if(isOp){
-                // 是高级运算符
-                if(isHighOp){
-                    // 不在高级范围内，说明高级运算符刚开始，添加左括号
-                    if(!flag){
-                        curr = '(' + curr
-                    }
-                    // 高级运算符为true
-                    flag = true
-                    curr += exp[i]
-                }else{
-                    if(flag){
-                        // 不是高级运算符 但在高级范围内，说明高级范围结束，添加右括号
-                        res.push(curr + ')')
-                        // 高级运算符结束为false
-                        flag = false
-                    }else{
-                        res.push(curr)
-                    }
-                    res.push(exp[i])
-                    curr = ''
-                }
-            }else{
-                curr += exp[i]
-            }
-        }
-        if(curr){
-            res.push(curr + (flag ? ')' : ''))
-        }
-        return res.join('')
-    }
-```
-
-#### 23. 实现所有维度的排列组合
+#### 22. 实现所有维度的排列组合
 
 ```js
 
@@ -617,7 +563,7 @@ function compose(list){
 }
 ```
 
-#### 24. 实现红绿灯交替重复亮
+#### 23. 用Promise实现红绿灯交替重复亮
 
 ```js
 红灯3秒亮一次，黄灯2秒亮一次，绿灯1秒亮一次；如何让三个灯不断交替重复亮灯？
@@ -658,7 +604,7 @@ async function step(){
 }
 ```
 
-#### 25. 随机生成多少位的某数组 | 随机生成范围(x, x+n)的数组
+#### 24. 随机生成多少位的某数组 | 随机生成范围(x, x+n)的数组
 
 ```js
 1. 使用Array.from：
@@ -675,11 +621,144 @@ function genArray(...args){
     }
 }
 
-// 使用 genArray(10,6) | genArray([1, 10])
+function genArray(arr){
+    return Array.from(new Array(arr[1]).keys()).slice(arr[0])
+}
 
-2. 使用new Array()：
+// 使用 genArray(10, 6) | genArray([1, 10])
+
+2. 使用 new Array()：
 
 function genArray(...args){
     return new Array(args[0]).fill(args[1])
 }
+
+// 使用 genArray(10, 6)
+```
+
+#### 25. a == 1 && a == 2 && a == 3 可能为 true 吗？
+
+```js
+将a定义为一个对象，重写 toString方法 或者 valueOf方法 实现
+(左边对象在比较时会调用 toString方法 和 valueOf方法)
+
+let a = {
+    value: 1
+    toString(){
+        return a.value++
+    }
+    // valueOf(){
+    //     return a.value++
+    // }
+}
+```
+
+#### 26. 实现判断浏览器的标识符
+
+```js
+if (window.ActiveXObject)
+return "IE";
+else if (document.getBoxObjectFor)
+return "Firefox";
+else if (window.MessageEvent && !document.getBoxObjectFor)
+return "Chrome";
+else if (window.opera)
+return "Opera";
+else if (window.openDatabase)
+return "Safari";
+```
+
+#### 27. 实现一个观察者模式
+
+```js
+var events = (function() {
+  var topics = {};
+  return {
+    // 注册监听函数
+    subscribe: function(topic, handler) {
+      if (!topics.hasOwnProperty(topic)) {
+        topics[topic] = [];
+      }
+      topics[topic].push(handler);
+    },
+
+    // 发布事件，触发观察者回调事件
+    publish: function(topic, info) {
+      if (topics.hasOwnProperty(topic)) {
+        topics[topic].forEach(function(handler) {
+          handler(info);
+        });
+      }
+    },
+
+    // 移除主题的一个观察者的回调事件
+    remove: function(topic, handler) {
+      if (!topics.hasOwnProperty(topic)) return;
+
+      var handlerIndex = -1;
+      topics[topic].forEach(function(item, index) {
+        if (item === handler) {
+          handlerIndex = index;
+        }
+      });
+
+      if (handlerIndex >= 0) {
+        topics[topic].splice(handlerIndex, 1);
+      }
+    },
+
+    // 移除主题的所有观察者的回调事件
+    removeAll: function(topic) {
+      if (topics.hasOwnProperty(topic)) {
+        topics[topic] = [];
+      }
+    }
+  };
+})();
+```
+
+#### 28. 实现一个JSONP
+
+```js
+function jsonp(url, params, callback) {
+  // 判断是否含有参数
+  let queryString = url.indexOf("?") === -1 ? "?" : "&";
+
+  // 添加参数
+  for (var k in params) {
+    if (params.hasOwnProperty(k)) {
+      queryString += k + "=" + params[k] + "&";
+    }
+  }
+
+  // 处理回调函数名
+  let random = Math.random()
+      .toString()
+      .replace(".", ""),
+    callbackName = "myJsonp" + random;
+
+  // 添加回调函数
+  queryString += "callback=" + callbackName;
+
+  // 构建请求
+  let scriptNode = document.createElement("script");
+  scriptNode.src = url + queryString;
+
+  window[callbackName] = function() {
+    // 调用回调函数
+    callback(...arguments);
+
+    // 删除这个引入的脚本
+    document.getElementsByTagName("head")[0].removeChild(scriptNode);
+  };
+
+  // 发起请求
+  document.getElementsByTagName("head")[0].appendChild(scriptNode);
+}
+```
+
+#### 29. 
+
+```js
+
 ```

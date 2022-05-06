@@ -1188,21 +1188,6 @@ outerText：内部文本，content
 4. 闭包(不合理的使用闭包)
 5. 对事件监听没有取消监听
 
-#### 26. 判断浏览器的标识符
-
-```js
-if (window.ActiveXObject)
-return "IE";
-else if (document.getBoxObjectFor)
-return "Firefox";
-else if (window.MessageEvent && !document.getBoxObjectFor)
-return "Chrome";
-else if (window.opera)
-return "Opera";
-else if (window.openDatabase)
-return "Safari";
-```
-
 #### 27. 节流与防抖
 
 1. 节流(__控制频率__)：规定时间内，多次触发事件__只执行一次回调函数__(scroll，mousemove等事件)
@@ -1408,39 +1393,7 @@ const deepClone = function(obj){
 
 
 
-#### 30. 函数柯里化的实现
 
-1. ```js
-    function curry(fn, ...args){
-        return fn.length <= args.length ?     fn(...args) : curry.bind(null, fn, ...args)
-    }
-    ```
-
-2.
-
-```js
-// 函数柯里化指的是一种将使用多个参数的一个函数转换成一系列使用一个参数的函数的技术。
-function curry(fn, args) {
-  // 获取函数需要的参数长度
-  let length = fn.length;
-  args = args || [];
-  return function() {
-    let subArgs = args.slice(0);
-    // 拼接得到现有的所有参数
-    for (let i = 0; i < arguments.length; i++) {
-      subArgs.push(arguments[i]);
-    }
-    // 判断参数的长度是否已经满足函数所需参数的长度
-    if (subArgs.length >= length) {
-      // 如果满足，执行函数
-      return fn.apply(this, subArgs);
-    } else {
-      // 如果不满足，递归返回科里化的函数，等待参数的传入
-      return curry.call(this, fn, subArgs);
-    }
-  };
-}
-```
 
 #### 31. 异步编程的方式
 
@@ -1480,95 +1433,6 @@ text/xml
     - mousemove， mouseout对性能消耗高，不适用事件委托
     - 都用事件代理，可能会出现事件误判，不该触发的事件绑定了事件
 
-#### 34. 手写一个JSONP
-
-```js
-function jsonp(url, params, callback) {
-  // 判断是否含有参数
-  let queryString = url.indexOf("?") === "-1" ? "?" : "&";
-
-  // 添加参数
-  for (var k in params) {
-    if (params.hasOwnProperty(k)) {
-      queryString += k + "=" + params[k] + "&";
-    }
-  }
-
-  // 处理回调函数名
-  let random = Math.random()
-      .toString()
-      .replace(".", ""),
-    callbackName = "myJsonp" + random;
-
-  // 添加回调函数
-  queryString += "callback=" + callbackName;
-
-  // 构建请求
-  let scriptNode = document.createElement("script");
-  scriptNode.src = url + queryString;
-
-  window[callbackName] = function() {
-    // 调用回调函数
-    callback(...arguments);
-
-    // 删除这个引入的脚本
-    document.getElementsByTagName("head")[0].removeChild(scriptNode);
-  };
-
-  // 发起请求
-  document.getElementsByTagName("head")[0].appendChild(scriptNode);
-}
-```
-
-#### 35. 手写一个观察者模式
-
-```js
-var events = (function() {
-  var topics = {};
-
-  return {
-    // 注册监听函数
-    subscribe: function(topic, handler) {
-      if (!topics.hasOwnProperty(topic)) {
-        topics[topic] = [];
-      }
-      topics[topic].push(handler);
-    },
-
-    // 发布事件，触发观察者回调事件
-    publish: function(topic, info) {
-      if (topics.hasOwnProperty(topic)) {
-        topics[topic].forEach(function(handler) {
-          handler(info);
-        });
-      }
-    },
-
-    // 移除主题的一个观察者的回调事件
-    remove: function(topic, handler) {
-      if (!topics.hasOwnProperty(topic)) return;
-
-      var handlerIndex = -1;
-      topics[topic].forEach(function(item, index) {
-        if (item === handler) {
-          handlerIndex = index;
-        }
-      });
-
-      if (handlerIndex >= 0) {
-        topics[topic].splice(handlerIndex, 1);
-      }
-    },
-
-    // 移除主题的所有观察者的回调事件
-    removeAll: function(topic) {
-      if (topics.hasOwnProperty(topic)) {
-        topics[topic] = [];
-      }
-    }
-  };
-})();
-```
 
 #### 36. 实现事件触发器(EventEmitter)
 
@@ -1617,7 +1481,7 @@ class EventEmitter {
 
 #### 37. 计算页面从加载到完成的时间
 
-```html
+```js
 ECMAScript 5引入“高精度时间戳”这个 API，部署在 performance 对象上。它的精度可以达到1毫秒
 的千分之一（1秒的百万分之一）。
 

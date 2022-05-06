@@ -147,6 +147,7 @@ const clearFunc = (str) => {
 2. 对象扁平化:
 
     -1. 自定义扁平化层数
+    // 只适用于纯对象
     const flatObj = (obj,num = 1) => {
         let temp = {},
             id = 0;
@@ -159,6 +160,33 @@ const clearFunc = (str) => {
         }
         return func(obj);
     }
+
+    const flatObj = (obj, num = 1) => {
+        let temp = {},
+            id = 0;
+        function flat(item, key="", isArr=false){
+            id++;
+            for(let [k,v] of Object.entries(item)){
+                if(id <= num){
+                    if(Array.isArray(v)){
+                        let p = isArr ? key + '[' + k + ']' : key + k
+                        flat(v, p, true)
+                    }else if(typeof v === 'object'){
+                        let p = isArr ? key + '[' + k + ']' : key + k + '.'
+                        flat(v, p, false)
+                    }else{
+                        let p = isArr ? key + '[' + k + ']' : key + k
+                        temp[p] = v
+                    }
+                }else{
+                    let p = isArr ? key + '[' + k + ']' : key + k
+                    temp[p] = v
+                } 
+            }
+        }
+    }
+
+
 ```
 
 ### 5. 格式化时间戳
