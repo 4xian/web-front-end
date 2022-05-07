@@ -1,10 +1,10 @@
-### 1. webpack是什么
+#### 1. webpack是什么
 
 ```js
 模块化打包工具，处理应用程序时，递归构建一个依赖关系图，包含应用程序需要的每个模块，将这些模块打包成一个或多个bundle
 ```
 
-### 2. webpack rollup
+#### 2. webpack rollup
 
 ```js
 webpack: 拥有强大的loader和丰富的插件
@@ -13,7 +13,7 @@ rollup: 适合基础库的打包，将各模块打包进一个文件中，通过
 没有webpack的功能丰富
 ```
 
-### 3. 常用的loader
+#### 3. 常用的loader
 
 ```js
 loader配置在module.rules属性中，每个loader都是一个对象，test为匹配的规则，use为配置调用对应的loader；
@@ -32,7 +32,7 @@ source-map-loader: 加载额外的 Source Map⽂件，以⽅便断点调试
 
 ```
 
-### 4. 常用的plugins
+#### 4. 常用的plugins
 
 ```js
 解决loader无法实现的事，plugins属性传入new实例对象
@@ -43,7 +43,7 @@ mini-css-extract-plugin: 将CSS提取到单独的文件中，支持按需加载
 purgecss-plugin-webpack: 将css进行tree shaking优化
 ```
 
-### 5. Loader和Plugin的区别
+#### 5. Loader和Plugin的区别
 
 ```js
 Loader的作用是让webpack拥有了加载和解析非JS文件的能力
@@ -51,7 +51,7 @@ Loader的作用是让webpack拥有了加载和解析非JS文件的能力
 Plugin扩展webpack的能力，webpack运行的生命周期中会广播出事件，Plugin监听这些事件，合适的时机通过webpack提供的API改变输出结果
 ```
 
-### 6. bundle, chunk, module
+#### 6. bundle, chunk, module
 
 ```js
 bundle: webpack打包出来的文件
@@ -59,7 +59,7 @@ chunk: 由多个模块组合而成的代码块，用于代码的合并和分割
 module: 开发中的单个模块，一个模块对应一个文件，webpack从配置的entry中递归找出所有依赖的模块
 ```
 
-### 7. webpack的构建流程
+#### 7. webpack的构建流程
 
 ```js
 Webpack 的运⾏流程是⼀个串⾏的过程，从启动到结束会依次执⾏以下流程： 
@@ -75,7 +75,7 @@ Webpack 的运⾏流程是⼀个串⾏的过程，从启动到结束会依次执
 
 ```
 
-### 8. webpack 热更新的实现原理
+#### 8. webpack 热更新的实现原理
 
 ```js
 ⾸先要知道server端和client端都做了处理⼯作：
@@ -90,7 +90,7 @@ Webpack 的运⾏流程是⼀个串⾏的过程，从启动到结束会依次执
 8. 最后⼀步，当 HMR 失败后，回退到 live reload 操作，也就是进⾏浏览器刷新来获取最新打包代码
 ```
 
-### 9. 利用webpack优化性能
+#### 9. 利用webpack优化性能
 
 ```js
     1. 压缩代码(JS，CSS，HTML文件，图片)
@@ -103,7 +103,7 @@ Webpack 的运⾏流程是⼀个串⾏的过程，从启动到结束会依次执
     5. 提取公共第三方库: splitChunksPlugin可以抽离公共模块，利用浏览器缓存缓存不频繁变动的公共代码
 ```
 
-### 10. Babel的原理是什么?
+#### 10. Babel的原理是什么?
 
 ```js
 babel 的转译过程也分为三个阶段，这三步具体是： 

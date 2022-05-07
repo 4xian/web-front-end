@@ -1,6 +1,6 @@
 # Vue相关高级技巧
 
-### 1. 自动注册组件
+#### 1. 自动注册组件
 
 ```js
 1.组件文件夹同级建个js:
@@ -21,7 +21,7 @@ requireComponent.keys().forEach(element => {
 // require.context是webpack的一个API，所以，需要基于webpack环境才可以使用。
 ```
 
-### 2. 自定义权限指令
+#### 2. 自定义权限指令
 
 ```js
 1. 过滤权限:
@@ -44,7 +44,7 @@ Vue.directive('permission-auth',{
 //使用 <button v-permission-auth="3">按钮</b
 ```
 
-### 3. 封装引入第三方组件步骤
+#### 3. 封装引入第三方组件步骤
 
 ```js
 1. 创建xxx.js文件专门引入第三方组件:
@@ -61,7 +61,7 @@ Vue.use(UIComponents)
 
 ```
 
-### 4. 根据合并策略自定义生命周期
+#### 4. 根据合并策略自定义生命周期
 
 ```js
 // /utils/customCycle.js
@@ -151,7 +151,7 @@ export default {
 }
 ```
 
-### 5. provide 和 inject
+#### 5. provide 和 inject
 
 ```js
 1. provide:
@@ -198,7 +198,7 @@ export default {
 provide 和 inject非响应式的,但传入一个可监听的对象,其对象的属性还是响应的
 ```
 
-### 6. 实现冒泡和捕获(vue1的$dispatch,$broadcast)
+#### 6. 实现冒泡和捕获(vue1的$dispatch,$broadcast)
 
 ##### 1. $dispatch
 
@@ -300,7 +300,7 @@ export default {
 }
 ```
 
-### 7. 使用hook监听生命周期
+#### 7. 使用hook监听生命周期
 
 ```js
 1. 使用this.$on,this.$once(只执行一次)内部监听生命周期函数:
@@ -317,7 +317,7 @@ export default {
 <CustomComponent @hook:updated="handleFunc"></CustomComponent>
 ```
 
-### 8. Vue.observable实现一个简易状态管理
+#### 8. Vue.observable实现一个简易状态管理
 
 ```js
 1. 创建store:
@@ -360,7 +360,7 @@ export default {
 }
 ```
 
-### 9. 使用Vue.extend和指令开发v-loading组件
+#### 9. 使用Vue.extend和指令开发v-loading组件
 
 ```vue
 1. loading组件
@@ -480,4 +480,4 @@ Vue.directive('loading',{
 })
 ```
 
-### 10
+#### 10

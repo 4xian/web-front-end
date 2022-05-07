@@ -1138,18 +1138,6 @@ innerText：内部文本，content
 outerText：内部文本，content
 ```
 
-#### 22. 类数组转为数组的方法：拥有length属性和若干索引属性的对象被称为类数组对象
-
-1. call方法调用数组的slice / splice / 方法：
-    - Array.prototype.slice.call(likeArr)
-    - Array.prototype.splice.call(likeArr,0)
-
-2. apply调用数组的concat方法：
-    - Array.prototype.concat.apply([] , likeArr)
-
-3. Array.form：
-    - Array.form(likeArr)
-
 #### 23. 常见数组的原生方法
 
 1. 数组和字符串的转换：

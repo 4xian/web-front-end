@@ -161,19 +161,20 @@ const clearFunc = (str) => {
         return func(obj);
     }
 
+    // 扁平化 适用于对象中有数组情况
     const flatObj = (obj, num = 1) => {
         let temp = {},
             id = 0;
         function flat(item, key="", isArr=false){
             id++;
             for(let [k,v] of Object.entries(item)){
-                if(id <= num){
+                if(id <= num + 1){
                     if(Array.isArray(v)){
                         let p = isArr ? key + '[' + k + ']' : key + k
                         flat(v, p, true)
                     }else if(typeof v === 'object'){
-                        let p = isArr ? key + '[' + k + ']' : key + k + '.'
-                        flat(v, p, false)
+                        let p = isArr ? key + '[' + k + '].' : key + k + '.'
+                        flat(v, p)
                     }else{
                         let p = isArr ? key + '[' + k + ']' : key + k
                         temp[p] = v
@@ -181,11 +182,12 @@ const clearFunc = (str) => {
                 }else{
                     let p = isArr ? key + '[' + k + ']' : key + k
                     temp[p] = v
-                } 
+                }
             }
         }
+        flat(obj)
+        return temp
     }
-
 
 ```
 

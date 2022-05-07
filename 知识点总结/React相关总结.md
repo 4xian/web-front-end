@@ -169,6 +169,7 @@ componentDidMount(){
             )
         }
 ```
+
 3. 非关系组件通信：
 
 ```js
@@ -179,7 +180,6 @@ componentDidMount(){
 
    2. redux 或 mobx
 ```
-
 
 #### 4. Mixins：(组件的扩展，共用方法)
 
@@ -218,7 +218,7 @@ React.render(<TickTock />, document.getElementById("example"));
 // 单组件共用多个mixins，其中有多个相同的生命周期方法，这些方法会在组件方法执行后按照mixins指定的数组顺序执行
 ```
 
-#### 5. Redux相关：
+#### 5. Redux相关
 
 ```js
 1. Actions：
@@ -333,8 +333,8 @@ store.dispatch(testAction(text))
   );
   ```
 
+#### 6. React-Router路由模式及原理
 
-#### 6. React-Router路由模式及原理：
 ```js
 1. HashRouter(hash模式)：
     监听hashchange事件，可以通过window.location.hash = 'xxx'，即通过URL的hash属性控制路由跳转的
@@ -368,7 +368,7 @@ store.dispatch(testAction(text))
 每次 URL 发生变化的回收，通过配置的 路由路径，匹配到对应的 Component，并且 render
 ```
 
-#### 7. 配置React-Router实现路由切换：
+#### 7. 配置React-Router实现路由切换
 
 ```js
 1. 使用<Route>组件：
@@ -439,8 +439,8 @@ store.dispatch(testAction(text))
 
 ```
 
+#### 8. React性能优化相关
 
-#### 8. React性能优化相关：
 ```js
 1. 父组件重新渲染，子组件不需要重新渲染：
     - 可以使用shouldComponentUpdate:
@@ -456,7 +456,8 @@ store.dispatch(testAction(text))
 
 ```
 
-#### 9. Hooks相关：
+#### 9. Hooks相关
+
 ```js
 1. 函数组件和类组件：
     - 函数组件：
@@ -607,7 +608,8 @@ store.dispatch(testAction(text))
             <FancyInput ref={inputRef} /> 的父组件可以调用 inputRef.current.focus()
 ```
 
-#### 10. 受控组件和非控组件：
+#### 10. 受控组件和非控组件
+
 ```js
 1. 受控组件：当表单状态发生变化，触发onChange事件，更新组件的state，这种组件成为受控组件
     - 初始state设置表单默认值
@@ -620,7 +622,8 @@ store.dispatch(testAction(text))
     <input type="text" ref={(input) => this.input = input} />
 ```
 
-#### 11. refs的作用及场景：
+#### 11. refs的作用及场景
+
 ```js
 1. refs用于访问render方法创建的React元素或DOM节点
 
@@ -639,7 +642,8 @@ store.dispatch(testAction(text))
     - 作用于自定义的类组件时，将组件挂载的实例作为属性current的值来创建ref
 ```
 
-#### 12. React绑定this的方式：
+#### 12. React绑定this的方式
+
 ```js
 1. 构造函数中绑定this(预先bind当前组件，可以避免在render操作中重复绑定)：
     constructor(props){
@@ -681,7 +685,7 @@ store.dispatch(testAction(text))
     }
 ```
 
-#### 13. setState相关：
+#### 13. setState相关
 
 ```js
 1. 调用setState时，组件中state不会立即改变，会把state放入队列中，出于性能原因，会将多次setState的状态合并修改成一次状态修改，最终只产生一次组件及子组件的重新渲染：

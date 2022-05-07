@@ -757,8 +757,75 @@ function jsonp(url, params, callback) {
 }
 ```
 
-#### 29. 
+#### 29. 实现Promise.all
+
+```js
+1. 简易版：
+Promise.myAll = function(list){
+    return new Promise((resolve,reject)=>{
+        if(list && list.length){
+            let res = [],
+                id = 0;
+            list.forEach((v,i)=>{
+                Promise.resolve(v).then(r=>{
+                    res[i] = r
+                    id++
+                    if(id === list.length){
+                        resolve(res)
+                    }
+                }).catch(err=>{
+                    reject(err)
+                })
+            })
+        }else resolve([])
+    })
+}
+
+2. 通用版：
+Promise.myAll = function(args){
+    return new Promise((resolve,reject)=>{
+        const result = []
+        let forId = 0,
+            sucId = 0;
+        // 使用for of遍历带有Iterable结构的
+        for(let v of args){
+            let tempId = forId
+            forId++
+            // 包裹一层兼容非promise情况
+            Promise.resolve(v).then(res=>{
+                result[tempId] = res
+                sucId++
+                if(sucId === forId){
+                    resolve(result)
+                }
+            }).catch(err=>{
+                reject(err)
+            })
+        }
+        if(!forId) resolve(result)
+    })
+}
+```
+
+#### 30. 实现一个Promise
 
 ```js
 
+```
+
+#### 31. 将类数组(拥有length属性和若干索引属性，但不具有数组原型上的方法被称为类数组)转为数组
+
+```js
+1. call方法调用数组的slice / splice 方法：
+    - Array.prototype.slice.call(likeArr)
+    - Array.prototype.splice.call(likeArr,0)
+
+2. apply调用数组的concat方法：
+    - Array.prototype.concat.apply([] , likeArr)
+
+3. Array.form：
+    - Array.form(likeArr)
+
+4. 扩展运算符：
+    - [...likeArr]
 ```

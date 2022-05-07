@@ -1,6 +1,6 @@
 # Typescript相关总结
 
-### 1.  数据类型
+#### 1.  数据类型
 
 ```typescript
 // 定义类型时都是小写(boolean, string, number)
@@ -30,12 +30,12 @@
 6. any(任意类型)：
  // 普通类型赋值过程中是不允许改变类型的
  // any类型则允许赋值为任意类型
- let reandom: any = 'test';
-  readom = 9;
-  readom = {};
+ let random: any = 'test';
+  random = 9;
+  random = {};
  // 任意值也可以访问任意属性和方法
- readom.func();
- readom.xxx;
+ random.func();
+ random.xxx;
 
 7. 声明未赋值变量时，未声明类型将被认为任意值类型
  let some;
@@ -72,7 +72,7 @@
  // x便拥有了a 和 b 的属性
 ```
 
-### 2. 对象的类型(接口)
+#### 2. 对象的类型(接口)
 
 ```typescript
 interface Person{
@@ -87,7 +87,7 @@ const tom: Person{
     id: 999,
     name:'xxx',
     age:23,
-    readomProp: 'xxxx'
+    randomProp: 'xxxx'
 }
 1. 必有属性：
  定义了一个变量tom，类型为Person，tom里的属性和方法必须与接口Person的一样
@@ -102,7 +102,7 @@ const tom: Person{
     readonly xxx: [type]
 ```
 
-### 3.  数组的类型
+#### 3.  数组的类型
 
 ```typescript
 1. 基础定义：
@@ -134,7 +134,7 @@ const tom: Person{
      }
 ```
 
-### 4. 函数的类型
+#### 4. 函数的类型
 
 ```typescript
 1. 函数声明的类型定义：
@@ -222,7 +222,7 @@ declare const Foo: CallWithNew;
 const bar = new Foo(); // bar被推断为string类型
 ```
 
-### 5. 类型断言：(手动指定一个值的类型)
+#### 5. 类型断言：(手动指定一个值的类型)
 
 - 类型断言的各种情况：
 
@@ -381,7 +381,7 @@ tom.run();
     tom.run();
     ```
 
-### 6.  声明文件：(通常放在 xxx.d.ts文件里)
+#### 6.  声明文件：(通常放在 xxx.d.ts文件里)
 
 - 全局变量的声明文件：(类型声明)
 
@@ -461,7 +461,7 @@ jQuery('#foo');
 jQuery.ajax('xxx/xx')
 ```
 
-### 7. 内置对象
+#### 7. 内置对象
 
 - ECMAScript的内置对象：
 
@@ -484,7 +484,7 @@ documnet.addEventListener('click', function(e: MouseEvent)){
 }
 ```
 
-### 8. 基础类型字面量类型(约束取值范围)
+#### 8. 基础类型字面量类型(约束取值范围)
 
 ```typescript
 1. 约束取值只能取规定内的值：
@@ -499,7 +499,7 @@ handleEvent(documnet.getElementById('hello'), 'scroll');
 handleEvent(document.getElementById('world'), 'dbclick'); // 报错，EventNames中不存在dbclick
 ```
 
-### 9.  元组
+#### 9.  元组
 
 ```typescript
 1. 元组合并不同类型的成员：
@@ -513,7 +513,7 @@ tom.push('male');
 tom.push(true); // error
 ```
 
-### 10.  枚举(用于取值被限制在一定范围内)
+#### 10.  枚举(用于取值被限制在一定范围内)
 
 ```typescript
 enum Days {Sun, Mon, Tue, Wed, Thu, Fri, Sat};
@@ -547,7 +547,7 @@ declare enum Directions {
 }
 ```
 
-### 10.  ts中的类
+#### 10.  ts中的类
 
 - 三种修饰符：(public, private, protected)
 
@@ -657,7 +657,7 @@ let a: Animal = new Animal('Jack');
 console.log(a.sayHi());
 ```
 
-### 11. 类与接口
+#### 11. 类与接口
 
 - 类实现接口：
 
@@ -743,7 +743,7 @@ function printPoint(p: Point) {
 printPoint(new Point(1, 2))
 ```
 
-### 13.  泛型
+#### 13.  泛型
 
 - 泛型是指在定义函数(参数/返回值)，接口，类(类的实例/类的方法)的时候，不预先指定具体的类型，而是使用的时候再指定
 

@@ -1,8 +1,8 @@
 # Vue相关总结
 
-##### 1. MVP MVC MVVM
+#### 1. MVP MVC MVVM
 
-```html
+```js
 MVC、MVP 和 MVVM 是三种常见的软件架构设计模式，主要通过分离关注点的方式来组织代码结构，优化我们的开发效率。
 
 MVC 通过分离 Model、View 和 Controller 的方式来组织代码结构。其中 View 负责页面的显示逻辑，Model 负责存储页面的业务数据，以及对相应数据的操作。并且 View 和 Model 应用了观察者模式，当 Model 层发生改变的时候它会通知有关 View 层更新页面。Controller 层是 View 层和 Model 层的纽带，它主要负责用户与应用的响应操作，当用户与页面产生交互的时候，Co
@@ -20,8 +20,9 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
 )
 ```
 
-##### 2. Vue和React
+#### 2. Vue和React
 
+```js
 1. 相同点：
     - 组件化思想
     - 支持服务端渲染
@@ -34,31 +35,33 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
     - **数据变化实现的原理不同**：vue使用的是可变的数据；react使用的是不可变数据
     - **组件化通信的不同**：vue子传父有两种，事件和回调函数；react使用回调函数来通信
     - **diff算法不同**：vue使用双指针，边对比，边更新dom；react主要使用diff队列保存需要更新哪些dom，得到patch树，再统一操作批量更新dom
+```
 
-##### 3. 使用Object.defineProperty()进行数据劫持有何缺点
+#### 3. 使用Object.defineProperty()进行数据劫持有何缺点
 
+```js
 1. 无法拦截某些属性的操作：
     - 通过下标方式修改数组数据
     - 给新对象新增属性
 2. 只能监听首次渲染时有的属性，无法实现深度监听
+```
 
-##### 4. 说说对SPA的理解
+#### 4. 说说对SPA的理解
 
+```js
 1. 单页面应用：
 
     - 一个主页面和多个页面片段
 
     - 局部刷新 / 哈希模式 / 数据传递容易 / 用户体验好
 
-        ```js
-        优点：
-        1.用户体验好，无需每次重新加载整个页面
-        2.前后端分离，分工明确
+        - 优点：
+            1.用户体验好，无需每次重新加载整个页面
+            2.前后端分离，分工明确
         
-        缺点：
-        1.不利于SEO
-        2.首屏渲染较慢
-        ```
+        - 缺点：
+            1.不利于SEO
+            2.首屏渲染较慢
 
 2. 实现一个单页面：
 
@@ -66,23 +69,20 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
 
     - 用pushstate记录浏览器的历史，驱动界面发送变化
 
-        ```
         1.检测hash/pushstate变化
         2.以当前hash为索引，加载对应资源
         3.等待资源加载完毕，隐藏之前界面，执行回调
         4.显示当前界面，点击按钮或浏览器回退/前进按钮触发hash变化(回到步骤1)
-        ```
 
     - hash模式：监听url中的hash来进行路由跳转
 
-        ```js
         //定义Router
         class Router{
             constructor(){
                 this.routes = {};
                 //存放路由path和callback
                 this.currentUrl = '';
-                window.addEventListener('load', this.refresh,false); window.addEventListener('haschange', this.refresh, false)
+                window.addEventListener('load', this.refresh,false); window.addEventListener('hashchange', this.refresh, false)
             }
             route(path,callback){
                 this.routes[path] = callback;
@@ -102,7 +102,6 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
         });
         myrouter.push('/'); //page1
         myrouter.push('/page2'); //page2
-        ```
 
     - history模式：借用H5 history api
 
@@ -110,7 +109,6 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
         - history.replaceState()：修改历史记录中当前记录
         - history.popState()：当history发生变化时触发
 
-        ```js
         class Router {
             constructor(){
                 this.routes = {};
@@ -146,7 +144,6 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
             console.log('page2');
         });
         myrouter.push('/page2'); // page2
-        ```
 
 3. 给SPA做SEO优化：
     - SSR服务端渲染：将组件或页面通过服务器生成html，再返回给浏览器，如nuxt.js
@@ -156,16 +153,17 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
     - 静态化：
         - 通过程序将动态网页抓取并保存为静态网页，存于服务器的硬盘中
         - 通过web服务器的URL Rewrite方式，把外部请求的静态地址转为实际的动态页面地址，静态页面实际不存在
+```
 
-##### 5. v-show和v-if
+#### 5. v-show和v-if
 
+```js
 1. v-show：
 
     - 不管初始条件是什么，元素都会被渲染
 
     - 通过display:none隐藏元素，但还存于dom结构中
 
-    ```js
     原理分析：有transition就执行transition，没有就直接设置display属性
     export const vShow: ObjectDirective<VShowElement> = {
      beforeMount(el, {value}, {transition}){
@@ -188,7 +186,6 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
        }
       },
     }
-    ```
 
 2. v-if：
 
@@ -198,7 +195,6 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
 
     - true-->false 时，触发组件：beforeDestory，destoryed
 
-        ```js
         原理分析：返回一个node节点，render函数通过表达式的值来决定是否生成DOM
         export const transformIf = createStructuralDirectiveTransform(
           /^(if|else|else-if)$/,
@@ -225,16 +221,17 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
             })
           }
         )
-        ```
 
 3. v-if有更高的切换消耗，v-show有更高的初始渲染消耗
+```
 
-##### 6.  Vue中new Vue() 的时候发生了什么
+#### 6. Vue中new Vue() 的时候发生了什么
 
+```js
 1. new Vue的时候调用_init方法
     - 定义$set, $get, $delete, $watch等方法
     - 定义$on, $off, $emit, $once等事件
-    - 定义_update,_forceUpdate, _destory等生命周期
+    - 定义_update,_forceUpdate, _destroy等生命周期
     - 调用beforeCreate之前，数据未完成初始化，像data,props无法访问
     - initState()：初始化顺序：props, methods, data
     - 到create时，数据已完成初始化，能够访问data, props，但并未完成dom挂载，因此无法访问到dom元素
@@ -252,9 +249,11 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
     - 监听组件数据，有变化就触发beforeUpdate钩子
 4. 执行render生成虚拟dom
 5. _update将调用patch虚拟DOM生成真实dom，并渲染到页面中
+```
 
-##### 7. Vue生命周期的理解
+#### 7. Vue生命周期的理解
 
+```js
 1. Vue生命周期中会自动绑定this上下文到实例中，因此不能用箭头函数定义生命周期方法
 2. beforeCreate --> created：初始化Vue实例，进行数据观测
     - 初始化inject
@@ -295,26 +294,32 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
     - 在此阶段中再修改数据，会再次触发更新方法(beforeUpdate, updated)
     - (更新后，所有状态已是最新)
 
-10. beforeDestory：
+10. beforeDestroy：
     - 实例销毁前，此时实例属性和方法仍可用
     - (可用于一些定时器或订阅的取消)
 
-11. destoryed：
+11. destroyed：
     - 实例销毁，解绑全部指令与事件监听器
     - 并不能清楚DOM，只是销毁实例
+```
 
-##### 8.  v-if和v-for相关
+#### 8. v-if和v-for相关
 
+```js
 1. 同一标签中同时使用v-if和v-for，vue2中v-for优先级高，源码中先判断v-for后判断v-if；而vue3中v-if优先级高
+
 2. 不要把v-if和v-for同时用同在一个元素上(每次渲染都会先循环再条件判断)
+
 3. 将v-if写在v-for的外层template标签上
+
 4. 用computed提前过滤掉那些不需要显示的项
+```
 
-##### 9. SPA首屏渲染慢如何解决
+#### 9. SPA首屏渲染慢如何解决
 
+```js
 1. 利用DOMContentLoad 或 performance计算首屏加载时间
 
-    ```js
     //方案一：
     document.addEventListener('DOMContentLoaded', (event) => {
         console.log('first contentful painting');
@@ -330,7 +335,6 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
       startTime: 507.80000002123415,
       duration: 0,
     };
-    ```
 
 2. 加载慢的原因：
     - 网络延时
@@ -342,7 +346,6 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
 
     - 减小入口文件体积
 
-        ```js
         路由懒加载，把不同路由对应的组件分割成不同的代码块，待路由被请求的时候会单独打包路由，使得入口文件变小，加载速度大大增加
         
         //vue-router配置路由的时候，采用动态加载路由的形式
@@ -351,69 +354,65 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
             name: 'ShowBlogs',
             component: () => import('./components/ShowBlogs.vue')
         ]
-        ```
 
     - 静态资源本地缓存
 
-        ```js
         //后端返回资源问题：
         1. 采用HTTP缓存，设置Cache-Control，Last-Modified，Etag等响应头
         2. 采用Service Worker离线缓存
         
         //前端合理利用localStorage
-        ```
 
     - UI框架按需加载
 
     - 抽离公共库
 
-        ```js
         //在webpack的config文件中，修改CommonsChunkPlugin的配置
         minChunks: 3
         //minChunks为3表示会把使用3次及以上的包抽离出来，放进公共依赖文件，避免了重复加载组件
-        ```
 
     - 图片资源的压缩
 
     - 开启GZip压缩
 
-        ```js
         nmp i compression-webpack-plugin -D
         
-        // 在vue.congig.js中引入并修改webpack配置
+        // 在vue.config.js中引入并修改webpack配置
         const CompressionPlugin = require('compression-webpack-plugin')
         
         configureWebpack: (config) => {
-                if (process.env.NODE_ENV === 'production') {
+            if (process.env.NODE_ENV === 'production') {
                     // 为生产环境修改配置...
-                    config.mode = 'production'
-                    return {
-                        plugins: [new CompressionPlugin({
-                            test: /\.js$|\.html$|\.css/, //匹配文件名
-                            threshold: 10240, //对超过10k的数据进行压缩
-        deleteOriginalAssets: false //是否删除原文件
-                        })]
-                    }
+                config.mode = 'production'
+                return {
+                    plugins: [new CompressionPlugin({
+                        test: /\.js$|\.html$|\.css/, //匹配文件名
+                        threshold: 10240, //对超过10k的数据进行压缩
+                        deleteOriginalAssets: false //是否删除原文件
+                    })]
                 }
-        ```
+            }
+        })
 
     - 使用SSR
 
-        ```
         1.组件或页面通过服务器生成html字符串，再发送到浏览器
         2.从头搭建一个服务端渲染是很复杂的，vue应用建议使用Nuxt.js实现服务端渲染
-        ```
+```
 
-##### 10. data属性为什么是一个函数
+#### 10. data属性为什么是一个函数
 
+```js
 1. **根实例**中定义data时既可以是函数，也可以是对象
     - (根实例是单例，不会产生数据污染情况)；
 2. **组件**中定义data属性只能是函数
     - (多个组件实例，对象是引用类型，共用一个data会污染数据)
     - (函数不一样，initData时会将其作为工厂函数，每次都会返回全新data对象)
+```
 
-##### 11. 动态给Vue的data添加一个新的属性时会发生什么
+#### 11. 动态给Vue的data添加一个新的属性时会发生什么
 
+```js
 1. 数据会变，但页面并不会更新：
     - 一开始data中的属性都经过Object.defineProperty()设置成响应式，因此data中数据变化，会进行拦截
     - 但直接给data添加一个新的属性，并没有通过defineProperty()设置成响应式
@@ -422,7 +421,6 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
 
     - Vue.set(obj, key, value) / vm.$set(Vue.set的别名)：
 
-        ```js
         //通过Vue.set向响应式对象中添加一个property，并确保这个新 property同样是响应式的，且触发视图更新
         原理：
         无非再次调用defineReactive方法，实现新增属性的响应式，关于defineReactive方法，内部还是通过Object.defineProperty实现属性拦截
@@ -440,15 +438,12 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
                 }
             })
         }
-        ```
 
     - Object.assign()：
 
-        ```js
         //直接使用Object.assign()添加到对象的新属性不会触发更新
         //应创建一个新的对象，合并原对象和混入对象的属性
         this.someObject =  Object.assign({},this.someObject,{newProperty1:1,newProperty2:2 ...})
-        ```
 
     - $forceUpdate()：
 
@@ -459,9 +454,11 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
     - 如果需要为新对象添加大量的新属性，则通过`Object.assign()`创建新对象
     - 如果你实在不知道怎么操作时，可采取`$forceUpdate()`进行强制刷新 (不建议)
     - `vue3`是用过`proxy`实现数据响应式的，直接动态添加新属性仍可以实现数据响应式
+```
 
-##### 12.  Vue中组件和插件的区别
+#### 12. Vue中组件和插件的区别
 
+```js
 1. 组件：
 
     - 降低整个系统的耦合度
@@ -474,7 +471,6 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
 
     - 编写组件：
 
-        ```js
         // 可以通过template属性来编写一个组件，如果组件内容多，我们可以在外部定义template组件内容，如果组件内容并不多，我们可直接写在template属性上
         
         <template id="testComponent">     // 组件显示的内容
@@ -485,7 +481,6 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
             template: '#testComponent'  
             template: `<div>component</div>`  // 组件内容少可以通过这种形式
         })
-        ```
 
 2. 插件：
 
@@ -503,7 +498,6 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
 
     - 编写插件：
 
-        ```js
         // vue插件的实现应该暴露一个 install 方法。这个方法的第一个参数是 Vue 构造器，第二个参数是一个可选的选项对象
         MyPlugin.install = function (Vue, options) {
           // 1. 添加全局方法或 property
@@ -529,13 +523,11 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
             // 逻辑...
           }
         }
-        ```
 
 3. 区别：
 
     - 组件注册：全局注册 / 局部注册
 
-        ```
         // 全局注册通过Vue.component方法，第一个参数为组件的名称，第二个参数为传入的配置项
         Vue.component('my-component-name', { /* ... */ })
         
@@ -546,20 +538,19 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
           component1   // 局部注册
          }
         }
-        ```
 
     - 插件注册：
 
-        ```js
         // 插件的注册通过Vue.use()的方式进行注册（安装），第一个参数为插件的名字，第二个参数是可选择的配置项
         Vue.use(插件名字,{ /* ... */} )
         
         注册插件的时候，需要在调用 new Vue() 启动应用之前完成
         Vue.use会自动阻止多次注册相同插件，只会注册一次
-        ```
+```
 
-##### 13. Vue组件之间的通信方式
+#### 13. Vue组件之间的通信方式
 
+```js
 1. 父子间通信：
 
     - props与$emit：
@@ -567,7 +558,6 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
         - 子组件设置props属性，接收父组件传过来的参数
         - 子组件通过$emit触发事件，父组件绑定监听器获取参数
 
-        ```vue
         //父组件：
         <Children name:"jack" age=18 @add='addFunc($event)'/>
         
@@ -578,23 +568,19 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
             // 对象形式  
             age:{    
                 type:Number, // 接收的类型为数值 
-                defaule:18,  // 默认值为18  
+                default:18,  // 默认值为18  
                require:true // age属性必须传递  
             }  
         }  
         this.$emit('add', good)
-        
-        ```
 
     - ref：
 
         - 父组件在使用子组件的时候设置`ref`
         - 父组件通过设置子组件`ref`来获取数据
 
-        ```vue
         <Children ref="foo" /> 
         this.$refs.foo  // 获取子组件实例，通过子组件实例我们就能拿到对应的数据  
-        ```
 
 2. 兄弟间通信：
 
@@ -603,7 +589,6 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
         - 兄弟组件通过`$emit`触发自定义事件，`$emit`第二个参数为传递的数值(传递数据的一方)
         - 另一个兄弟组件通过`$on`监听自定义事件(获取数据的一方)
 
-        ```vue
         // 另一种方式  
         Vue.prototype.$bus = new Vue() // Vue已经实现了Bus的功能 
         
@@ -612,19 +597,16 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
         
         // 兄弟组件2：
         this.$bus.$on('foo', this.handle)
-        ```
 
     - $parent / $root：
 
         - 通过共同祖辈`$parent`或者`$root`搭建通信侨联
 
-        ```vue
         // 兄弟组件1：
         this.$parent.emit('add');
         
         // 兄弟组件2：
         this.$parent.on('add',this.add);
-        ```
 
 3. 祖孙与后代间通信：(祖父--儿子--孙子) (祖父-- ... --后代组件)
 
@@ -634,7 +616,6 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
         - 包含了父级作用域中不作为 `prop` 被识别 (且获取) 的特性绑定 ( class 和 style 除外)
         - 可以通过 `v-bind="$attrs"` 传⼊内部组件
 
-        ```vue
         // 祖父组件引用儿子组件：
         <Child msg="lalala" @some-event="onSomeEvent"></Child>
         
@@ -645,14 +626,12 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
         <div @click="$emit('some-event', 'msg from grandson')">  
         {{msg}}  
         </div>  
-        ```
 
     - provide / inject：
 
         - 祖先组件定义`provide`属性，返回传递的值
         - 后代组件通过`inject`接收组件传递过来的值
 
-        ```vue
         // 祖先组件：
         provide(){  
             return {  
@@ -662,28 +641,26 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
         
         // 后代组件：
         inject:['foo'] // 获取到祖先组件传递过来的值  
-        ```
 
 4. 非关系组件间通信：
 
     - Vuex(存储共享变量的容器 )：复杂关系的组件数据传递
 
-        ```
         1. state用来存放共享变量的地方
         2. getter，可以增加一个getter派生状态，(相当于store中的计算属性），用来获得共享变量的值
         3. mutations用来存放修改state的方法(同步)
         4. actions也是用来存放修改state的方法，不过action是在mutations的基础上进行。常用来做一些异步操作
-        ```
+```
 
-##### 14.  ******重点**谈谈对双向数据绑定的理解
+#### 14. 双向数据绑定的原理
 
+```js
 1. 理解ViewModel：
     - 数据变化后更新视图
     - 视图变化后更新数据
     - 监听器（Observer）：对所有数据的属性进行监听
     - 解析器（Compiler）：对每个元素节点的指令进行扫描跟解析,根据指令模板替换数据,以及绑定相应的更新函数
 
-```json
 // 1. 先来一个构造函数：执行初始化，对data执行响应化处理
 class Vue {  
   constructor(options) {  
@@ -716,9 +693,7 @@ class Observer {
     });  
   }  
 }  
-```
 
-```js
 // 2. 编译Compile
 class Compile {  
   constructor(el, vm) {  
@@ -748,9 +723,7 @@ class Compile {
     return node.nodeType == 3 && /\{\{(.*)\}\}/.test(node.textContent);  
   }  
 }  
-```
 
-```js
 // 3. 依赖收集
 1. defineReactive时为每⼀个key创建⼀个Dep实例
 2. 初始化视图时读取某个key，例如name1，创建⼀个watcher1
@@ -817,8 +790,9 @@ function definaReactive(obj, key, val){
 }
 ```
 
-##### 15.  谈谈对NextTick的理解：(本质是一种优化策略)
+#### 15. 谈谈对NextTick的理解：(本质是一种优化策略)
 
+```js
 1. 在下次 DOM 更新循环结束之后**执行延迟回调**，修改数据之后立即使用这个方法，获取更新后的 DOM
 
     (`Vue` 在更新 `DOM` 时是异步执行的。当数据发生变化，`Vue`将开启一个异步更新队列，视图需要**等队列中所有数据变化完成之后**，再统一进行更新)
@@ -827,12 +801,10 @@ function definaReactive(obj, key, val){
 
 3. $nextTick会返回一个promise对象,可以用await
 
-    ```js
     this.message = '修改后的值'
     console.log(this.$el.textContent) // => '原始的值'
     await this.$nextTick()
     console.log(this.$el.textContent) // => '修改后的值'
-    ```
 
 4. 实现原理：
 
@@ -844,7 +816,6 @@ function definaReactive(obj, key, val){
         - setImmediate
         - setTimeout
 
-        ```js
         export let isUsingMicroTask = false
         if (typeof Promise !== 'undefined' && isNative(Promise)) {
           //判断1：是否原生支持Promise
@@ -894,23 +865,21 @@ function definaReactive(obj, key, val){
             copies[i]()
           }
         }
-        ```
 
-    小结：
+    - 小结：
 
-    ```
-    1. 把回调函数放入callbacks等待执行
-    2. 将执行函数放到微任务或者宏任务中
-    3. 事件循环到了微任务或者宏任务，执行函数依次执行callbacks中的回调
-    ```
+        1. 把回调函数放入callbacks等待执行
+        2. 将执行函数放到微任务或者宏任务中
+        3. 事件循环到了微任务或者宏任务，执行函数依次执行callbacks中的回调
+```
 
-##### 16. 谈谈你对mixin的理解
+#### 16. 谈谈你对mixin的理解
 
+```js
 1. 本质其实就是一个`js`对象，它可以包含我们组件中任意功能选项，如`data`、`components`、`methods`、`created`、`computed`等等
 
 2. 局部混入：
 
-    ```json
     定义一个mixin对象，有组件options的data、methods属性
     var myMixin = {
       created: function () {
@@ -927,11 +896,9 @@ function definaReactive(obj, key, val){
     Vue.component('componentA',{
       mixins: [myMixin] // 调用
     })
-    ```
 
 3. 全局混入：
 
-    ```js
     通过Vue.mixin()进行全局的混入
     Vue.mixin({
       created: function () {
@@ -939,7 +906,6 @@ function definaReactive(obj, key, val){
         }
     })
     使用全局混入需要特别注意，因为它会影响到每一个组件实例（包括第三方组件）
-    ```
 
 4. 注意事项：
 
@@ -953,7 +919,6 @@ function definaReactive(obj, key, val){
     - 再遍历 `child`，合并补上 `parent` 中没有的`key`，调用`mergeField`方法进行合并，保存在变量`options`
     - 通过 `mergeField` 函数进行了合并
 
-    ```
     合并策略：
     1.替换型：
      同名的props、methods、inject、computed会被来 者代替
@@ -967,11 +932,12 @@ function definaReactive(obj, key, val){
     4.叠加型：
      叠加型合并有：component、directives、filters
      叠加型主要是通过原型链进行层层的叠加
-    ```
+```
 
-##### 17. 谈谈你对slot的理解
+#### 17. 谈谈你对slot的理解
 
-1. `solt`在组件模板中占好了位置，当使用该组件标签时候，组件标签里面的内容就会自动填坑（替换组件模板中`slot`位置），作为承载分发内容的出口
+```js
+1. `slot`在组件模板中占好了位置，当使用该组件标签时候，组件标签里面的内容就会自动填坑（替换组件模板中`slot`位置），作为承载分发内容的出口
 2. 通过`slot`插槽**向组件内部指定位置传递内容**，完成这个复用组件在不同场景的应用
 3. 默认插槽：
     - 父组件直接在子组件中写的内容被默认放到子组件插槽位置
@@ -981,7 +947,6 @@ function definaReactive(obj, key, val){
     - 子组件用name区分插槽的位置
     - 父组件在子组件使用时加上v-slot:name(子组件插槽name值)即可
 
-    ```vue
     // 子组件：
     <template>
         <slot>插槽后备的内容</slot>
@@ -994,14 +959,12 @@ function definaReactive(obj, key, val){
         <!-- 具名插槽⽤插槽名做参数 -->
         <template v-slot:content>内容...</template>
     </child>
-    ```
 
 5. 作用域插槽：
 
     - 子组件在作用域上绑定属性来将子组件的信息传给父组件使用，这些属性会被挂在父组件`v-slot`接受的对象上
     - 父组件中在使用时通过`v-slot:`（简写：#）获取子组件的信息，在内容中使用
 
-    ```vue
     // 子组件：
     <template> 
       <slot name="footer" testProps="子组件的值">
@@ -1019,119 +982,99 @@ function definaReactive(obj, key, val){
           来⾃⼦组件数据：{{slotProps.testProps}}
         </template>
     </child>
-    ```
 
 6. 小结：
     - `v-slot`属性只能在`<template>`上使用，但在只有默认插槽时可以在组件标签上使用
     - 默认插槽名为`default`，可以省略default直接写`v-slot`
     - 缩写为`#`时不能不写参数，写成`#default`
     - 可以通过解构获取`v-slot={user}`，还可以重命名`v-slot="{user: newName}"`和定义默认值`v-slot="{user = '默认值'}"`
+```
 
-##### 18. 谈谈你对Vue.observable的理解
+#### 18. 谈谈你对Vue.observable的理解
 
+```js
 1. 让一个对象变成响应式数据，`Vue` 内部会用它来处理 `data` 函数返回的对象
+```
 
-##### 19. 常用的修饰符有哪些
+#### 19. 常用的修饰符有哪些
 
-1. **表单修饰符**：
+```js
+1. 表单修饰符：
 
     - lazy：
 
-        ```html
         在我们填完信息，光标离开标签的时候，才会将值赋予给value，也就是在change事件之后再进行信息同步
-        <input type="text" v-model.lazy="value">
-        <p>{{value}}</p>
-        ```
+        // <input type="text" v-model.lazy="value">
+        // <p>{{value}}</p>
 
     - trim：
 
-        ```html
         自动过滤用户输入的首空格字符，而中间的空格不会过滤
-        <input type="text" v-model.trim="value">
-        ```
+        // <input type="text" v-model.trim="value">
 
     - number：
 
-        ```html
         自动将用户的输入值转为数值类型，但如果这个值无法被parseFloat解析，则会返回原来的值
-        <input v-model.number="age" type="number">
-        ```
+        // <input v-model.number="age" type="number">
 
 2. **事件修饰符**：对事件捕获以及目标进行了处理
 
     - stop：
 
-        ```html
         阻止了事件冒泡，相当于调用了event.stopPropagation方法
-        <div @click="shout(2)">
-        <button @click.stop="shout(1)">ok</button>
-        </div>
-        ```
+        // <div @click="shout(2)">
+        //   <button @click.stop="shout(1)">ok</button>
+        //</div>
 
     - prevent：
 
-        ```html
         阻止了事件的默认行为，相当于调用了event.preventDefault方法
-        <form v-on:submit.prevent="onSubmit"></form>
-        ```
+        // <form v-on:submit.prevent="onSubmit"></form>
 
     - self：
 
-        ```html
         只当在 event.target 是当前元素自身时触发处理函数
-        <div v-on:click.self="doThat">...</div>
+        // <div v-on:click.self="doThat">...</div>
         
-        ****
         用 v-on:click.prevent.self 会阻止所有的点击，而 v-on:click.self.prevent 只会阻止对元素自身的点击
-        ****
-        ```
 
     - once：
 
-        ```html
         绑定了事件以后只能触发一次，第二次就不会触发
-        <button @click.once="shout(1)">ok</button>
-        ```
+        // <button @click.once="shout(1)">ok</button>
 
     - capture：向下捕获
 
-        ```html
         使事件触发从包含这个元素的顶层开始往下触发
         
-        <div @click.capture="shout(1)">
+        /* <div @click.capture="shout(1)">
             obj1
-        <div @click.capture="shout(2)">
-            obj2
-        <div @click="shout(3)">
-            obj3
-        <div @click="shout(4)">
-            obj4
-        </div>
-        </div>
-        </div>
-        </div>
+            <div @click.capture="shout(2)">
+                obj2
+                <div @click="shout(3)">
+                    obj3
+                    <div @click="shout(4)">
+                        obj4
+                    </div>
+                </div>
+            </div>
+        </div> */
+
         // 输出结构: 1 2 4 3 
-        ```
 
     - passive：
 
-        ```html
         移动端，当我们在监听元素滚动事件的时候，会一直触发onscroll事件会让我们的网页变卡，因此我们使用这个修饰符的时候，相当于给onscroll事件整了一个.lazy修饰符
         <!-- 滚动事件的默认行为 (即滚动行为) 将会立即触发 -->
         <!-- 而不会等待 `onScroll` 完成  -->
         <!-- 这其中包含 `event.preventDefault()` 的情况 -->
-        <div v-on:scroll.passive="onScroll">...</div>
-        ```
+        // <div v-on:scroll.passive="onScroll">...</div>
 
     - native：
 
-        ```html
         让组件变成像html内置标签那样监听根元素的原生事件，否则组件上使用 v-on 只会监听自定义事件
-        <my-component v-on:click.native="doSomething"></my-component>
-        ****
+        // <my-component v-on:click.native="doSomething"></my-component>
         使用.native修饰符来操作普通HTML标签是会令事件失效的
-        ****
-        ```
 
 3. **鼠标按钮修饰符**：
 
@@ -1141,72 +1084,61 @@ function definaReactive(obj, key, val){
 
     - middle 中键点击
 
-        ```html
-        <button @click.left="shout(1)">ok</button>
+        /* <button @click.left="shout(1)">ok</button>
         <button @click.right="shout(1)">ok</button>
-        <button @click.middle="shout(1)">ok</button>
-        ```
+        <button @click.middle="shout(1)">ok</button> */
 
 4. **键盘修饰符**：用来修饰键盘事件（`onkeyup`，`onkeydown`）的
 
     - 普通键（enter、tab、delete、space、esc、up...）
     - 系统修饰键（ctrl、alt、meta、shift...）
 
-    ```html
     // 只有按键为keyCode的时候才触发
-    <input type="text" @keyup.keyCode="shout()">
+    // <input type="text" @keyup.keyCode="shout()">
     
     还可以通过以下方式自定义一些全局的键盘码别名
     Vue.config.keyCodes.f2 = 113
-    ```
 
 5. **v-bind修饰符**：主要是为属性进行操作
 
     - async：能对`props`进行一个双向绑定
 
-    ```html
-    //父组件
-    <comp :myMessage.sync="bar"></comp> 
-    //子组件
-    this.$emit('update:myMessage',params);
+    // 父组件
+    // <comp :myMessage.sync="bar"></comp> 
+    // 子组件
+    // this.$emit('update:myMessage',params);
     
     以上这种方法相当于以下的简写:
-    //父亲组件
-    <comp :myMessage="bar" @update:myMessage="func"></comp>
+    // 父亲组件
+    // <comp :myMessage="bar" @update:myMessage="func"></comp>
     func(e){
      this.bar = e;
     }
-    //子组件js
+    // 子组件js
     func2(){
       this.$emit('update:myMessage',params);
     }
     
-    ***
     1. 使用sync的时候，子组件传递的事件名格式必须为update:value，其中value必须与子组件中props中声明的名称完全一致
     2. 注意带有 .sync 修饰符的 v-bind 不能和表达式一起使用
     3. 将 v-bind.sync 用在一个字面量的对象上，例如 v-bind.sync=”{ title: doc.title }”，是无法正常工作的
-    ***
-    ```
 
     - props：
 
-    ```html
     设置自定义标签属性，避免暴露数据，防止污染HTML结构
-    <input id="uid" title="title1" value="1" :index.prop="index">
-    ```
+    // <input id="uid" title="title1" value="1" :index.prop="index">
 
     - camel：
 
-    ```html
     将命名变为驼峰命名法，如将view-Box属性名转换为 viewBox
-    <svg :viewBox="viewBox"></svg>
-    ```
+    // <svg :viewBox="viewBox"></svg>
+```
 
-##### 20.  自定义指令相关
+#### 20. 自定义指令相关
 
+```js
 1. 指令的几种方式：
 
-    ```js
     //会实例化一个指令，但这个指令没有参数 
     `v-xxx`
     
@@ -1221,11 +1153,9 @@ function definaReactive(obj, key, val){
     
     // -- 使用修饰符（`modifier`）
     `v-xxx:arg.modifier="value"`
-    ```
 
 2. 全局注册：Vue.directive('name', { })
 
-    ```json
     // 注册一个全局自定义指令 `v-focus`
     Vue.directive('focus', {
       // 当被绑定的元素插入到 DOM 中时……
@@ -1234,11 +1164,9 @@ function definaReactive(obj, key, val){
         el.focus()  // 页面加载完成之后自动让输入框获取到焦点的小功能
       }
     })
-    ```
 
 3. 局部注册：在组件`options`选项中设置`directives`属性\
 
-    ```js
     directives: {
       focus: {
         // 指令的定义
@@ -1250,11 +1178,9 @@ function definaReactive(obj, key, val){
     
     // 使用
     <input v-focus />
-    ```
 
 4. 钩子函数：
 
-    ```js
     bind：只调用一次，指令第一次绑定到元素时调用。在这里可以进行一次性的初始化设置
     
     inserted：被绑定元素插入父节点时调用 (仅保证父节点存在，但不一定已被插入文档中)
@@ -1283,12 +1209,10 @@ function definaReactive(obj, key, val){
     oldVnode：上一个虚拟节点，仅在 update 和 componentUpdated 钩子中可用
     
     // 除了 el 之外，其它参数都应该是只读的，切勿进行修改。如果需要在钩子之间共享数据，建议通过元素的 dataset 来进行
-    ```
 
 5. 例子：
 
-    ```json
-    // 1.设置v-throttle自定义指令
+    - 1. 设置v-throttle自定义指令
     Vue.directive('throttle', {
       bind: (el, binding) => {
         let throttleTime = binding.value; // 防抖时间
@@ -1307,12 +1231,10 @@ function definaReactive(obj, key, val){
         }, true);
       },
     });
-    // 2.为button标签设置v-throttle自定义指令
+    // 为button标签设置v-throttle自定义指令
     <button @click="sayHello" v-throttle>提交</button>
-    ```
 
-    ```js
-    // 图片懒加载
+    - 2. 图片懒加载
     const LazyLoad = {
         // install方法
         install(Vue,options){
@@ -1401,10 +1323,8 @@ function definaReactive(obj, key, val){
     
     }
     export default LazyLoad;
-    ```
 
-    ```js
-    // 一键复制
+    - 3. 一键复制
     import { Message } from 'ant-design-vue';
     
     const vCopy = { //
@@ -1454,17 +1374,19 @@ function definaReactive(obj, key, val){
     };
     
     export default vCopy;
-    ```
+```
 
-##### 21.  vue中key相关
+#### 21. vue中key相关
 
+```js
 1. key是每个vnode的唯一节点，也是diff算法的一种优化策略，根据key，更快速准确的找到对应vnode节点(减少对页面的dom操作，提高diff效率)
+```
 
-##### 22. vue的过滤器相关(vue2)
+#### 22. vue的过滤器相关(vue2)
 
+```js
 1. 过滤器可以用在两个地方：双花括号插值和 `v-bind` 表达式，过滤器应该被添加在 `JavaScript`表达式的尾部，由“管道”符号指示：
 
-    ```html
     <!-- 在双花括号中 -->
     {{ message | capitalize }}
     
@@ -1474,11 +1396,9 @@ function definaReactive(obj, key, val){
     过滤器是 JavaScript函数，因此可以接收参数：
     {{ message | filterA('arg1', arg2) }}
     filterA 被定义为接收三个参数的过滤器函数
-    ```
 
 2. 局部过滤器：
 
-    ```js
     filters: {
       capitalize: function (value) {
         if (!value) return ''
@@ -1486,11 +1406,9 @@ function definaReactive(obj, key, val){
         return value.charAt(0).toUpperCase() + value.slice(1)
       }
     }
-    ```
 
 3. 全局过滤器：
 
-    ```js
     Vue.filter('capitalize', function (value) {
       if (!value) return ''
       value = value.toString()
@@ -1502,15 +1420,18 @@ function definaReactive(obj, key, val){
     })
     
     // 当全局过滤器和局部过滤器重名时，会采用局部过滤器
-    ```
+```
 
-##### 23. 虚拟DOM相关
+#### 23. 虚拟DOM相关
 
+```js
 1. 抽象化真实DOM，表现为一个JS对象，用对象的属性描述节点，主要包括标签名(tag)，属性(attrs)，子元素(children)三个属性
 2. 更新节点时，虚拟dom并不会立即操作DOM，而是将多次更新的diff内容保存到本地js对象，最终将js对象一次性attach到DOM树上
+```
 
-##### 24. vue的diff算法
+#### 24. vue的diff算法
 
+```js
 1. 同层级进行, 不会跨层级比较；diff比较的过程中，循环从两边向中间比较
 
 2. 作用于虚拟 `dom` 渲染成真实 `dom` 的新旧 `VNode`节点比较
@@ -1529,32 +1450,31 @@ function definaReactive(obj, key, val){
 
     ​    \4. 新前 旧后 (旧后节点，移动到旧前之前)
 
-```
-1. 在Vue类的构造器里进行观测数据observe，初始化Watcher类,并将Watcher本身赋值给Dep.target；模板编译
-2. 通过Observer类将每层属性转成响应式的对象，添加一个_ob_属性(对象的话直接进行响应式添加,数组可能需要遍历再添加)
-(数组通过原型式继承原来的方法，并改写了7个，添加dep的notify方法)
- - new一个Dep类，作用是管理订阅者，通知更新
- - 定义响应式中get中通过dep实例依赖收集，添加订阅者；set中通过dep实例通知更新
- - Watcher类开始更新视图
+ 4. 总结：
+    - 在Vue类的构造器里进行观测数据observe，初始化Watcher类,并将Watcher本身赋值给Dep.target；模板编译
+    - 通过Observer类将每层属性转成响应式的对象，添加一个_ob_属性(对象的话直接进行响应式添加,数组可能需要遍历再添加)
+    (数组通过原型式继承原来的方法，并改写了7个，添加dep的notify方法)
+        - new一个Dep类，作用是管理订阅者，通知更新
+        - 定义响应式中get中通过dep实例依赖收集，添加订阅者；set中通过dep实例通知更新
+        - Watcher类开始更新视图
  
-3. h函数将template模板转为js对象描述(标签名，属性，子元素)
-4. patch函数进行节点对比，同一节点开始详细对比，不同节点直接新建新节点，插入旧节点之前，删除旧节点
-5. 节点对比有无文本，新节点有文本直接innerText替换旧文本
-新旧若都有子节点，那就diff比较；新有子节点，旧无，则新建子节点appendChild
-6. diff 比较 四优化策略
+    - h函数将template模板转为js对象描述(标签名，属性，子元素)
+    - patch函数进行节点对比，同一节点开始详细对比，不同节点直接新建新节点，插入旧节点之前，删除旧节点
+    - 节点对比有无文本，新节点有文本直接innerText替换旧文本，新旧若都有子节点，那就diff比较；新有子节点，旧无，则新建子节点appendChild
+    - diff 比较 四优化策略
 ```
 
-##### 25.  Vue中如何解决跨域
+#### 25. Vue中如何解决跨域
 
+```js
 1. CORS(跨域资源共享)：
     - 一系列传输的HTTP头组成，HTTP头决定浏览器是否阻止前端获取请求响应
     - 只需增加一些http头，让服务器能声明允许的访问来源(后端)
 
-```js
 // 以koa框架举例:
 app.use(async (ctx, next)=> {
   ctx.set('Access-Control-Allow-Origin', '*');
-  ctx.set('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
+  ctx.set('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderField');
   ctx.set('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
   if (ctx.method == 'OPTIONS') {
     ctx.body = 200; 
@@ -1562,18 +1482,16 @@ app.use(async (ctx, next)=> {
     await next();
   }
 })
-```
 
 2. Proxy：
 
     - vue.config.js配置
 
-    ```js
     我们可以通过webpack为我们起一个本地服务器作为请求的代理对象
     通过该服务器转发请求至目标服务器，得到结果再转发给前端，但是最终发布上线时如果web应用和接口服务器不在一起仍会跨域
     
     在vue.config.js文件，新增以下代码:
-    amodule.exports = {
+    module.exports = {
         devServer: {
             host: '127.0.0.1',
             port: 8084,
@@ -1592,11 +1510,9 @@ app.use(async (ctx, next)=> {
     
     通过axios发送请求中，配置请求的根路径:
     axios.defaults.baseURL = '/api'
-    ```
 
     - 通过nginx配置：
 
-    ```js
     server {
         listen    80;
         # server_name www.josephxia.com;
@@ -1613,6 +1529,6 @@ app.use(async (ctx, next)=> {
             proxy_set_header  X-Forwarded-For  $proxy_add_x_forwarded_for;
         }
     }
-    ```
+```
 
-##### 26
+#### 26
