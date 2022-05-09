@@ -24,14 +24,14 @@ fill(填满,会拉伸) | contain(保持宽高比,有黑边) | cover(保持宽高
 
 ```scss
 // 1. 多行设置省略号
-        display: -webkit-box;
+  display: -webkit-box;
   overflow: hidden;
   text-overflow: ellipsis;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3; // 要省略的行数
 
 // 2. 单行设置省略号
-        overflow: hidden;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 ```

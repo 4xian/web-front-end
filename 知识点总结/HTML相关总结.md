@@ -88,7 +88,7 @@ link定义文档与外部资源的关系，只能存在于head中，rel属性定
     - 回流一定引起重绘，重绘不一定引起回流.
 
 2. 引起重绘的属性和方法：
-    - color / background / border-style / border-radius / visibility / ...
+    - color / background / border-style / border-radius / visibility / 文本方向 / 阴影的修改 ...
 3. 引起回流的属性和方法：
     - 添加或删除DOM元素；
     - 尺寸改变，margin，padding，width，height；
@@ -100,12 +100,13 @@ link定义文档与外部资源的关系，只能存在于head中，rel属性定
 
 4. 如何减少回流：
     - CSS中：
-    - 避免table布局；避免多层内联；避免使用CSS表达式；动画效果用到脱离文档流的元素上；
+    - 避免table布局；避免多层内联；避免使用CSS表达式；动画效果用到脱离文档流的元素上；使用css3硬件加速
     -
     - JS中：
     - 操作样式尽量用预先定义的class代替style；
     - 避免频繁操作DOM，创建一个documentFragment，在该对象里操作DOM，最后再添加到文档中；
     - 避免将节点属性放在循环的变量里
+    - 设置属性display: none，然后再操作js，最后再显示display:block
 ```
 
 #### 6. H5的新特性

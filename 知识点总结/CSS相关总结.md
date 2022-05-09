@@ -15,20 +15,94 @@ IE盒模型 / 标准盒模型
 #### 2. CSS选择器有哪些
 
 ```js
-id选择器(#id) / 类选择器(.className) / 标签选择器(div,h1,p) / 后代选择器(h1 p) / 相邻后代选择器(子)选择器(ul > li) / 兄弟选择器(li~a) / 相邻兄弟选择器(li+a) / 属性选择器(a[rel="external"]) / 伪类选择器(:hover, :nth-child) / 伪元素选择器(::after, ::before) / 通配符选择器(*)
+1. 选择器种类：
+    - id选择器(#id) 
+    - 类选择器(.className) 
+    - 标签选择器(div,h1,p) 
+    - 后代选择器(h1 p) 
+    - 相邻后代选择器(子)选择器(ul > li) 
+    - 兄弟选择器(li~a) 
+    - 相邻兄弟选择器(li+a)
+    - 属性选择器(a[rel="external"]) 
+    - 伪类选择器(:hover, :nth-child) 
+    - 伪元素选择器(::after, ::before) 
+    - 通配符选择器(*)
 
-- 伪元素和伪类：修饰不在文档树中的部分
-- 伪类匹配的是特殊状态， 伪元素匹配的是特殊位置
+2. 伪元素和伪类：修饰不在文档树中的部分
+    - 伪元素:
+        ::before / ::after / ::first-letter(选取指定选择器的首字母) / ::first-line(选取指定选择器的首行)
+
+    - 伪类:
+        :link(未被访问的链接)
+        :visited(已被访问的链接)
+        :active(活动的链接)
+        :hover(鼠标悬浮的元素)
+        :focus(选择具有焦点的)
+        :first-child(选择父元素的首个子元素)
+        // 以下css3新增
+        :first-of-type 父元素的首个元素
+        :last-of-type 父元素的最后一个元素
+        :only-of-type 父元素的特定类型的唯一子元素
+        :only-child 父元素中唯一子元素
+        :nth-child(n) 选择父元素中第N个子元素
+        :nth-last-of-type(n) 选择父元素中第N个子元素，从后往前
+        :last-child 父元素的最后一个元素
+        :root 设置HTML文档
+        :empty 指定空的元素
+        :enabled 选择被禁用元素
+        :disabled 选择被禁用元素
+        :checked 选择选中的元素
+        :not(selector) 选择非 <selector> 元素的所有元素
+
+    - 伪类匹配的是特殊状态， 伪元素匹配的是特殊位置
+
+3. 属性选择器：
+    - [attribute]：选择带有attribute属性的元素
+    - [attribute=value]：选择所有使用attribute=value的元素
+    - [attribute~=value]：选择attribute属性包含value的元素
+    - [attribute|=value]：选择attribute属性以value开头的元素
+    // 以下css3新增
+    - [attribute*=value]：选择attribute属性值包含value的所有元素
+    - [attribute^=value]：选择attribute属性开头为value的所有元素
+    - [attribute$=value]：选择attribute属性结尾为value的所有元素
+
+4. 优先级相关：!important > 内联 > ID选择器 > 类选择器 > 标签选择器
+    - 计算规则：
+       - 如果存在内联样式，那么 A = 1, 否则 A = 0
+       - B的值等于 ID选择器出现的次数
+       - C的值等于 类选择器 和 属性选择器 和 伪类 出现的总次数
+       - D 的值等于 标签选择器 和 伪元素 出现的总次数
+
+        // 例：
+        #nav-global > ul > li > a.nav-link
+        - 因为没有内联样式 ，所以 A = 0
+        - ID选择器总共出现了1次， B = 1
+        - 类选择器出现了1次， 属性选择器出现了0次，伪类选择器出现0次，所以 C = (1 + 0 + 0) = 1
+        - 标签选择器出现了3次， 伪元素出现了0次，所以 D = (3 + 0) = 3
+        结果可以简记作：(0, 1, 1, 3)
+
+    - 比较规则：
+        - 从左往右依次进行比较 ，较大者优先级更高
+        - 如果相等，则继续往右移动一位进行比较
+        - 如果4位全部相等，则后面的会覆盖前面的
 ```
 
 #### 3. CSS中可继承的属性
 
 ```js
-- 字体系列：font-size / font-weight / font-family / font-style / ...
-- 文本系列：text-align / text-shadow / line-height / word-spacing / letter-spacing / color/...
-- 列表属性：list-style / list-style-type / list-style-image / list-style-position / ...
-- cursor / visibility
-- 可使用inherit显式指定是否可继承
+1. 可继承的：
+    - 字体系列：font / font-size / font-weight / font-family / font-style / ...
+    - 文本系列：text-align / text-shadow / line-height / word-spacing / letter-spacing / color/...
+    - 列表属性：list-style / list-style-type / list-style-image / list-style-position / ...
+    - cursor / visibility
+    - 可使用inherit显式指定是否可继承
+
+2. 无继承的：
+    - display
+    - 文本属性：vertical-align、text-decoration
+    - 盒子模型的属性：宽度、高度、内外边距、边框等
+    - 背景属性：背景图片、颜色、位置等
+    - 定位属性：浮动、清除浮动、定位position等
 ```
 
 #### 4. CSS中优先级如何计算
@@ -214,12 +288,17 @@ table{border-collapse:collapse;border-spacing:0;}
 #### 13. 块级格式化上下文(BFC)
 
 ```js
-按规则摆放的容器，内外环境都不受影响，相当于一个隔离区域
+1. 按规则摆放的容器，内外环境都不受影响，相当于一个隔离区域
 
-创建BFC：
-    - 根元素
+2. 
+    - box垂直方向的距离由margin决定，同一个BFC中的两个相邻box的margin会重叠
+    - BFC区域不会与float box重叠
+    - 计算BFC的高度时，浮动元素也会参与计算
+
+3. 创建BFC：
+    - 根元素html
     - float为非none的值
-    - 绝对定位
+    - 绝对定位absolute/fixed
     - display为inline-block / flex / inline-flex / table-cell / table-caption /
     - overflow为非visible的值
 ```
@@ -251,15 +330,31 @@ table{border-collapse:collapse;border-spacing:0;}
 - 相同属性的样式抽离出来，整合并通过class使用 / 样式定义到外部css中
 ```
 
-#### 16. 常见的元素隐藏方式
+#### 16. 常见的元素隐藏方式及特点
 
 ```js
-display：none ，脱离文档流，渲染树不会包含该渲染对象
-visibility：hidden，页面中仍然占据空间，不会响应绑定的事件
-opacity：0，页面中占据空间，并且响应绑定的事件
-通过绝对定位将元素移出可视区域
-通过clip/clip-path裁剪元素的方式实现隐藏，占据空间，不会响应事件
-transform: scale(0) ，占据空间，不会响应事件
+1. display：none 
+    - 脱离文档流，渲染树不会包含该渲染对象，无法响应点击事件
+    - 非继承属性，无法通过修改子节点属性显示
+    - 会造成回流
+    - 不支持动画
+
+2. visibility：hidden，
+    - 页面中仍然占据空间，不会响应绑定的事件
+    - 继承属性，子节点设置visibility:visible可让子节点显示
+    - 会造成重绘
+
+3. opacity：0，
+    - 页面中占据空间，并且【响应绑定的事件】
+    - 非继承属性，无法通过修改子节点属性显示
+    - 会造成重绘
+
+4. 通过绝对定位将元素移出可视区域
+5. 通过clip/clip-path裁剪元素的方式实现隐藏，占据空间，不会响应事件
+    - clip-path: polygon(0px 0px,0px 0px,0px 0px,0px 0px)
+6. transform: scale(0) ，占据空间，不会响应事件
+7. 设置height，width为0 和 overflow：hidden
+    - 不占据页面空间，无法响应点击事件
 ```
 
 #### 17. CSS中百分比的计算基准
@@ -267,14 +362,14 @@ transform: scale(0) ，占据空间，不会响应事件
 ```js
 公式：当前元素某CSS属性值 = 基准 * 对应的百分比
 
-- 元素的 position 为 relative 和 absolute 时，top和bottom、left和right基准分别为包含块的 height、width
-- 元素的 position 为 fixed 时，top和bottom、left和right基准分别为初始包含块（也就是视口）的 height、width，移动设备较为复杂，基准为 Layout viewport 的 height、width
-- 元素的 height 和 width 设置为百分比时，基准分别为包含块的 height 和 width
-- 元素的 margin 和 padding 设置为百分比时，基准为包含块的 width（易错）
+- 元素的 position 为 relative 和 absolute 时，top和bottom、left和right基准分别为父元素的 height、width
+- 元素的 position 为 fixed 时，top和bottom、left和right基准分别为初始父元素（也就是视口）的 height、width，移动设备较为复杂，基准为 Layout viewport 的 height、width
+- 元素的 height 和 width 设置为百分比时，基准分别为父元素的 height 和 width
+- 元素的 margin 和 padding 设置为百分比时，【基准为父元素的 width】（易错）
 - 元素的 border-width，不支持百分比
-- 元素的 text-indent，基准为包含块的 width
+- 元素的 text-indent，基准为父元素的 width
 
-- 元素的 border-radius，基准为分别为自身的height、width
+- 元素的 border-radius，基准为分别为【自身】的height、width
 - 元素的 background-size，基准为分别为自身的height、width
 - 元素的 translateX、translateY，基准为分别为自身的height、width
 - 元素的 line-height，基准为自身的 font-size
@@ -303,3 +398,80 @@ transform: scale(0) ，占据空间，不会响应事件
     - 行内元素对于margin和padding 【水平方向有效，竖直方向无效】；块级元素水平竖直都有效
     - 行内元素无法包裹块级元素；块级元素可以包裹行内元素/块级元素
 ```
+
+#### 19. css加载会造成阻塞吗
+
+```js
+1. 结论：
+    - css加载不会阻塞DOM树的解析
+    - css加载会阻塞DOM树的渲染
+    - css加载会阻塞后面js语句的执行
+
+2. 原因：
+    - DOM解析和CSS解析是并行的过程，CSS加载不会阻塞DOM解析
+    - 由于渲染树需要DOM树和CSSOM树，必须等到CSS资源加载完成才能渲染DOM，因此CSS加载会阻塞DOM渲染
+    - js可能会操作dom节点和css样式，css会在js执行前先执行，因此css会阻塞后面js执行
+
+3. 提高css加载速度：
+    - 使用CDN
+    - 对css进行压缩
+    - 合理的使用缓存
+    - 减少http请求数，将多个css文件合并
+```
+
+#### 20. grid网格布局
+
+```js
+1. 
+    grid-template-columns： 设置列宽
+    grid-template-rows：设置行高
+
+        - repeat(次数, 数值): 简写重复的值
+        - auto-fill：自动填充，让一行或一列可以容纳更多的单元格
+        - fr：片段，表示比例关系
+        - minmax(min, max)：长度范围，第一个参数是最小值，第二个是最大值
+        - auto：由浏览器自己决定长度
+
+    .class{
+        display: grid;
+        grid-template-columns: 200px 200px 200px; // 或者 repeat(3, 200px)
+        grid-template-columns: repeat(auto-fill, 200px); // 列表是200px，数量不固定，随浏览器自动放置个数
+        grid-template-columns: 200px 1fr 2fr; // 第一列宽200px，后面剩余两部分，宽度比例为剩余宽度的1/3 和2/3
+        grid-template-columns: 200px auto 200px; // 第一列 第三列为200px，中间由浏览器决定
+    }
+
+2. grid-row-gap： 行间距
+   grid-column-gap：列间距
+   grid-gap：行列间距的简写形式
+
+3. grid-template-areas：定义区域，一个区域由一个或多个单元格组成
+
+    // 九个单元格，将其定义为a-i的九个区域
+    .class{
+        display: grid;
+        grid-template-columns: repeat(3, 100px);
+        grid-template-rows: repeat(3, 100px);
+        grid-template-areas: 'a b c'
+                             'd e f'
+                             'g h i'
+
+        // 合并某些区域 将9个单元格分成a、b、c三个区域
+        grid-template-areas: 'a a a'
+                             'b b b'
+                             'c c c'
+
+        某些区域不需要利用，则使用"点"（.）表示
+    }
+
+4. grid-area：指定项目放在哪一个区域，与grid-template-areas一起使用
+    // 放置b区域
+    .class{
+        grid-area: b
+    }
+
+5. grid-auto-flow：决定子元素的排列顺序
+    - row 先行后列(默认)
+    - column 先列后行
+```
+
+#### 21. 
