@@ -1531,4 +1531,236 @@ app.use(async (ctx, next)=> {
     }
 ```
 
-#### 26
+
+
+### 路由Vue-Router相关
+
+#### 1. Vue-Router的懒加载方法
+
+```js
+1. 正常非懒加载：
+    import XXX from 'xxx.vue'
+    const router = new VueRouter({
+        routes:[
+            {
+                path: 'xxx',
+                component: XXX
+            }
+        ]
+    })
+
+2. 方法一(常用)：箭头函数 + import动态加载
+    const XXX = () => import('xxx.vue')
+    const router = new VueRouter({
+        routes:[
+            {
+                path: 'xxx',
+                component: XXX
+            }
+        ]
+    })
+
+3. 方法二：箭头函数 + require()
+    const router = new VueRouter({
+        routes:[
+            path: 'xxx',
+            component: resolve => require(['xxx'], resolve)
+        ]
+    })
+
+4. 方法三：使用webpack的require.ensure；该情况下，多路由指定相同的chunkName，会合并打包成一个js文件
+    const XXX = resolve => require.ensure([], () => resolve('xxx'))
+    const router = new VueRouter({
+        routes:[
+            path: 'xxx',
+            component: XXX,
+            name:'xxx'
+        ]
+    })
+```
+
+#### 2. Vue-Router的 hash模式 和 history模式
+
+```js
+1. hash模式：
+    // http://www.abc.com/#/vue
+    - hash值为#后面的内容：#/vue
+    - hash值会出现在url中，但不会出现在HTTP请求中
+    - 改变hash值不会重载页面，hash值变化对应的url都会被浏览器记录下来，可以实现页面的前进和后退
+    - 主要原理就是onhashchange事件
+        window.onhashchange = function(e){
+
+        }
+
+2. history模式：分两部分(切换历史状态；修改历史状态)
+    - 切换历史状态：forward()、back()、go() 对应浏览器前进 后退 跳转
+    - 修改历史状态：pushState()、replaceState() 可以对浏览器历史记录进行修改，改变url，但不会立即像后端发送请求(改变url不会刷新页面)
+
+3. 两种方式的对比：
+    - pushState设置的新URL可以与当前URL同源的任意URL；hash只修改 # 后面的部分，因此只能设置与当前URL同文档的URL
+    - pushState设置的新URL可与旧的一样，也会记录到栈中；hash必须不同的值才会记录
+    - pushState通过stateObject可设置任意类型的数据到记录中；hash只能添加短字符串
+    - hash模式下仅hash符号之前的会在请求中，如果没有对路由的全覆盖，也不会报404错误；history下，前端url需和请求的url一致，如没有对应的路由则会报404
+```
+
+#### 3. 获取页面的hash变化
+
+```js
+1. 监听$route的变化：
+    watch:{
+        $route:{
+            handler:(val,old){
+                console.log(val)
+            },
+            deep:true
+        }
+    }
+
+
+2. window.location.hash：可以读取值也可以设置值
+```
+
+#### 4. $route 和 $router 的区别
+
+```js
+1. $route：路由信息对象，是只读不可变的(可监听)
+    - fullpath：'' // 路由完整路径
+    - hash：'' // 路由的hash值(锚点)
+    - mathced：[] // 当前路由的所有嵌套路径片段的路由记录
+    - meta：{} // 路由文件中自定义的meta内容
+    - name：'' // 路由名称
+    - params：{} // 
+    - path：'' // 当前路由的路径
+    - query：{} // 表示URL查询参数，跟随在路径后？的参数
+
+2. $router：路由实例对象，包含了路由跳转方法，钩子函数等
+    // 导航守卫
+    router.beforeEach((to, from, next) => {
+        /* 需调用next() */
+    })
+
+    router.beforeResolve((to, from, next) => {
+        /* 需调用next() */
+    })
+
+    router.afterEach((to, from) => {
+
+    })
+
+    router.push / router.replace / router.go / router.back / router.forward
+
+```
+
+#### 5. 路由传参及获取参数相关
+
+```js
+1. params方式：
+    - /router/:id
+
+    - 路由定义：
+        <router-link :to="'/user/+userId" replace> 用户 </router-link>
+
+        {
+            path: '/user/:userId',
+            component: User
+        }
+
+    - 路由跳转：
+        - <router-link :to="{name: 'users', params: {name: jian}}"> 按钮 </router-link>
+
+        - this.$router.push({
+            name: 'users',
+            params: {
+                name: jian
+            }
+        })
+
+        - this.$router.push('/user/' + jian)
+
+    - 参数获取：
+        - this.params.xxx
+
+2. query方式：
+    - /route?id=123
+
+    - 路由定义：
+        <router-link :to="{path: '/profile',query: {name: jian}}">测试</router-link>
+
+    - 跳转方法：
+        - <router-link :to="{name: 'users', query: {name: jian}}">测试</router-link>
+
+        - <router-link :to="{path: '/users',query: {name: jian}}">测试</router-link>
+
+        - this.$router.push({
+            name: 'users',
+            query: {
+                name: jian
+            }
+        })
+
+        - this.$router.push({
+            path: '/user',
+            query: {
+                name: jian
+            }
+        })
+
+        - this.$router.push('/user?name=' + jian)
+
+    - 参数获取：
+        - this.$route.query
+
+```
+
+#### 6. Vue-Router路由钩子
+
+```js
+1. 全局路由钩子：
+    // 全局前置守卫：进路由之前
+    - router.beforeEach((to, from, next) => {
+        // to：即将要进入的目标
+        // from：当前要离开的路由
+        // next：可选参数，可传递指定路由
+
+        // 返回 false 取消导航
+        return false
+    })
+
+    // 全局解析守卫：在beforeRouteEnter 调用之后调用 (在所有组件内守卫和异步路由组件被解析之后，解析守卫就被正确调用)
+    - router.beforeResolve(() => {
+        // 获取数据或执行其他操作的钩子
+    })
+
+    // 全局后置钩子：进路由之后 (对于分析、更改页面标题、声明页面等辅助功能)
+    - router.afterEach((to, from, failure) => {
+        // 该钩子没有 next 但有failure
+    })
+
+    例：
+        router.beforeEach((to, from, next) => {
+            if(getToken()){
+                if(to.path === '/login'){
+                    next('/index')
+                }else{
+                    next()
+                }
+            }else{
+                if(whiteList.includes(to.path)){
+                    next()
+                }else{
+                    next('/login')
+                }
+            }
+        })
+
+        router.beforeResolve(async to =>{
+            if(to.meta.xxx){
+                
+            }
+        })
+
+        // 跳转之后回到顶部
+        router.afterEach((to, from) => {
+            window.scrollTo(0,0)
+        })
+```
