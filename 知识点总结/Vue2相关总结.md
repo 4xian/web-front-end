@@ -410,16 +410,21 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
     - (函数不一样，initData时会将其作为工厂函数，每次都会返回全新data对象)
 ```
 
-#### 11. 动态给Vue的data添加一个新的属性时会发生什么
+#### 11. Vue2中响应式数据的缺点及解决方法
 
 ```js
-1. 数据会变，但页面并不会更新：
-    - 一开始data中的属性都经过Object.defineProperty()设置成响应式，因此data中数据变化，会进行拦截
-    - 但直接给data添加一个新的属性，并没有通过defineProperty()设置成响应式
+1. 缺点：
+    - 无法检测数组/对象的新增
+    - 无法检测通过索引修改数组的操作【this.items[indexOfItem] = newValue】(Object.defineProperty是可以检测到通过索引改变数组的操作，只是由于性能问题，vue没有做该功能的实现)
 
-2. 解决方法：
+2. 如果给data中的对象新增一个属性，页面情况？
+    - 数据会变，但页面并不会更新：
+        - 一开始data中的属性都经过Object.defineProperty()设置成响应式，因此data中数据变化，会进行拦截
+        - 但直接给data添加一个新的属性，并没有通过defineProperty()设置成响应式
 
-    - Vue.set(obj, key, value) / vm.$set(Vue.set的别名)：
+3. 解决方法：
+
+    - Vue.set(obj, key, value) / this.$set(Vue.set的别名)：
 
         //通过Vue.set向响应式对象中添加一个property，并确保这个新 property同样是响应式的，且触发视图更新
         原理：
@@ -438,6 +443,9 @@ ViewModel：视图模型层，用来连接Model和View，是Model和View之间�
                 }
             })
         }
+
+    - 对于数组可使用splice：vue重写splice可以监听
+        - 重写的数组方法： push() / pop() / shift() / unshift() / splice() / sort() / reverse()
 
     - Object.assign()：
 
@@ -1531,9 +1539,108 @@ app.use(async (ctx, next)=> {
     }
 ```
 
+#### 26. Vue中computed和watch的区别
 
+```js
+1. computed：
+    - 基于【data中声明】过的或【父组件传递的props】计算得到的新值(依赖其他属性计算而来)
+    - 属性名不可与data中声明的重复
+    - 属性值是函数时，默认走get方法，必须有返回值，切返回值即为属性的属性值
+    - 属性被使用时，才会执行computed代码，默认会缓存计算结果，当依赖的发生变化时才会重新计算，否则返回缓存结果
 
-### 路由Vue-Router相关
+    data:{
+        first: 123,
+        last: 234
+    },
+    computed:{
+        count:function(){
+            return this.first + this.last
+        }
+    }
+
+    - 高级用法：拥有get和set方法
+    computed:{
+        count:{
+            get(){
+                return this.first + this.last
+            },
+            set(val){
+                // val为新值
+                this.first = val.split('')[0]
+                this.last = val.split('')[1]
+            }
+        }
+    }
+
+2. watch：
+    - 监听Vue实例上的属性变化(data，props，computed)
+    - 支持异步的，不支持缓存
+    watch:{
+        first:function(val, old){
+            // val为新值; old为旧值
+            this.count = val + this.last
+        }
+    }
+
+    - 高级用法：
+    watch:{
+        first: {
+            handler(newVal,old){
+                console.log(newVal, old)
+            },
+            // 是否监听对象内部的变化
+            deep: true,
+            // 是否第一次就监听执行
+            immediate: true
+        }
+    }
+
+    - 监听对象单个属性的变化：
+        - 直接监听对象的属性 
+            watch:{
+                obj.first: function(val, old){
+                    console.log(val,old)
+                }
+            }
+
+        - 与computed配合使用：computed返回想要监听的属性值，watch用来监听
+            computed: {
+                firstChange(){
+                    return obj.first
+                }
+            }
+            watch: {
+                firstChange(val,old){
+                    console.log(val,old)
+                }
+            }
+```
+
+#### 27. Vue中keep-alive相关
+
+```js
+1. <keep-alive>是Vue的内置组件，会缓存不活动的组件实例，而不是销毁它们；本身是一个抽象组件，不会渲染为DOM元素，也不会出现在父组件链中
+
+2. include：字符串 / 正则 / 数组
+    - 指定哪些组件被缓存
+    - 指定多个被缓存
+
+    // 指定home组件和about组件被缓存
+    <keep-alive include="home,about">
+        <router-view> </router-view>
+    </keep-alive>
+
+3. exclude：字符串 / 正则 / 数组
+    - 指定组件不被缓存
+    - 指定多个不被缓存
+
+    // 除了home组件和about组件别的都缓存
+    <keep-alive exclude="home,about" >
+        <router-view></router-view>
+    </keep-alive>
+```
+
+### Vue-Router相关
 
 #### 1. Vue-Router的懒加载方法
 
@@ -1755,7 +1862,7 @@ app.use(async (ctx, next)=> {
 
         router.beforeResolve(async to =>{
             if(to.meta.xxx){
-                
+
             }
         })
 
@@ -1763,4 +1870,225 @@ app.use(async (ctx, next)=> {
         router.afterEach((to, from) => {
             window.scrollTo(0,0)
         })
+
+2. 单个路由独享钩子：
+    - 进入路由时触发，不会在params，query 或 hash改变时触发，只有切换不同的路由时才会触发
+    [
+        {
+            path: '/',
+            name: 'index',
+            component: Index,
+            beforeEnter: (to, from, next) => {
+                console.log('即将进入首页')
+                next()
+
+                // return false
+            }
+        }
+    ]
+
+    - 也可传递一个函数数组给beforeEnter，复用逻辑
+        function removeQuery(to){
+            if(Object.keys(to.keys).length){
+                return {
+                    path: to.path,
+                    query: {},
+                    hash: to.hash
+                }
+            }
+        }
+        function removeHash(to){
+            if(to.hash) return {
+                path: to.path,
+                query: {},
+                hash: ''
+            }
+        }
+        const rules = [
+            {
+                path: '/users/:id',
+                component: UserDetail,
+                beforeEnter: [removeQuery, removeHash]
+            },
+            {
+                path: '/about',
+                component: About,
+                beforeEnter: [removeQuery]
+            }
+        ]
+
+3. 组件内钩子：
+    - beforeRouteEnter(to, from, next){
+        // 进入组件前调用
+        // 由于组件实例还没被创建，因此无法获取this，可传递一个回调给next访问实例
+        // beforeRouteEnter 是唯一支持给 next 传递回调的守卫
+        next(vm => {        
+            console.log(vm)     
+        })
+    }
+
+    - beforeRouteUpdate(to, from, next){
+        // 当前路由改变，组件被复用时调用
+        // 例：带动态参数的路径 /user/:id，在 user/1 和 user/2 跳转时，都渲染 同一个组件，该情况下会被调用
+        // 由于㢟已经挂载好了，可访问到this
+    }
+
+    - beforeRouteLeave(to, from, next){
+        // 离开组件时调用，可访问到this
+        // 离开守卫 通常用来预防用户在还未保存修改前突然离开，可以通过返回 false 来取消
+        // return false
+    }
+
+4. 完整的路由导航解析过程：
+    - 路由导航开始触发
+    - 调用离开路由的组件守卫beforeRouteLeave
+    - 调用全局前置守卫beforeEach
+    - 调用复用的组件钩子beforeRouteUpdate
+    - 调用单个路由独享守卫beforeEnter
+    - 解析异步路由组件
+    - 调用进入组件前的守卫beforeRouteEnter
+    - 调用全局解析守卫beforeResolve
+    - 导航被确认
+    - 调用全局后置守卫afterEach
+    - 触发dom更新
+    - 调用beforeRouteEnter守卫中传给next的回调函数，创建好的组件实例会作为回调函数的参数传入
+
+5. 路由导航和生命周期，keep-alive结合起来过程：
+    - 假设从啊组件离开，第一次进入b组件
+        beforeRouteLeave -> beforeEach -> beforeEnter -> beforeRouteEnter -> beforeResolve -> afterEach -> 
+        beforeCreate -> created -> beforeMount -> deactivated -> mounted -> activated -> 执行beforeRouteEnter的next回调
+```
+
+#### 7. 路由跳转和location.href有什么区别
+
+```js
+1. location.href = '/xxx'：简单方便，会刷新页面
+
+2. history.pushState('/xxx')：无刷新页面，静态跳转
+
+3. 路由跳转：router.push()，使用了diff算法，实现了按需加载，减少了dom的消耗(在history模式下，与history.pushState没什么区别)
+```
+
+#### 8. params 与 query有什么区别
+
+```js
+1. params与name搭配使用，地址栏上不会显示，刷新会丢失params里的数据
+
+2. query与path搭配使用，地址栏会显示参数，刷新不会丢失参数
+```
+
+### Vuex相关
+
+#### 1. vuex的辅助函数如何使用？
+
+```js
+1. mapState：将state属性映射到computed属性上
+
+    - 接受对象时：key可随意定义，要的是state里的值
+
+    - 接受数组时：计算属性的key需与state中的key相同
+
+        computed:{
+            otherComputed(){
+                return '其他的计算属性'
+            },
+            ...mapState({
+                // 映射countAlias为 store.state.count
+                countAlias: 'count',
+                // 箭头函数方式
+                nameAlias: state => state.name,
+                // 访问实例this时，只能使用普通函数，不能使用箭头函数
+                combineState(state){
+                    return this.otherComputed + state.count
+                }
+            }),
+            // 映射count为store.state.count, name为store.state.name
+            ...mapState(['count', 'name'])
+        }
+
+        // 使用：
+        this.countAlias / this.nameAlias / this.combineState / this.count / this.name
+
+2. mapGetters：把getters里的属性映射到computed中，state中属性变化会触发getters中方法，有一个参数(state)
+
+    - 接受对象时：key可随意定义，要的是getters里方法
+
+    - 接受数组时：key和getters中的方法名需一致
+
+    computed:{
+        ...mapGetters({
+            // key可设置方法别名，值为getters中的方法
+            nameAlias: 'name',
+        }),
+        ...mapGetters(['name'])
+    }
+
+3. mapMutations: 把mutations里的方法映射到methods中，主要修改state中的数据，两个参数(state, payload)
+
+    - 接受对象时：key可随意定义，要的是mutations里方法
+
+    - 接受数组时：key和actions中的方法名需一致
+
+    methods:{
+        ...mapMutations({
+            // key可设置方法别名，值为mutations中的方法
+            addAlias: 'handleAdd'
+        }),
+        ...mapMutations(['handleAdd'])
+    }
+
+4. mapActions：把actions里的方法映射到methods中
+
+    - 接受对象时：key可随意定义，要的是actions里方法
+
+    - 接受数组时：key和actions中的方法名需一致
+
+    methods:{
+        ...mapActions({
+            // key可设置方法别名，值为actions中的方法
+            asyncAlias: 'handleAsync',
+            changeAlias: 'handleInput'
+        }),
+        ...mapActions(['handleAsync', 'handleInput'])
+    }
+
+5. modules属性：模块
+    - 每个模块都是一个小型Vuex
+    - 每个模块都有state，getters，mutations，actions
+    - 导出模块时加一个 namespaced:true
+
+    // 例：
+    // 单个模块 custom.js
+    const store = {
+        state:{},
+        getters:{},
+        mutations:{},
+        actions:{}
+    }
+    export default {
+        ...store,
+        namespaced: true
+    }
+
+    // store中 index.js
+    import customVuex from 'custom.js'
+    export default new Vuex.Store({
+        state:{},
+        getters:{},
+        mutations:{},
+        actions:{},
+        modules: {
+            customVuex
+        }
+    })
+
+    - 当开启命名空间时如何使用辅助函数：
+        - mapXXX('命名空间名称', {
+            // 别名：命名空间中的原名称
+            alias: 'vuex中对应的原名称',
+        })
+
+        // 数组需保持名字一致
+        - mapXXX('命名空间名称', ['名字1', '名字2'])
+
 ```
