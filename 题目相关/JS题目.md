@@ -21,7 +21,7 @@
             this.queue = []
             this.wait = []
             this.result = []
-            
+        
             this.addQueue(list)
         },
         addQueue: function(arr, flag = true){
@@ -81,7 +81,7 @@ function myCreate(obj){
 function myInstanceof(left,right){
     let proto = Object.getPrototypeOf(left),
         prototype = right.prototype;
-    
+  
     while(true){
         if(!proto) return false
         if(proto === prototype) return true
@@ -316,7 +316,7 @@ function getType(v){
     }else{
         return typeof v
     } 
-    
+  
 }
 ```
 
@@ -828,4 +828,24 @@ Promise.myAll = function(args){
 
 4. 扩展运算符：
     - [...likeArr]
+```
+
+#### 32. 自定义事件监听localStorage
+
+```js
+1. 监听localStorage的内容变化：
+	// 重写setItem
+	const setItem = localStorage.setItem
+	localStorage.setItem = function(name, value) {
+		setItem.apply(this, arguments)
+		let event = new Event('storageEvent')
+		event.key = name
+		event.value = value
+		window.dispatchEvent(event)
+	}
+
+// 使用：
+window.addEventListener('storageEvent', (e) => {
+	console.log(e)
+})
 ```

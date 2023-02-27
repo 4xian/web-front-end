@@ -362,7 +362,7 @@ export default {
 
 #### 9. 使用Vue.extend和指令开发v-loading组件
 
-```vue
+```js
 1. loading组件
 <!--loading.vue -->
 <template>
@@ -480,4 +480,130 @@ Vue.directive('loading',{
 })
 ```
 
-#### 10
+#### 10. Vue单页面引入js
+
+```js
+1. 全局组件：
+Vue.component('custom-script', {
+	render: (c)=> {
+		let that = this;
+		return c('script', {
+			attrs: {
+				type: 'text/javascript',
+				src: this.src
+			},
+			on: {
+				load: (e)=> {
+					that.$emit('load',e)
+				},
+				error: (e)=> {
+					that.$emit('error',e)
+				},
+				readystatechange: (e)=> {
+					if (this.readyState == 'complete') {
+                        			self.$emit('load', e);
+                    			}
+				},
+			}
+		})
+	},
+	props: {
+		src: {
+			type: String,
+			required: true
+		}
+	}
+})
+
+2. 局部引入：
+<template> 
+	<div> 
+		<remote-css href="https://cdn.bootcss.com/twitter-bootstrap/4.2.1/css/bootstrap.css"></remote-css>
+  		<remote-js src="https://cdn.bootcss.com/twitter-bootstrap/4.2.1/js/bootstrap.bundle.js"></remote-js>
+ 	</div>
+</template>
+components:{
+       'remote-css': {
+            render(createElement) {  
+              return createElement('link', { attrs: { rel: 'stylesheet', href: this.href }});
+            },
+            props: {
+            	href: { type: String, required: true },
+            },
+        },
+        'remote-js': {
+            render(createElement) {
+              return createElement('script', { attrs: { type: 'text/javascript', src: this.src }});  
+            },
+            props: {
+            	src: { type: String, required: true },
+            },
+        },
+},
+```
+
+#### 11. Vue 刷新页面的几种方式
+
+```javascript
+1. 最简单的方式：(整个页面重新加载，有白屏)
+	- location.reload()
+	- this.$router.go(0)
+
+2. provide/inject方式：
+	- 首先在app.vue中对<router-view>进行调整
+	- 在需要的页面inject使用
+
+	// app.vue
+	<template>
+		<div id="app">
+			<router-view v-if="showRouter"></router-view>
+		</div>
+	</template>
+	<script>
+		export default {
+			name: 'App',
+			provide() {
+				return {
+					reload: this.reload
+				}
+			},
+			data() {
+    				return {
+      					showRouter: true
+    				}
+  			},
+			methods: {
+    				reload() {
+      					this.showRouter = false
+      					this.$nextTick(() => {
+        					this.showRouter = true
+      					})
+    				}
+  			},
+		}
+
+	</script>
+
+	// 需要的页面直接inject调用
+	<script>
+		export default {
+			// 引用provide提供的方法
+			inject: ['reload']
+			data() {
+    				return {}
+  			},
+			methods: {
+    				refresh(){
+					this.reload()
+				}
+  			},
+		}
+
+	</script>
+
+3. 先跳转空白页面再跳转回去：(页面不会闪，但路由会快速变化)
+	// new page.vue
+	beforeRouteEnter(to, from, next) {
+    		next((vm) => vm.router.replace(from.path))
+  	},
+```

@@ -12,7 +12,7 @@
  git add . // 添加至缓存区
  git commit -m '描述'  // 提交到本地
  git push origin dev:dev // 推送  远端名 本地仓库：远端仓库
-    
+  
  git log // 查看提交记录ID
  git checkout -b [branch名] // 新建分支，并切换到该分支
 ```
@@ -90,6 +90,7 @@ git revert: 撤销某次操作，之前提交的commit记录和history都会保�
 (git revert HEAD^: 撤销前前一个版本)
 
 git rebase: 删除指定的commit，
+
 (git reset: 未指定ID，暂存区会被当前ID版本号覆盖，工作区不变)
 (git reset <ID>: 指定ID，暂存区会被指定ID版本号覆盖，工作区不变)
 (--mixed: 默认只有暂存区变化)
@@ -103,4 +104,10 @@ git rebase: 删除指定的commit，
 ```js
 保存当前工作进度，后续可以将某次保存的内容推出来
 
+```
+
+#### 9. git fetch --prune
+
+```js
+vscode 同步最新远端所有分支到本地
 ```

@@ -84,7 +84,7 @@ class FindSql {
         }
         return this.data.sort(fn)
     }
-    
+  
 }
 
 let find = (d) => new FindSql(d);
@@ -319,6 +319,18 @@ Array.from(arr);
             v.children = child;
         })
         return [arr[0]]
+    }
+
+    function toTree(arr, id = 'id', pid = 'pid', children = 'children', rootId = 0) {
+      let array = JSON.parse(JSON.stringify(arr))
+      const tree = array.filter((parent) => {
+        let data = array.filter((child) => {
+          return parent[id] === child[pid]
+        })
+        parent[children] = data.length ? data : ''
+        return parent[pid] == rootId
+      })
+      return tree
     }
 
     2. 将树形结构扁平化为数对象:
